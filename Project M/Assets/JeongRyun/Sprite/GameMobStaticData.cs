@@ -39,21 +39,33 @@ namespace ProjectM.InGame
     //@ 몬스터 종류 마다 고유의 능력치를 가지고 있다.
     public struct MobInfo
     {
-        /// <summary>
-        /// 몬스터 기본정보 초기화 
-        /// </summary>
-        /// <param name="_maxHP">몬스터의 최초 HP</param>
-        /// <param name="_speed">몬스터의 속도</param>
-        public MobInfo(float _maxHP, float _speed)
+        //대중적인 몬스터 초기화
+        public MobInfo(float _maxHP, float _speed, MobMovememt _movememt)
         {
             maxHP = _maxHP;
             speed = _speed;
+            specialMob = false;
+            staticMob = false;
+            movement = _movememt;
+        }
+        //특수적인 몬스터 초기화
+        public MobInfo(float _maxHP, float _speed, bool _special, bool _static, MobMovememt _movememt)
+        {
+            maxHP = _maxHP;
+            speed = _speed;
+            specialMob = _special;
+            staticMob = _static;
+            movement = _movememt;
         }
 
         readonly public float maxHP;
         readonly public float speed;
+        readonly public bool specialMob;   //이 몬스터가 보스 등 특별한 몬스터라면 true
+        readonly public bool staticMob;  //공격을 받지 않는 장애물 같은 몬스터라면 true ex) 마리오의 파이프 꽃 같은 경우
+        readonly public MobMovememt movement;
     }
 
+    
     public class GameMobStaticData : Singleton<GameMobStaticData>
     {
         private Dictionary<KindOfMob, MobInfo> mobReferenceInfo_Table = new Dictionary<KindOfMob, MobInfo>();
@@ -67,9 +79,9 @@ namespace ProjectM.InGame
                 return;
 
             mobReferenceInfo_Table.Clear();
-            mobReferenceInfo_Table.Add(KindOfMob.ReferenceMob, new MobInfo(100, 2));
-            mobReferenceInfo_Table.Add(KindOfMob.Tmp_1, new MobInfo(30, 3));
-            mobReferenceInfo_Table.Add(KindOfMob.Tmp_2, new MobInfo(30, 3));
+            mobReferenceInfo_Table.Add(KindOfMob.ReferenceMob, new MobInfo(100, 2, MobMovememt.HorizontalMovement));
+            mobReferenceInfo_Table.Add(KindOfMob.Tmp_1, new MobInfo(30, 3, MobMovememt.JumpMovement));
+            mobReferenceInfo_Table.Add(KindOfMob.Tmp_2, new MobInfo(30, 3, MobMovememt.DashMovement));
         }
 
         public MobInfo GetMobReferenceInfo(KindOfMob _mobType)
