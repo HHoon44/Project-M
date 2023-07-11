@@ -9,37 +9,42 @@ namespace ProjectM.InGame
         private Animator anim;
 
         [Header("MobSetting")]
-        public bool thisSpecialMob = false;   //이 몬스터가 보스 등 특별한 몬스터라면 true
-        public bool thisStaticMob = false;  //공격을 받지 않는 장애물 같은 몬스터라면 true
-        public KindOfMob mobType;
+        public KindOfMob thisMobType;
 
-        [Space(10f)]
-        [Header("Linking")]
-        public Transform BottomRayTip;
+        // [Space(10f)]
+        // [Header("Linking")]
 
-        private MobInfo mobStartInfo;
+        public MobInfo mobInfo { get; private set; }
         public float nowHP { get; private set; }
-        private float speed;
 
         private void Start()
         {
+            if (gameObject.tag != "Mob")
+            {
+                Debug.LogWarning("현재 몹 전용 컴포넌트를 다른 객체가 가지고 있습니다.");
+                this.enabled = false;
+            }
+
             anim = GetComponent<Animator>();
 
             if (anim == null)
                 Debug.LogWarning("케릭터의 애니메이터가 없습니다.");
 
-            GameMobStaticData.Instance.GetMobReferenceInfo(mobType);
-
-            nowHP = mobStartInfo.maxHP;
-            speed = mobStartInfo.speed;
+            mobInfo = GameMobStaticData.Instance.GetMobReferenceInfo(thisMobType);
         }
 
         private void OnEnable()
         {
-
+            //todo: 몹 생성 애니메이션 활성화
+            Invoke(nameof(Regen), 1f);
         }
 
-     
+        private void Regen()
+        {
+            nowHP = mobInfo.maxHP;
+        }
+
+
 
         private void Movement()
         {
