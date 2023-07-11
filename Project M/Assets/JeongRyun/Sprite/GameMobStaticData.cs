@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using ProjectM.Util;
 
-namespace InGame.Mob
+namespace ProjectM.InGame
 {
     /// <summary>
     ///@ 해당 몬스터의 종류를 구분할때 쓰임

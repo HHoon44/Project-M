@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace InGame.Mob
+namespace ProjectM.InGame
 {
     //오브젝트 폴링을 이용하여 몬스터 활성화 구현
     public class StageMobsController : MonoBehaviour
