@@ -20,7 +20,7 @@ namespace ProjectM.Util
         /// <summary>
         /// 외부에서 인스턴스에 접근하기 위한 프로퍼티
         /// </summary>
-        private static T Instance
+        public static T Instance
         {
             get
             {
