@@ -29,6 +29,7 @@ namespace ProjectM.InGame
                 Debug.LogWarning("케릭터의 애니메이터가 없습니다.");
 
             GameMobStaticData.Instance.GetMobReferenceInfo(mobType);
+
             nowHP = mobStartInfo.maxHP;
             speed = mobStartInfo.speed;
         }
@@ -38,14 +39,7 @@ namespace ProjectM.InGame
 
         }
 
-        private void FixedUpdate()
-        {
-            //RaycastHit2D hit;
-            if (Physics2D.Linecast(BottomRayTip.position, BottomRayTip.position, 1 << LayerMask.NameToLayer("Ground"))) //땅만 인식한다.
-            {
-                Debug.Log("a");
-            }
-        }
+     
 
         private void Movement()
         {

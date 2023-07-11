@@ -15,6 +15,15 @@ namespace ProjectM.InGame
         Tmp_2
     }
 
+
+    public enum MobMovememt
+    {
+        None,
+        HorizontalMovement,
+        JumpMovement,
+        DashMovement
+    }
+
     /// <summary>
     ///@ 공격과 디버프 
     ///!임시
@@ -24,6 +33,8 @@ namespace ProjectM.InGame
         None,
         Slow
     }
+
+
 
     //@ 몬스터 종류 마다 고유의 능력치를 가지고 있다.
     public struct MobInfo

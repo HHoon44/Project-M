@@ -82,6 +82,7 @@ MonoBehaviour:
   thisSpecialMob: 0
   thisStaticMob: 0
   mobType: 0
+  BottomRayTip: {fileID: 0}
 --- !u!95 &1837887694007372484
 Animator:
   serializedVersion: 4
