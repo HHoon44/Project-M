@@ -557,6 +557,18 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3959350145345348694, guid: 69a0faacba8b94385af30cbc4ccd46fd, type: 3}
+      propertyPath: mobSize
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3959350145345348694, guid: 69a0faacba8b94385af30cbc4ccd46fd, type: 3}
+      propertyPath: idleTime
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3959350145345348694, guid: 69a0faacba8b94385af30cbc4ccd46fd, type: 3}
+      propertyPath: moveTime
+      value: 2.95
+      objectReference: {fileID: 0}
+    - target: {fileID: 3959350145345348694, guid: 69a0faacba8b94385af30cbc4ccd46fd, type: 3}
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}

@@ -6,16 +6,27 @@ namespace ProjectM.InGame
 {
     public class GameMobMovement : MonoBehaviour
     {
+        [Header("Move")]
+        public float mobSize;
+
+        [Range(0, 10)]
+        public float moveTime;
+        [Range(0, 10)]
+        public float idleTime;
+
         Rigidbody2D rigid;
 
         private KindOfMob mobType;
         private MobMovememt movememtState = MobMovememt.None;
 
+        //초기화 상수
         private Vector3 startPos;
         private float speed;
 
+        //오브젝트 변수
         private float nextStap;
         private bool flipX = false;
+        private bool moveAble;
 
         private void Start()
         {
@@ -30,10 +41,13 @@ namespace ProjectM.InGame
             mobType = GetComponent<GameMob>().thisMobType;
 
             startPos = transform.position;
-            Turn(Random.Range(0, 2) == 1 ? true : false); //시작 시 앞뒤를 랜덤하게 만든다.
 
             speed = GameMobStaticData.Instance.GetMobReferenceInfo(mobType).speed;
             movememtState = GameMobStaticData.Instance.GetMobReferenceInfo(mobType).movement;
+
+
+
+            StartCoroutine(IdleToMove());
         }
 
         private void FixedUpdate()
@@ -42,21 +56,28 @@ namespace ProjectM.InGame
             if ((startPos.y - 1) >= transform.position.y)
                 transform.position = startPos;
 
-            //몬스터 마다 고유의 움직임
-            switch (movememtState)
+            if (moveAble)
             {
-                case MobMovememt.None:
-                    None();
-                    break;
-                case MobMovememt.HorizontalMovement:
-                    HorizontalMovement();
-                    break;
-                case MobMovememt.JumpMovement:
-                    JumpMovement();
-                    break;
-                case MobMovememt.DashMovement:
-                    JumpMovement();
-                    break;
+                //몬스터 마다 고유의 움직임
+                switch (movememtState)
+                {
+                    case MobMovememt.None:
+                        None();
+                        break;
+                    case MobMovememt.HorizontalMovement:
+                        HorizontalMovement();
+                        break;
+                    case MobMovememt.JumpMovement:
+                        JumpMovement();
+                        break;
+                    case MobMovememt.DashMovement:
+                        JumpMovement();
+                        break;
+                }
+            }
+            else
+            {
+                rigid.velocity = Vector2.zero;
             }
 
             //지형을 감지하면 플립한다.
@@ -66,6 +87,18 @@ namespace ProjectM.InGame
                         Turn(true);
                     else
                         Turn(false);
+        }
+
+        private IEnumerator IdleToMove()
+        {
+            while (true)
+            {
+                moveAble = true;
+                RandomTurn();
+                yield return new WaitForSeconds(Random.Range(moveTime / 2, moveTime));
+                moveAble = false;
+                yield return new WaitForSeconds(Random.Range(idleTime / 2, idleTime));
+            }
         }
 
         //act: 가만히 있음
@@ -139,6 +172,13 @@ namespace ProjectM.InGame
                 nextStap = -Mathf.Abs(nextStap);
                 transform.localScale = new Vector3(1, 1, -1);
             }
+            Debug.Log(nextStap);
+        }
+
+        private void RandomTurn()
+        {
+            bool flip = Random.Range(0, 2) == 1 ? true : false;
+            Turn(flip);
         }
 
         /// <summary>
@@ -153,7 +193,7 @@ namespace ProjectM.InGame
                     nextStap = 0;
                     break;
                 case MobMovememt.HorizontalMovement:
-                    nextStap = speed / 3;
+                    nextStap = mobSize;
                     break;
                 case MobMovememt.JumpMovement:
                     nextStap = speed;
