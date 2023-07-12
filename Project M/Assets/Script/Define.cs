@@ -4,8 +4,11 @@ using UnityEngine;
 
 namespace ProjectM.Define
 {
-    public class Define : MonoBehaviour
+    public enum PoolType { }
+
+    public class StaticData
     {
-        public enum PoolType { }
+        public const string SDExcelPath = "Assets/StaticData/Excel";
+        public const string SDJsonPath = "Assets/StaticData/Json";
     }
 }
