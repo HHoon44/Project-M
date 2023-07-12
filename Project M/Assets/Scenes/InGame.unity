@@ -505,6 +505,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2211680249126867986, guid: 69a0faacba8b94385af30cbc4ccd46fd, type: 3}
+      propertyPath: thisMobType
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2211680249126867986, guid: 69a0faacba8b94385af30cbc4ccd46fd, type: 3}
       propertyPath: BottomRayTip
       value: 
       objectReference: {fileID: 0}

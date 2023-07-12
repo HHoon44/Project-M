@@ -6,6 +6,8 @@ namespace ProjectM.InGame
 {
     public class GameMobMovement : MonoBehaviour
     {
+        Rigidbody2D rigid;
+
         private KindOfMob mobType;
         private MobMovememt movememtState = MobMovememt.None;
 
@@ -17,6 +19,8 @@ namespace ProjectM.InGame
 
         private void Start()
         {
+            rigid = GetComponent<Rigidbody2D>();
+
             if (gameObject.tag != "Mob")
             {
                 Debug.LogWarning("현재 몹 전용 컴포넌트를 다른 객체가 가지고 있습니다.");
@@ -26,7 +30,7 @@ namespace ProjectM.InGame
             mobType = GetComponent<GameMob>().thisMobType;
 
             startPos = transform.position;
-            flipX = Random.Range(0, 2) == 1 ? true : false; //시작 시 앞뒤를 랜덤하게 만든다.
+            Turn(Random.Range(0, 2) == 1 ? true : false); //시작 시 앞뒤를 랜덤하게 만든다.
 
             speed = GameMobStaticData.Instance.GetMobReferenceInfo(mobType).speed;
             movememtState = GameMobStaticData.Instance.GetMobReferenceInfo(mobType).movement;
@@ -34,10 +38,6 @@ namespace ProjectM.InGame
 
         private void FixedUpdate()
         {
-            //로딩되고 일정 시간동안 움직이지 않음
-            // if (startingTime + 0.01f >= Time.time)
-            //     return;
-
             //만약 시작 위치보다 떨어져 있다면, 다시 위치를 초기화 한다.
             if ((startPos.y - 1) >= transform.position.y)
                 transform.position = startPos;
@@ -59,9 +59,13 @@ namespace ProjectM.InGame
                     break;
             }
 
+            //지형을 감지하면 플립한다.
             if (movememtState != MobMovememt.None)
                 if (GroundSense())
-                    Turn();
+                    if (rigid.velocity.x > 0)
+                        Turn(true);
+                    else
+                        Turn(false);
         }
 
         //act: 가만히 있음
@@ -73,16 +77,19 @@ namespace ProjectM.InGame
         //act: 좌우로 움직임
         private void HorizontalMovement()
         {
+            if (!flipX)
+                rigid.velocity = new Vector2(speed, rigid.velocity.y);
+            else
+                rigid.velocity = new Vector2(-speed, rigid.velocity.y);
         }
 
         //act: 점프를 하면서 움직임
         private void JumpMovement()
         {
-            // if (Physics2D.Linecast(BottomRayTip.position, BottomRayTip.position, 1 << LayerMask.NameToLayer("Ground"))) //땅만 인식한다.
-            // {
-            //     Debug.Log("a");
+
         }
 
+        //act: 랜덤 시간마다 대쉬를 한다.
         private void DashMovement()
         {
 
@@ -115,20 +122,50 @@ namespace ProjectM.InGame
             return false;
         }
 
-        private void Turn()
+        private void Turn(bool _flip)
         {
+            SetNextStap();
+
+            //플립정보 반전
+            flipX = _flip;
+
             if (!flipX)
             {
-
+                nextStap = Mathf.Abs(nextStap);
                 transform.localScale = new Vector3(1, 1, 1);
             }
             else
             {
+                nextStap = -Mathf.Abs(nextStap);
                 transform.localScale = new Vector3(1, 1, -1);
             }
+        }
 
-            // CancelInvoke();
-            // Invoke("Think", 5);
+        /// <summary>
+        ///act: 몬스터가 계속해서 이동한다면, 다음 자리는 어디 일지 미리 계산한다.
+        ///tip: 몬스터가 오른쪽을 보고 있을 때 기준
+        /// </summary>
+        private void SetNextStap()
+        {
+            switch (movememtState)
+            {
+                case MobMovememt.None:
+                    nextStap = 0;
+                    break;
+                case MobMovememt.HorizontalMovement:
+                    nextStap = speed / 3;
+                    break;
+                case MobMovememt.JumpMovement:
+                    nextStap = speed;
+                    break;
+                case MobMovememt.DashMovement:
+                    //todo: 대쉬 거리 계산
+                    break;
+                default:
+                    Debug.Log("알 수 없는 움직임");
+                    movememtState = MobMovememt.None;
+                    break;
+            }
         }
 
         void Think()
