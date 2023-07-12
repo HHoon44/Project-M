@@ -73,8 +73,7 @@ namespace ProjectM.Util
                 }
             }
 
-            T recycleObj = (pred == null) ? (Pool.Count > 0 ? Pool[0] : null) :
-                (Pool.Find(obj => pred(obj) && obj.CanReCycle));
+            T recycleObj = (pred == null) ? (Pool.Count > 0 ? Pool[0] : null) : (Pool.Find(obj => pred(obj) && obj.CanReCycle));
 
             if (recycleObj == null)
             {
