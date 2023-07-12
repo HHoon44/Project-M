@@ -2,64 +2,34 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using ProjectM.Util;
+using ProjectM.Define;
 
 namespace ProjectM.InGame
 {
-    /// <summary>
-    ///@ 해당 몬스터의 종류를 구분할때 쓰임
-    /// </summary>
-    public enum KindOfMob
-    {
-        ReferenceMob,
-        Tmp_1,
-        Tmp_2
-    }
-
-
-    public enum MobMovememt
-    {
-        None,
-        HorizontalMovement,
-        JumpMovement,
-        DashMovement
-    }
-
-    /// <summary>
-    ///@ 공격과 디버프 
-    ///!임시
-    /// </summary>
-    public enum DebuffType
-    {
-        None,
-        Slow
-    }
-
-
-
-    //@ 몬스터 종류 마다 고유의 능력치를 가지고 있다.
+    //@ 몬스터 종류 마다 고유의 능력치를 저장하는 자료형
     public struct MobInfo
     {
         //대중적인 몬스터 초기화
-        public MobInfo(float _maxHP, float _speed, MobMovememt _movememt)
+        public MobInfo(float _maxHP, float _atkCool, MobMovememt _movememt)
         {
             maxHP = _maxHP;
-            speed = _speed;
+            atkCool = _atkCool;
             specialMob = false;
             staticMob = false;
             movement = _movememt;
         }
         //특수적인 몬스터 초기화
-        public MobInfo(float _maxHP, float _speed, bool _special, bool _static, MobMovememt _movememt)
+        public MobInfo(float _maxHP, float _atkCool, bool _special, bool _static, MobMovememt _movememt)
         {
             maxHP = _maxHP;
-            speed = _speed;
+            atkCool = _atkCool;
             specialMob = _special;
             staticMob = _static;
             movement = _movememt;
         }
 
         readonly public float maxHP;
-        readonly public float speed;
+        readonly public float atkCool;
         readonly public bool specialMob;   //이 몬스터가 보스 등 특별한 몬스터라면 true
         readonly public bool staticMob;  //공격을 받지 않는 장애물 같은 몬스터라면 true ex) 마리오의 파이프 꽃 같은 경우
         readonly public MobMovememt movement;

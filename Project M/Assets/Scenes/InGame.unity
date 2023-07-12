@@ -510,7 +510,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2211680249126867986, guid: 69a0faacba8b94385af30cbc4ccd46fd, type: 3}
       propertyPath: thisMobType
-      value: 1
+      value: 101
       objectReference: {fileID: 0}
     - target: {fileID: 2211680249126867986, guid: 69a0faacba8b94385af30cbc4ccd46fd, type: 3}
       propertyPath: BottomRayTip
@@ -561,6 +561,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3959350145345348694, guid: 69a0faacba8b94385af30cbc4ccd46fd, type: 3}
+      propertyPath: speed
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3959350145345348694, guid: 69a0faacba8b94385af30cbc4ccd46fd, type: 3}
       propertyPath: mobSize
       value: 1
       objectReference: {fileID: 0}
@@ -570,7 +574,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3959350145345348694, guid: 69a0faacba8b94385af30cbc4ccd46fd, type: 3}
       propertyPath: moveTime
-      value: 2.95
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 3959350145345348694, guid: 69a0faacba8b94385af30cbc4ccd46fd, type: 3}
       propertyPath: jumpFarce
@@ -581,8 +585,28 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3959350145345348694, guid: 69a0faacba8b94385af30cbc4ccd46fd, type: 3}
+      propertyPath: detectArea
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3959350145345348694, guid: 69a0faacba8b94385af30cbc4ccd46fd, type: 3}
       propertyPath: jumpTiming
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3959350145345348694, guid: 69a0faacba8b94385af30cbc4ccd46fd, type: 3}
+      propertyPath: idleCooltime
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3959350145345348694, guid: 69a0faacba8b94385af30cbc4ccd46fd, type: 3}
+      propertyPath: jumpCooltime
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3959350145345348694, guid: 69a0faacba8b94385af30cbc4ccd46fd, type: 3}
+      propertyPath: moveCooltime
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3959350145345348694, guid: 69a0faacba8b94385af30cbc4ccd46fd, type: 3}
+      propertyPath: turnCooltime
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8241904046274209127, guid: 69a0faacba8b94385af30cbc4ccd46fd, type: 3}
       propertyPath: m_Name

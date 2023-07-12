@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using ProjectM.Define;
 
 namespace ProjectM.InGame
 {
