@@ -134,13 +134,11 @@ namespace ProjectM.InGame
         {
             //다음 위치가 어디일지 미리 검색한다.
             Vector2 nextPos = new Vector2(transform.position.x + nextStap, transform.position.y);
-            Debug.Log("Detect start");
 
             //낭떠러지가 있는 지 확인.
             Debug.DrawRay(nextPos, Vector3.down * (transform.position.y - startPos.y + 1), Color.green);
             if (!Physics2D.Raycast(nextPos, Vector3.down, transform.position.y - startPos.y + 1, LayerMask.GetMask("Ground")))
             {
-                Debug.Log("detect1");
                 return true;
             }
 
@@ -148,7 +146,6 @@ namespace ProjectM.InGame
             Debug.DrawLine(transform.position, nextPos, Color.red);
             if (Physics2D.Linecast(transform.position, nextPos, LayerMask.GetMask("Ground")))
             {
-                Debug.Log("detect2");
                 return true;
             }
 
@@ -172,7 +169,6 @@ namespace ProjectM.InGame
                 nextStap = -Mathf.Abs(nextStap);
                 transform.localScale = new Vector3(1, 1, -1);
             }
-            Debug.Log(nextStap);
         }
 
         private void RandomTurn()

@@ -7,12 +7,10 @@ namespace ProjectM.InGame
     public class GameMob : MonoBehaviour
     {
         private Animator anim;
+        private GameMobMovement movement;
 
         [Header("MobSetting")]
         public KindOfMob thisMobType;
-
-        // [Space(10f)]
-        // [Header("Linking")]
 
         public MobInfo mobInfo { get; private set; }
         public float nowHP { get; private set; }
@@ -54,17 +52,21 @@ namespace ProjectM.InGame
         // act: 몬스터가 인자값 만큼 데미지를 입으며, 그 즉시 해당 디버프를 받아옵니다.
         public void SufferDemage(float _Demaged, DebuffType[] _types)
         {
+            //절대적인 몹이라면 공격을 받지 않음
+            if (mobInfo.staticMob)
+                return;
+
             if (0 >= nowHP - _Demaged)
             {
                 nowHP = 0;
                 MobDie();
+                return;
             }
             else
             {
+                //todo: 공격 받는 애니메이션
                 nowHP -= _Demaged;
             }
-
-            //todo: 공격 받는 애니메이션
         }
 
         //act: 몬스터의 죽음

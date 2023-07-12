@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using ProjectM.Util;
 using UnityEngine;
 
 namespace ProjectM.InGame
@@ -8,7 +9,7 @@ namespace ProjectM.InGame
     public class StageMobsController : MonoBehaviour
     {
         [SerializeField] private GameObject[] inStageMob;  //스테이지 안의 몬스터를 모두 넣어준다.
-
+       // ObjectPool<GameObject> a = new ObjectPool<GameObject>();
         private void Awake()
         {
 

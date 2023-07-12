@@ -30,10 +30,7 @@ namespace ProjectM.Util
         /// 풀링할 새로운 오브젝트를 등록하는 메서드
         /// </summary>
         /// <param name="obj"> 풀에 등록할 오브젝트 </param>
-        public void RegistPoolableObject(T obj)
-        {
-            Pool.Add(obj);
-        }
+        public void RegistPoolableObject(T obj) => Pool.Add(obj);
 
         /// <summary>
         /// 사용한 오브젝트를 풀에 반환하는 메서드
