@@ -6,13 +6,19 @@ namespace ProjectM.InGame
 {
     public class GameMobMovement : MonoBehaviour
     {
-        [Header("Move")]
+        [Header("BaseMove")]
         public float mobSize;
-
         [Range(0, 10)]
         public float moveTime;
         [Range(0, 10)]
         public float idleTime;
+
+        [Space(10f)]
+        [Header("JumpMove")]
+        public float jumpFarce;
+        [Range(1, 10)]
+        public float jumpTiming; //최저를 1초로 해서 땅에 떨어지지 않았는데 다시 점프를 금지한다.
+
 
         Rigidbody2D rigid;
 
@@ -45,9 +51,10 @@ namespace ProjectM.InGame
             speed = GameMobStaticData.Instance.GetMobReferenceInfo(mobType).speed;
             movememtState = GameMobStaticData.Instance.GetMobReferenceInfo(mobType).movement;
 
-
-
             StartCoroutine(IdleToMove());
+
+            if (movememtState == MobMovememt.JumpMovement)
+                StartCoroutine(JumpTimer());
         }
 
         private void FixedUpdate()
@@ -77,7 +84,7 @@ namespace ProjectM.InGame
             }
             else
             {
-                rigid.velocity = Vector2.zero;
+                rigid.velocity = Vector2.up * rigid.velocity;
             }
 
             //지형을 감지하면 플립한다.
@@ -119,7 +126,16 @@ namespace ProjectM.InGame
         //act: 점프를 하면서 움직임
         private void JumpMovement()
         {
-
+            HorizontalMovement();
+        }
+        private IEnumerator JumpTimer()
+        {
+            while (true)
+            {
+                yield return new WaitForSeconds(jumpTiming);
+                rigid.AddForce(Vector2.up * jumpFarce, ForceMode2D.Impulse);
+                Debug.Log("Jump");
+            }
         }
 
         //act: 랜덤 시간마다 대쉬를 한다.
@@ -189,10 +205,10 @@ namespace ProjectM.InGame
                     nextStap = 0;
                     break;
                 case MobMovememt.HorizontalMovement:
-                    nextStap = mobSize;
+                    nextStap = speed /2;
                     break;
                 case MobMovememt.JumpMovement:
-                    nextStap = speed;
+                    nextStap = speed / 4;
                     break;
                 case MobMovememt.DashMovement:
                     //todo: 대쉬 거리 계산

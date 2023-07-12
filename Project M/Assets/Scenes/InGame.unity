@@ -500,13 +500,17 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1313953504}
     m_Modifications:
+    - target: {fileID: -6271309021878876667, guid: 69a0faacba8b94385af30cbc4ccd46fd, type: 3}
+      propertyPath: m_BodyType
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2211680249126867986, guid: 69a0faacba8b94385af30cbc4ccd46fd, type: 3}
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2211680249126867986, guid: 69a0faacba8b94385af30cbc4ccd46fd, type: 3}
       propertyPath: thisMobType
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2211680249126867986, guid: 69a0faacba8b94385af30cbc4ccd46fd, type: 3}
       propertyPath: BottomRayTip
@@ -569,8 +573,16 @@ PrefabInstance:
       value: 2.95
       objectReference: {fileID: 0}
     - target: {fileID: 3959350145345348694, guid: 69a0faacba8b94385af30cbc4ccd46fd, type: 3}
+      propertyPath: jumpFarce
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3959350145345348694, guid: 69a0faacba8b94385af30cbc4ccd46fd, type: 3}
       propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3959350145345348694, guid: 69a0faacba8b94385af30cbc4ccd46fd, type: 3}
+      propertyPath: jumpTiming
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8241904046274209127, guid: 69a0faacba8b94385af30cbc4ccd46fd, type: 3}
       propertyPath: m_Name
