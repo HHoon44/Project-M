@@ -6,14 +6,14 @@ namespace ProjectM.InGame
 {
     public class GameMobMovement : MonoBehaviour
     {
-        GameMob mob;
+        private KindOfMob mobType;
         private MobMovememt movememtState = MobMovememt.None;
 
         private Vector3 startPos;
         private float speed;
 
         private float nextStap;
-        private bool flipX;
+        private bool flipX = false;
 
         private void Start()
         {
@@ -23,25 +23,21 @@ namespace ProjectM.InGame
                 this.enabled = false;
             }
 
-            mob = GetComponent<GameMob>();
-            if (mob == null)
-                Debug.LogWarning("GameMob 컨포넌트가 없습니다.");
+            mobType = GetComponent<GameMob>().thisMobType;
 
             startPos = transform.position;
             flipX = Random.Range(0, 2) == 1 ? true : false; //시작 시 앞뒤를 랜덤하게 만든다.
 
-            Invoke(nameof(LateStart), 0);
-        }
-
-        private void LateStart()
-        {
-            speed = mob.mobInfo.speed;
-            movememtState = mob.mobInfo.movement;
-            Debug.Log(movememtState.ToString());
+            speed = GameMobStaticData.Instance.GetMobReferenceInfo(mobType).speed;
+            movememtState = GameMobStaticData.Instance.GetMobReferenceInfo(mobType).movement;
         }
 
         private void FixedUpdate()
         {
+            //로딩되고 일정 시간동안 움직이지 않음
+            // if (startingTime + 0.01f >= Time.time)
+            //     return;
+
             //만약 시작 위치보다 떨어져 있다면, 다시 위치를 초기화 한다.
             if ((startPos.y - 1) >= transform.position.y)
                 transform.position = startPos;
@@ -63,8 +59,9 @@ namespace ProjectM.InGame
                     break;
             }
 
-            //if (movememtState != MobMovememt.None)
-            GroundSense();
+            if (movememtState != MobMovememt.None)
+                if (GroundSense())
+                    Turn();
         }
 
         //act: 가만히 있음
@@ -76,7 +73,6 @@ namespace ProjectM.InGame
         //act: 좌우로 움직임
         private void HorizontalMovement()
         {
-            nextStap = speed/3;
         }
 
         //act: 점프를 하면서 움직임
@@ -96,22 +92,24 @@ namespace ProjectM.InGame
         //tip: 근처에 낭떠러지거나, 벽이면 ture를 리턴.
         private bool GroundSense()
         {
+            //다음 위치가 어디일지 미리 검색한다.
             Vector2 nextPos = new Vector2(transform.position.x + nextStap, transform.position.y);
             Debug.Log("Detect start");
 
             //낭떠러지가 있는 지 확인.
-            Debug.DrawRay(nextPos, Vector3.down, Color.green);
-            if (Physics2D.Raycast(nextPos, Vector3.down * 1, 1, LayerMask.GetMask("Ground")))
+            Debug.DrawRay(nextPos, Vector3.down * (transform.position.y - startPos.y + 1), Color.green);
+            if (!Physics2D.Raycast(nextPos, Vector3.down, transform.position.y - startPos.y + 1, LayerMask.GetMask("Ground")))
             {
-                //return true;
                 Debug.Log("detect1");
+                return true;
             }
-            //벽이 있는 지 확인/
+
+            //벽이 있는 지 확인.
             Debug.DrawLine(transform.position, nextPos, Color.red);
             if (Physics2D.Linecast(transform.position, nextPos, LayerMask.GetMask("Ground")))
             {
                 Debug.Log("detect2");
-                //return true;
+                return true;
             }
 
             return false;
@@ -119,16 +117,15 @@ namespace ProjectM.InGame
 
         private void Turn()
         {
-            // if (!flipX)
-            // {
-            //     nextStap = 1;
-            //     transform.localScale = new Vector3(1, 1, 1);
-            // }
-            // else
-            // {
-            //     nextStap = -1;
-            //     transform.localScale = new Vector3(1, 1, -1);
-            // }
+            if (!flipX)
+            {
+
+                transform.localScale = new Vector3(1, 1, 1);
+            }
+            else
+            {
+                transform.localScale = new Vector3(1, 1, -1);
+            }
 
             // CancelInvoke();
             // Invoke("Think", 5);
