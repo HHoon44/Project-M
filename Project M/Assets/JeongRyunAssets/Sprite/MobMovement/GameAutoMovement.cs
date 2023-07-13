@@ -26,7 +26,6 @@ namespace ProjectM.InGame
 
         protected Rigidbody2D rigid;
 
-
         //초기화 상수
         private Vector3 startPos;
 
@@ -56,14 +55,9 @@ namespace ProjectM.InGame
                 maxMoveTime = minMoveTime;
             if (minIdleTime >= maxIdleTime)
                 maxIdleTime = minIdleTime;
-
-            StartMoveState();
         }
 
-        private void OnEnable()
-        {
-            StartMoveState();
-        }
+        protected virtual void OnEnable() => StartMoveState();
 
         //코루틴 활성화 및 초반 움직임 세팅
         //todo: 코루틴은 활성화 시 다시 켜주어야 한다.
@@ -78,7 +72,6 @@ namespace ProjectM.InGame
                     Debug.LogWarning("몬스터의 움직이, 휴식, 플립 쿨타임 0초 입니다. " + thisOrder());
             }
         }
-
 
 
         private void FixedUpdate()
@@ -101,14 +94,8 @@ namespace ProjectM.InGame
                         Turn(false);
         }
 
-        //act: 가만히 있음
-        private void None()
-        {
-
-        }
-
         //act: 좌우 움직임
-        protected void HorizontalMovement()
+        private void HorizontalMovement()
         {
             if (!flipX)
                 rigid.velocity = new Vector2(speed, rigid.velocity.y);
@@ -116,18 +103,10 @@ namespace ProjectM.InGame
                 rigid.velocity = new Vector2(-speed, rigid.velocity.y);
         }
 
-        //act: 주기적으로 대쉬를 하는 움직임
-        private void DashMovement()
-        {
-
-        }
-
-
-
         //@ 움직임 패턴 코루틴
         //@=================================================================================================================================================
 
-        //자동으로 이동, 휴식을 변경합니다.
+        //act: 자동으로 이동, 휴식을 변경합니다.
         private IEnumerator SwitchIdleMoveTimer_co()
         {
             while (true)
@@ -184,9 +163,10 @@ namespace ProjectM.InGame
             else
             {
                 nextStap = -.2f * speed;
-                transform.localScale = new Vector3(1, 1, -1);
+                transform.localScale = new Vector3(-1, 1, 1);
             }
         }
+        
         //act: 랜덤하게 돌린다.
         //tip: 맵에서 자연스럽게 돌아다니게 하기위해
         private void RandomTurn()

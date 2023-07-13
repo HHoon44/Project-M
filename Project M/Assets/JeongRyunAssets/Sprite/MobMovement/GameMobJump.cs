@@ -1,11 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using ProjectM.Define;
 
 namespace ProjectM.InGame
 {
-
     //점프를 하는 몬스터가의 움직임
     public class GameMobJump : GameAutoMovement
     {
@@ -17,7 +15,6 @@ namespace ProjectM.InGame
         [Range(0, 30)]
         [SerializeField] protected float maxJumpCooltime;
 
-        private void Jump() => rigid.AddForce(Vector2.up * jumpFarce, ForceMode2D.Impulse);
 
         protected override void Start()
         {
@@ -25,7 +22,12 @@ namespace ProjectM.InGame
 
             if (minJumpCooltime >= maxJumpCooltime)
                 maxJumpCooltime = minJumpCooltime;
-                
+
+        }
+
+        protected override void OnEnable()
+        {
+            base.OnEnable();
             StartCoroutine(JumpTimer_co());
         }
 
@@ -41,8 +43,7 @@ namespace ProjectM.InGame
                     Jump();
             }
         }
-
-
+        private void Jump() => rigid.AddForce(Vector2.up * jumpFarce, ForceMode2D.Impulse);
     }
 
 }
