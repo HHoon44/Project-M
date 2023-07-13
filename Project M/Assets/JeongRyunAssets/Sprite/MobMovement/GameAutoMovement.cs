@@ -5,7 +5,7 @@ using ProjectM.Define;
 
 namespace ProjectM.InGame
 {
-    public class GameMobMovement : MonoBehaviour
+    public class GameAutoMovement : MonoBehaviour
     {
         [Header("MoveInfo")]
         [SerializeField] protected float speed;
@@ -23,17 +23,9 @@ namespace ProjectM.InGame
         [Range(0, 30)]
         [SerializeField] protected float maxIdleTime;
 
-        [Space(10f)]
-        [Header("JumpInfo")]
-        [SerializeField] protected float jumpFarce;
-        [Range(0, 30)]
-        [SerializeField] protected float minJumpCooltime;
-        [Range(0, 30)]
-        [SerializeField] protected float maxJumpCooltime;
 
-        Rigidbody2D rigid;
+        protected Rigidbody2D rigid;
 
-        private MobMovememt movememtState = MobMovememt.None;
 
         //초기화 상수
         private Vector3 startPos;
@@ -43,7 +35,7 @@ namespace ProjectM.InGame
         private bool flipX = false;
         private bool moveAble;
 
-        private void Start()
+        protected virtual void Start()
         {
             rigid = GetComponent<Rigidbody2D>();
             if (rigid == null)
@@ -55,25 +47,21 @@ namespace ProjectM.InGame
                 this.enabled = false;
             }
 
-            //몬스터 정보에서 움직임 종류를 가져온다.
-            movememtState = GameMobStaticData.Instance.GetMobReferenceInfo(GetComponent<GameMob>().thisMobType).movement;
-
             if (!IsGround())
                 Debug.LogWarning("몬스터가 공중에 뜬 상태로 시작되었습니다. " + thisOrder());
 
-            startPos = transform.position;
+            startPos = movetip.position;
 
             if (minMoveTime >= maxMoveTime)
                 maxMoveTime = minMoveTime;
             if (minIdleTime >= maxIdleTime)
                 maxIdleTime = minIdleTime;
-            if (minJumpCooltime >= maxJumpCooltime)
-                maxJumpCooltime = minJumpCooltime;
 
             StartMoveState();
         }
 
-        private void OnEnable() {
+        private void OnEnable()
+        {
             StartMoveState();
         }
 
@@ -81,21 +69,8 @@ namespace ProjectM.InGame
         //todo: 코루틴은 활성화 시 다시 켜주어야 한다.
         private void StartMoveState()
         {
-            switch (movememtState)
-            {
-                case MobMovememt.None:
-                    break;
-                case MobMovememt.HorizontalMovement:
-                    break;
-                case MobMovememt.JumpMovement:
-                    StartCoroutine(JumpTimer_co());
-                    break;
-                case MobMovememt.DashMovement:
-                    break;
-            }
-
             // 움직이지 않는 몬스터거나, 움직임 전환 속도가 0초일때
-            if (MobMovememt.None != movememtState)
+            if (speed != 0)
             {
                 if (maxMoveTime > 0f && maxIdleTime > 0f)
                     StartCoroutine(SwitchIdleMoveTimer_co());
@@ -113,31 +88,12 @@ namespace ProjectM.InGame
                 transform.position = startPos;
 
             if (moveAble)
-            {
-                //몬스터 마다 고유의 움직임
-                switch (movememtState)
-                {
-                    case MobMovememt.None:
-                        None();
-                        break;
-                    case MobMovememt.HorizontalMovement:
-                        HorizontalMovement();
-                        break;
-                    case MobMovememt.JumpMovement:
-                        JumpMovement();
-                        break;
-                    case MobMovememt.DashMovement:
-                        JumpMovement();
-                        break;
-                }
-            }
+                HorizontalMovement();
             else
-            {
                 rigid.velocity = Vector2.up * rigid.velocity;
-            }
 
             //지형을 계속해서 확인하고, 이상을 감지하면 플립실행
-            if (movememtState != MobMovememt.None)
+            if (speed != 0)
                 if (GroundSense())
                     if (rigid.velocity.x > 0)
                         Turn(true);
@@ -152,21 +108,13 @@ namespace ProjectM.InGame
         }
 
         //act: 좌우 움직임
-        private void HorizontalMovement()
+        protected void HorizontalMovement()
         {
             if (!flipX)
                 rigid.velocity = new Vector2(speed, rigid.velocity.y);
             else
                 rigid.velocity = new Vector2(-speed, rigid.velocity.y);
         }
-
-        //act: 좌우와 점프 움직임
-        private void JumpMovement()
-        {
-            HorizontalMovement();
-        }
-        private void Jump() => rigid.AddForce(Vector2.up * jumpFarce, ForceMode2D.Impulse);
-
 
         //act: 주기적으로 대쉬를 하는 움직임
         private void DashMovement()
@@ -191,18 +139,7 @@ namespace ProjectM.InGame
                 yield return new WaitForSeconds(Random.Range(minIdleTime, minIdleTime));
             }
         }
-        //자동으로 시간에 맞추어 점프를 합니다.
-        private IEnumerator JumpTimer_co()
-        {
-            while (true)
-            {
-                yield return new WaitForSeconds(Random.Range(minJumpCooltime, maxJumpCooltime));
-                while (Mathf.Abs(rigid.velocity.y) >= 0.01f)
-                    yield return new WaitForFixedUpdate();
-                if (IsGround())
-                    Jump();
-            }
-        }
+
 
 
         //@ 몬스터 플립
@@ -216,8 +153,8 @@ namespace ProjectM.InGame
             Vector2 nextPos = new Vector2(movetip.position.x + nextStap, movetip.position.y);
 
             //낭떠러지가 있는 지 확인.
-            Debug.DrawRay(nextPos, Vector3.down * (movetip.position.y - startPos.y + 1), Color.green);
-            if (!Physics2D.Raycast(nextPos, Vector3.down, movetip.position.y - startPos.y + 1, LayerMask.GetMask("Ground")))
+            Debug.DrawRay(nextPos, Vector3.down * (movetip.position.y - startPos.y + .3f), Color.green);
+            if (!Physics2D.Raycast(nextPos, Vector3.down, movetip.position.y - startPos.y + .3f, LayerMask.GetMask("Ground")))
             {
                 return true;
             }
@@ -241,12 +178,12 @@ namespace ProjectM.InGame
 
             if (!flipX)
             {
-                nextStap = Mathf.Abs(.5f);
+                nextStap = .2f * speed;
                 transform.localScale = new Vector3(1, 1, 1);
             }
             else
             {
-                nextStap = -Mathf.Abs(.5f);
+                nextStap = -.2f * speed;
                 transform.localScale = new Vector3(1, 1, -1);
             }
         }
@@ -261,7 +198,7 @@ namespace ProjectM.InGame
         //@ 기타
         //@=================================================================================================================================================
 
-        private bool IsGround() => Physics2D.Raycast(transform.position, Vector2.down, 1, LayerMask.GetMask("Ground"));
+        protected bool IsGround() => Physics2D.Raycast(transform.position, Vector2.down, 1, LayerMask.GetMask("Ground"));
         private int thisOrder() => transform.GetSiblingIndex();
     }
 }

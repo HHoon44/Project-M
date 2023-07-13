@@ -8,7 +8,7 @@ namespace ProjectM.InGame
     public class GameMob : MonoBehaviour
     {
         private Animator anim;
-        private GameMobMovement movement;
+        private GameAutoMovement movement;
 
         [Header("MobSetting")]
         public KindOfMob thisMobType;

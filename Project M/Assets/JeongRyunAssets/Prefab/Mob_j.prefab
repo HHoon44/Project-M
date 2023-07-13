@@ -72,11 +72,11 @@ GameObject:
   m_Component:
   - component: {fileID: 3363349399135574841}
   - component: {fileID: 2211680249126867986}
-  - component: {fileID: 3959350145345348694}
+  - component: {fileID: 2514784532108144456}
   - component: {fileID: 1837887694007372484}
   - component: {fileID: -6271309021878876667}
   m_Layer: 0
-  m_Name: Mob_reference
+  m_Name: Mob_j
   m_TagString: Mob
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -113,7 +113,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   thisMobType: 0
---- !u!114 &3959350145345348694
+--- !u!114 &2514784532108144456
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -122,11 +122,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 8241904046274209127}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: db6493fdae8db4d1889469ce609fc622, type: 3}
+  m_Script: {fileID: 11500000, guid: fa8fe34a69ca54935af6558612f0215d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 0
-  movetip: {fileID: 1301093887513661878}
+  movetip: {fileID: 0}
   minMoveTime: 0
   maxMoveTime: 0
   minIdleTime: 0
