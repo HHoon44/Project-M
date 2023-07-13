@@ -75,7 +75,6 @@ namespace ProjectM.InGame
             }
         }
 
-
         private void FixedUpdate()
         {
             //만약 시작 위치보다 떨어져 있다면, 다시 위치를 초기화 한다.

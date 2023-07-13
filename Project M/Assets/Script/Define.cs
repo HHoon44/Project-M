@@ -36,7 +36,7 @@ namespace ProjectM.Define
 
 
 
-    //! InGame에 관련된 Define
+    //! InGame에 관련된 Define ========================================================================================================================================
 
     //@ 몬스터의 종류를 나열
     //tip: 열거형의 정수는 스테이지와 관계있음   00## => 00 스테이지 번호, ## 몬스터 고유 번호
@@ -46,15 +46,6 @@ namespace ProjectM.Define
         Tmp_1,
         Tmp_2
 
-    }
-
-    //@ 해당 몬스터의 움직임 알고리즘 선택
-    public enum MobMovememt
-    {
-        None,
-        HorizontalMovement,
-        JumpMovement,
-        DashMovement
     }
 
     //@ 데미지를 입을 때 같이 전해지는 디버프 종류

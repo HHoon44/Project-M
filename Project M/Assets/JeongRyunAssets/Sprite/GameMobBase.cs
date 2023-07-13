@@ -5,7 +5,7 @@ using ProjectM.Define;
 
 namespace ProjectM.InGame
 {
-    public class GameMob : MonoBehaviour
+    public class GameMobBase : MonoBehaviour
     {
         private Animator anim;
         private GameAutoMovement movement;

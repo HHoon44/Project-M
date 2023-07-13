@@ -2,17 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 namespace ProjectM.InGame
 {
-    //tip: 공격의 부모 함수로 쓰입니다.
-    public class GameMobDash : MonoBehaviour
+
+    public class GameMobRangeATK : GameMobAttackBase
     {
+        // Start is called before the first frame update
         void Start()
         {
 
         }
 
+        // Update is called once per frame
         void Update()
         {
 
