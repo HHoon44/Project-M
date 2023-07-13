@@ -23,6 +23,7 @@ namespace ProjectM.InGame
         [Range(0, 30)]
         [SerializeField] protected float maxIdleTime;
 
+        [SerializeField] protected bool atDetectPlayerStop = false; //플레이어가 근처에 있다는 것을 알았을 때의 움직임
 
         protected Rigidbody2D rigid;
 

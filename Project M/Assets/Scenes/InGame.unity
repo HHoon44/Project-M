@@ -1772,6 +1772,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4360867409989136028, guid: 1ad5256f5eefb2d47a21d1d28928e4b4, type: 3}
+      propertyPath: mobDetectionTip
+      value: 
+      objectReference: {fileID: 5422318606311783110}
     - target: {fileID: 5422318607267426292, guid: 1ad5256f5eefb2d47a21d1d28928e4b4, type: 3}
       propertyPath: m_Name
       value: Player
@@ -1822,3 +1826,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1ad5256f5eefb2d47a21d1d28928e4b4, type: 3}
+--- !u!4 &5422318606311783110 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1936042287858647261, guid: 1ad5256f5eefb2d47a21d1d28928e4b4, type: 3}
+  m_PrefabInstance: {fileID: 5422318606311783109}
+  m_PrefabAsset: {fileID: 0}

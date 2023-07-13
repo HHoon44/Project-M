@@ -13,8 +13,11 @@ namespace ProjectM.InGame
         [Header("MobSetting")]
         public KindOfMob thisMobType;
 
+        //mobInfo
         public MobInfo mobInfo { get; private set; }
         public float nowHP { get; private set; }
+
+
 
         private void Start()
         {
@@ -30,24 +33,38 @@ namespace ProjectM.InGame
                 Debug.LogWarning("케릭터의 애니메이터가 없습니다.");
 
             mobInfo = GameMobStaticData.Instance.GetMobReferenceInfo(thisMobType);
+
+            Regen();
         }
 
         private void OnEnable()
         {
             //todo: 몹 생성 애니메이션 활성화
-            Invoke(nameof(Regen), 1f);
+            //Invoke(nameof(Regen), 1f);
+            Regen();
         }
 
+        //act: 근처에 플레이어가 있는 지 감지
+        private bool DetectPlayerObj()
+        {
+            bool detect = false;
+            if (Vector2.Distance(transform.position, GamePlayer.GetPlayerTip()) <= mobInfo.detectArea)
+                detect = true;
+            return detect;
+        }
+        //act: 직선으로 플레이어가 있는 지 확인
+        // public bool StraightLine()
+        // {
+
+
+        // }
+
+        //@ 몬스터 라이프 ============================================================================================
+
+        //act: 몬스터가 다시 태어날 때 활성화 로직
         private void Regen()
         {
             nowHP = mobInfo.maxHP;
-        }
-
-
-
-        private void Movement()
-        {
-
         }
 
         // act: 몬스터가 인자값 만큼 데미지를 입으며, 그 즉시 해당 디버프를 받아옵니다.

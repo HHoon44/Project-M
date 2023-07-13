@@ -7,6 +7,7 @@ namespace ProjectM.InGame
 
     public class GameMobRangeATK : GameMobAttackBase
     {
+        
         // Start is called before the first frame update
         void Start()
         {
