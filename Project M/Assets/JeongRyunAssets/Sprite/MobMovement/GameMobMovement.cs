@@ -7,29 +7,32 @@ namespace ProjectM.InGame
 {
     public class GameMobMovement : MonoBehaviour
     {
-        [Header("BaseMove")]
-        public float speed;
-        [Range(0.2f, 5)]
-        public float detectArea;
-        [Space(10f)]
-        [Range(0, 10)]
-        //todo: 최대최소 만들기
-        public float moveCooltime;
-        [Space(10f)]
-        [Range(0, 10)]
-        public float idleCooltime;
+        [Header("MoveInfo")]
+        [SerializeField] protected float speed;
+        [SerializeField] protected Transform movetip;
 
         [Space(10f)]
-        [Header("JumpMove")]
-        public float jumpFarce;
-        [Range(0, 10)]
-        public float jumpCooltime; //최저를 1초로 해서 땅에 떨어지지 않았는데 다시 점프를 금지한다.
+        [Range(0, 30)]
+        [SerializeField] protected float minMoveTime;
+        [Range(0, 30)]
+        [SerializeField] protected float maxMoveTime;
 
-        readonly static float Deviation = .5f;   //움직임 쿨 오차
+        [Space(10f)]
+        [Range(0, 30)]
+        [SerializeField] protected float minIdleTime;
+        [Range(0, 30)]
+        [SerializeField] protected float maxIdleTime;
+
+        [Space(10f)]
+        [Header("JumpInfo")]
+        [SerializeField] protected float jumpFarce;
+        [Range(0, 30)]
+        [SerializeField] protected float minJumpCooltime;
+        [Range(0, 30)]
+        [SerializeField] protected float maxJumpCooltime;
 
         Rigidbody2D rigid;
 
-        private KindOfMob mobType;
         private MobMovememt movememtState = MobMovememt.None;
 
         //초기화 상수
@@ -43,22 +46,34 @@ namespace ProjectM.InGame
         private void Start()
         {
             rigid = GetComponent<Rigidbody2D>();
+            if (rigid == null)
+                Debug.LogWarning("rigid없음" + thisOrder());
 
             if (gameObject.tag != "Mob")
             {
-                Debug.LogWarning("현재 몹 전용 컴포넌트를 다른 객체가 가지고 있습니다. " + transform.GetSiblingIndex());
+                Debug.LogWarning("현재 몹 전용 컴포넌트를 다른 객체가 가지고 있습니다. " + thisOrder());
                 this.enabled = false;
             }
 
-            mobType = GetComponent<GameMob>().thisMobType;
             //몬스터 정보에서 움직임 종류를 가져온다.
-            movememtState = GameMobStaticData.Instance.GetMobReferenceInfo(mobType).movement;
+            movememtState = GameMobStaticData.Instance.GetMobReferenceInfo(GetComponent<GameMob>().thisMobType).movement;
 
             if (!IsGround())
-                Debug.LogWarning("몬스터가 공중에 뜬 상태로 시작되었습니다. " + transform.GetSiblingIndex());
+                Debug.LogWarning("몬스터가 공중에 뜬 상태로 시작되었습니다. " + thisOrder());
 
             startPos = transform.position;
 
+            if (minMoveTime >= maxMoveTime)
+                maxMoveTime = minMoveTime;
+            if (minIdleTime >= maxIdleTime)
+                maxIdleTime = minIdleTime;
+            if (minJumpCooltime >= maxJumpCooltime)
+                maxJumpCooltime = minJumpCooltime;
+
+            StartMoveState();
+        }
+
+        private void OnEnable() {
             StartMoveState();
         }
 
@@ -82,12 +97,10 @@ namespace ProjectM.InGame
             // 움직이지 않는 몬스터거나, 움직임 전환 속도가 0초일때
             if (MobMovememt.None != movememtState)
             {
-                if (moveCooltime > 0f && idleCooltime > 0f)
-                {
+                if (maxMoveTime > 0f && maxIdleTime > 0f)
                     StartCoroutine(SwitchIdleMoveTimer_co());
-                }
                 else
-                    Debug.LogWarning("몬스터의 움직이, 휴식, 플립 쿨타임 0초 입니다. " + transform.GetSiblingIndex());
+                    Debug.LogWarning("몬스터의 움직이, 휴식, 플립 쿨타임 0초 입니다. " + thisOrder());
             }
         }
 
@@ -173,9 +186,9 @@ namespace ProjectM.InGame
             {
                 moveAble = true;
                 RandomTurn();
-                yield return new WaitForSeconds(Random.Range(moveCooltime / 2f, moveCooltime * (3 / 4f)));
+                yield return new WaitForSeconds(Random.Range(minMoveTime, maxMoveTime));
                 moveAble = false;
-                yield return new WaitForSeconds(Random.Range(idleCooltime / 2f, idleCooltime * (3 / 4f)));
+                yield return new WaitForSeconds(Random.Range(minIdleTime, minIdleTime));
             }
         }
         //자동으로 시간에 맞추어 점프를 합니다.
@@ -183,10 +196,9 @@ namespace ProjectM.InGame
         {
             while (true)
             {
-                yield return new WaitForSeconds(Random.Range(jumpCooltime / 2f, jumpCooltime * (3 / 4f)));
-                while (!IsGround())
+                yield return new WaitForSeconds(Random.Range(minJumpCooltime, maxJumpCooltime));
+                while (Mathf.Abs(rigid.velocity.y) >= 0.01f)
                     yield return new WaitForFixedUpdate();
-                yield return new WaitForSeconds(0.5f);
                 if (IsGround())
                     Jump();
             }
@@ -201,18 +213,18 @@ namespace ProjectM.InGame
         private bool GroundSense()
         {
             //다음 위치가 어디일지 미리 검색한다.
-            Vector2 nextPos = new Vector2(transform.position.x + nextStap, transform.position.y);
+            Vector2 nextPos = new Vector2(movetip.position.x + nextStap, movetip.position.y);
 
             //낭떠러지가 있는 지 확인.
-            Debug.DrawRay(nextPos, Vector3.down * (transform.position.y - startPos.y + 1), Color.green);
-            if (!Physics2D.Raycast(nextPos, Vector3.down, transform.position.y - startPos.y + 1, LayerMask.GetMask("Ground")))
+            Debug.DrawRay(nextPos, Vector3.down * (movetip.position.y - startPos.y + 1), Color.green);
+            if (!Physics2D.Raycast(nextPos, Vector3.down, movetip.position.y - startPos.y + 1, LayerMask.GetMask("Ground")))
             {
                 return true;
             }
 
             //벽이 있는 지 확인.
-            Debug.DrawLine(transform.position, nextPos, Color.red);
-            if (Physics2D.Linecast(transform.position, nextPos, LayerMask.GetMask("Ground")))
+            Debug.DrawLine(movetip.position, nextPos, Color.red);
+            if (Physics2D.Linecast(movetip.position, nextPos, LayerMask.GetMask("Ground")))
             {
                 return true;
             }
@@ -229,12 +241,12 @@ namespace ProjectM.InGame
 
             if (!flipX)
             {
-                nextStap = Mathf.Abs(detectArea);
+                nextStap = Mathf.Abs(.5f);
                 transform.localScale = new Vector3(1, 1, 1);
             }
             else
             {
-                nextStap = -Mathf.Abs(detectArea);
+                nextStap = -Mathf.Abs(.5f);
                 transform.localScale = new Vector3(1, 1, -1);
             }
         }
@@ -250,6 +262,7 @@ namespace ProjectM.InGame
         //@=================================================================================================================================================
 
         private bool IsGround() => Physics2D.Raycast(transform.position, Vector2.down, 1, LayerMask.GetMask("Ground"));
+        private int thisOrder() => transform.GetSiblingIndex();
     }
 }
 
