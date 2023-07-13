@@ -55,9 +55,11 @@ namespace ProjectM.InGame
                 maxMoveTime = minMoveTime;
             if (minIdleTime >= maxIdleTime)
                 maxIdleTime = minIdleTime;
+
+            StartMoveState();
         }
 
-        protected virtual void OnEnable() => StartMoveState();
+        //protected virtual void OnEnable() => StartMoveState();
 
         //코루틴 활성화 및 초반 움직임 세팅
         //todo: 코루틴은 활성화 시 다시 켜주어야 한다.
@@ -166,7 +168,7 @@ namespace ProjectM.InGame
                 transform.localScale = new Vector3(-1, 1, 1);
             }
         }
-        
+
         //act: 랜덤하게 돌린다.
         //tip: 맵에서 자연스럽게 돌아다니게 하기위해
         private void RandomTurn()

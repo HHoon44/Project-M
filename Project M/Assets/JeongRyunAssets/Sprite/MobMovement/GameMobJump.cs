@@ -22,12 +22,7 @@ namespace ProjectM.InGame
 
             if (minJumpCooltime >= maxJumpCooltime)
                 maxJumpCooltime = minJumpCooltime;
-
-        }
-
-        protected override void OnEnable()
-        {
-            base.OnEnable();
+                
             StartCoroutine(JumpTimer_co());
         }
 
