@@ -7,16 +7,10 @@ namespace ProjectM.InGame
 
     public class GamePlayerMovement : MonoBehaviour
     {
-        // Start is called before the first frame update
-        void Start()
-        {
-
-        }
-
-        // Update is called once per frame
+        public float atDebugSpeed;
         void Update()
         {
-
+            transform.position = new Vector2(transform.position.x + Input.GetAxisRaw("Horizontal") * atDebugSpeed * Time.deltaTime, transform.position.y + Input.GetAxisRaw("Vertical") * atDebugSpeed * Time.deltaTime);
         }
     }
 }

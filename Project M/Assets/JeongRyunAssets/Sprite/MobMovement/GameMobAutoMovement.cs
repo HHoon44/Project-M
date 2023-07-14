@@ -26,7 +26,7 @@ namespace ProjectM.InGame
         [SerializeField] protected bool atDiscoverPlayerStop = false; //플레이어가 근처에 있다는 것을 알았을 때의 움직임
 
         protected Rigidbody2D rigid;
-        private GameMobBase mob;
+        protected GameMobBase mob;
 
         //초기화 상수
         private Vector3 startPos;
@@ -34,7 +34,9 @@ namespace ProjectM.InGame
         //오브젝트 변수
         private float nextStap;
         private bool flipX = false;
+        private bool isGround;
         private bool moveAble;
+
 
         protected virtual void Start()
         {
@@ -81,17 +83,21 @@ namespace ProjectM.InGame
 
         private void FixedUpdate()
         {
+            isGround = IsGround();
             //만약 시작 위치보다 떨어져 있다면, 다시 위치를 초기화 한다.
             if ((startPos.y - 1) >= transform.position.y)
-                transform.position = startPos;
+                if (isGround)
+                    transform.position = startPos;
+                else
+                    moveAble = false;
+
+            if (atDiscoverPlayerStop && mob.discoveryPlayer)
+                moveAble = false;
 
             //원래 움직이는 몬스터 중에 몬스터를 보면 멈추는 몬스터에서 플레이어가 감지되었을 때만 멈춘다.
             if (moveAble)
             {
-                if (atDiscoverPlayerStop && mob.discoveryPlayer)
-                    rigid.velocity = Vector2.zero;
-                else
-                    HorizontalMovement();
+                HorizontalMovement();
             }
             else
                 rigid.velocity = Vector2.up * rigid.velocity;
@@ -122,9 +128,16 @@ namespace ProjectM.InGame
         {
             while (true)
             {
+                while (!isGround || Mathf.Abs(rigid.velocity.y) >= 0.01f)
+                    yield return new WaitForSeconds(0.1f);                //공중에 떠있을 시간동안 버퍼
+
                 moveAble = true;
                 RandomTurn();
                 yield return new WaitForSeconds(Random.Range(minMoveTime, maxMoveTime));
+
+                while (!isGround || Mathf.Abs(rigid.velocity.y) >= 0.01f)
+                    yield return new WaitForSeconds(0.1f);
+
                 moveAble = false;
                 yield return new WaitForSeconds(Random.Range(minIdleTime, minIdleTime));
             }
@@ -180,6 +193,8 @@ namespace ProjectM.InGame
         //tip: 맵에서 자연스럽게 돌아다니게 하기위해
         private void RandomTurn()
         {
+            if (atDiscoverPlayerStop && mob.discoveryPlayer)
+                return;
             bool flip = Random.Range(0, 2) == 1 ? true : false;
             Turn(flip);
         }

@@ -41,6 +41,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5422318607267734622}
   - component: {fileID: 4360867409989136028}
+  - component: {fileID: 8668922267887499472}
   - component: {fileID: 5422318607255075026}
   - component: {fileID: 5422318607276918396}
   - component: {fileID: 5422318607267358525}
@@ -80,7 +81,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3bec497cf76d84f578209610f78dfdf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mobDetectionTip: {fileID: 0}
+  mobDetectionTip: {fileID: 1936042287858647261}
+--- !u!114 &8668922267887499472
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5422318607267426292}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b4cdc4c5d5044bcfb6dd8894e2f5498, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  atDebugSpeed: 10
 --- !u!212 &5422318607255075026
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -161,7 +175,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5422318607267426292}
-  m_BodyType: 0
+  m_BodyType: 1
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0

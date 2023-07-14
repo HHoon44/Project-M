@@ -22,7 +22,7 @@ namespace ProjectM.InGame
 
             if (minJumpCooltime >= maxJumpCooltime)
                 maxJumpCooltime = minJumpCooltime;
-                
+
             StartCoroutine(JumpTimer_co());
         }
 
@@ -32,10 +32,13 @@ namespace ProjectM.InGame
             while (true)
             {
                 yield return new WaitForSeconds(Random.Range(minJumpCooltime, maxJumpCooltime));
-                while (Mathf.Abs(rigid.velocity.y) >= 0.01f)
-                    yield return new WaitForFixedUpdate();
-                if (IsGround())
-                    Jump();
+                if (!atDiscoverPlayerStop || !mob.discoveryPlayer) //플레이어가 감지 되면 점프는 하지 않는다.
+                {
+                    while (Mathf.Abs(rigid.velocity.y) >= 0.01f)
+                        yield return new WaitForFixedUpdate();
+                    if (IsGround())
+                        Jump();
+                }
             }
         }
         private void Jump() => rigid.AddForce(Vector2.up * jumpFarce, ForceMode2D.Impulse);
