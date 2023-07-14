@@ -88,7 +88,7 @@ namespace ProjectM.InGame
             //원래 움직이는 몬스터 중에 몬스터를 보면 멈추는 몬스터에서 플레이어가 감지되었을 때만 멈춘다.
             if (moveAble)
             {
-                if (atDiscoverPlayerStop && mob.discoverPlayer)
+                if (atDiscoverPlayerStop && mob.discoveryPlayer)
                     rigid.velocity = Vector2.zero;
                 else
                     HorizontalMovement();

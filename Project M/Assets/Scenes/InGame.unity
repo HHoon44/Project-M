@@ -1615,6 +1615,10 @@ PrefabInstance:
       propertyPath: mobDetectionTip
       value: 
       objectReference: {fileID: 5422318606311783110}
+    - target: {fileID: 5422318607267358525, guid: 1ad5256f5eefb2d47a21d1d28928e4b4, type: 3}
+      propertyPath: m_BodyType
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5422318607267426292, guid: 1ad5256f5eefb2d47a21d1d28928e4b4, type: 3}
       propertyPath: m_Name
       value: Player

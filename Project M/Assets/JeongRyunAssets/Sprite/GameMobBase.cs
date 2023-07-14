@@ -14,8 +14,8 @@ namespace ProjectM.InGame
         //mobInfo
         public MobInfo mobInfo { get; private set; }
         public float nowHP { get; private set; }
-        public bool detectPlayer { get; private set; }  //플레이어가 근처에 있다면
-        public bool discoverPlayer { get; private set; }  //플레이어가 보인다면
+        public bool detectionPlayer { get; private set; }  //플레이어가 근처에 있다면
+        public bool discoveryPlayer { get; private set; }  //플레이어가 보인다면
 
         public bool isLive { get; private set; }   //자신이 죽었다면
 
@@ -24,10 +24,15 @@ namespace ProjectM.InGame
         public GameObject renderObj;
         public Transform moveTip;
         public Transform atkTip;
-        public GameObject detectMark;
+
+        public GameObject detectionMark;
+        public GameObject discoveryMark;
 
         private void Start()
         {
+            if (renderObj == null || moveTip == null || atkTip == null || detectionMark == null)
+                Debug.LogError("몬스터 필수 컴포넌트 없음");
+
             if (gameObject.tag != "Mob")
             {
                 Debug.LogWarning("현재 몹 전용 컴포넌트를 다른 객체가 가지고 있습니다.");
@@ -41,7 +46,15 @@ namespace ProjectM.InGame
             mobInfo = GameMobStaticData.Instance.GetMobReferenceInfo(thisMobType);
 
             Regen();
+            StartCoroutine(ControllMark_co());
         }
+
+        private void FixedUpdate()
+        {
+            DetectUpdate();
+        }
+
+        //@ 몬스터 라이브 ===================================================================================================================
 
         //act: 몬스터가 다시 태어날 때 활성화 로직
         private void Regen()
@@ -51,27 +64,7 @@ namespace ProjectM.InGame
             renderObj.SetActive(true);
         }
 
-        private void FixedUpdate()
-        {
-            detectPlayer = DetectPlayer();
-            discoverPlayer = DiscoverPlayer();
-
-            if (detectPlayer)
-            {
-                Debug.DrawLine(atkTip.position, GamePlayer.GetPlayerTip(), Color.red);
-                detectMark.SetActive(true);
-            }
-            else
-                detectMark.SetActive(false);
-        }
-
-        //플레이어가 몬스터 근차에 갔을 때 true
-        private bool DetectPlayer() => Vector2.Distance(transform.position, GamePlayer.GetPlayerTip()) <= mobInfo.detectArea;
-        //플레이어와 몬스터 사이에 장애물이 없을 때 true
-        private bool DiscoverPlayer() => (detectPlayer && !Physics2D.Linecast(atkTip.position, GamePlayer.GetPlayerTip(), LayerMask.GetMask("Ground")));
-
-        //@ 몬스터 라이프 ============================================================================================
-        // act: 몬스터가 인자값 만큼 데미지를 입으며, 그 즉시 해당 디버프를 받아옵니다.
+        //act: 데미지를 입힐 때 호출
         public void SufferDemage(float _Demaged, DebuffType[] _types)
         {
             //절대적인 몹이라면 공격을 받지 않음
@@ -106,5 +99,54 @@ namespace ProjectM.InGame
         {
             renderObj.SetActive(false);
         }
+
+        //@ 플레이어 감지 ===================================================================================================================
+        //act: 플래이어를 기준으로 감지한다.
+        private void DetectUpdate()
+        {
+            if (mobInfo.detectArea == 0)
+                return;
+
+            detectionPlayer = DetectPlayer();
+            discoveryPlayer = DiscoverPlayer();
+
+            if (detectionPlayer)
+            {
+                Debug.DrawLine(atkTip.position, GamePlayer.GetPlayerTip(), Color.red);
+                detectionMark.SetActive(true);
+            }
+            else
+                detectionMark.SetActive(false);
+        }
+
+        //act: 감지된 정보를 토대로 몹 위에 플레이어가 감지 여부를 알 수 있도록 띄어줍니다.
+        private IEnumerator ControllMark_co()
+        {
+            while (true)
+            {
+                yield return new WaitForSeconds(0.1f);
+                if (discoveryPlayer)
+                {
+                    detectionMark.SetActive(false);
+                    discoveryMark.SetActive(true);
+                }
+                else if (detectionPlayer)
+                {
+                    detectionMark.SetActive(true);
+                    discoveryMark.SetActive(false);
+                }
+                else
+                {
+                    detectionMark.SetActive(false);
+                    discoveryMark.SetActive(false);
+                }
+            }
+        }
+
+        //플레이어가 몬스터 근차에 갔을 때 true
+        private bool DetectPlayer() => Vector2.Distance(transform.position, GamePlayer.GetPlayerTip()) <= mobInfo.detectArea;
+        //플레이어와 몬스터 사이에 장애물이 없을 때 true
+        private bool DiscoverPlayer() => (detectionPlayer && !Physics2D.Linecast(atkTip.position, GamePlayer.GetPlayerTip(), LayerMask.GetMask("Ground")));
+
     }
 }
