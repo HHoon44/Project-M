@@ -73,6 +73,7 @@ GameObject:
   - component: {fileID: 3363349399135574841}
   - component: {fileID: 2211680249126867986}
   - component: {fileID: 2514784532108144456}
+  - component: {fileID: 2914979203407755415}
   - component: {fileID: 1837887694007372484}
   - component: {fileID: -6271309021878876667}
   m_Layer: 0
@@ -113,6 +114,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   thisMobType: 0
+  detectPlayer: 0
+  discoverPlayer: 0
 --- !u!114 &2514784532108144456
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -131,9 +134,23 @@ MonoBehaviour:
   maxMoveTime: 0
   minIdleTime: 0
   maxIdleTime: 0
+  atDiscoverPlayerStop: 0
   jumpFarce: 0
   minJumpCooltime: 0
   maxJumpCooltime: 0
+--- !u!114 &2914979203407755415
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8241904046274209127}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: edf97d3a75f2145c6a938ca8751bb34f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  atkTip: {fileID: 5992856870765436753}
 --- !u!95 &1837887694007372484
 Animator:
   serializedVersion: 4

@@ -5,9 +5,8 @@ using UnityEngine;
 namespace ProjectM.InGame
 {
 
-    public class GameMobRangeATK : GameMobBaseATK
+    public class GamePlayerMovement : MonoBehaviour
     {
-        
         // Start is called before the first frame update
         void Start()
         {

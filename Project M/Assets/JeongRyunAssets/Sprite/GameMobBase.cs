@@ -8,7 +8,8 @@ namespace ProjectM.InGame
     public class GameMobBase : MonoBehaviour
     {
         private Animator anim;
-        private GameAutoMovement movement;
+        private GameMobAutoMovement movement;
+        private GameMobBaseATK attack;
 
         [Header("MobSetting")]
         public KindOfMob thisMobType;
@@ -17,7 +18,8 @@ namespace ProjectM.InGame
         public MobInfo mobInfo { get; private set; }
         public float nowHP { get; private set; }
 
-
+        public bool detectPlayer;
+        public bool discoverPlayer;
 
         private void Start()
         {
@@ -28,6 +30,7 @@ namespace ProjectM.InGame
             }
 
             anim = GetComponent<Animator>();
+            attack = GetComponent<GameMobBaseATK>();
 
             if (anim == null)
                 Debug.LogWarning("케릭터의 애니메이터가 없습니다.");
@@ -44,20 +47,18 @@ namespace ProjectM.InGame
             Regen();
         }
 
-        //act: 근처에 플레이어가 있는 지 감지
-        private bool DetectPlayerObj()
+        private void FixedUpdate()
         {
-            bool detect = false;
-            if (Vector2.Distance(transform.position, GamePlayer.GetPlayerTip()) <= mobInfo.detectArea)
-                detect = true;
-            return detect;
+            detectPlayer = DetectPlayer();
+            discoverPlayer = DiscoverPlayer();
+
+            Debug.DrawLine(attack.atkTip.position, GamePlayer.GetPlayerTip(), Color.red);
         }
-        //act: 직선으로 플레이어가 있는 지 확인
-        // public bool StraightLine()
-        // {
 
-
-        // }
+        //플레이어가 몬스터 근차에 갔을 때 true
+        private bool DetectPlayer() => Vector2.Distance(transform.position, GamePlayer.GetPlayerTip()) <= mobInfo.detectArea;
+        //플레이어와 몬스터 사이에 장애물이 없을 때 true
+        private bool DiscoverPlayer() => (detectPlayer && !Physics2D.Linecast(attack.atkTip.position, GamePlayer.GetPlayerTip(), LayerMask.GetMask("Ground")));
 
         //@ 몬스터 라이프 ============================================================================================
 

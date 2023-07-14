@@ -5,7 +5,8 @@ using ProjectM.Define;
 
 namespace ProjectM.InGame
 {
-    public class GameAutoMovement : MonoBehaviour
+    //몬스터의 움직임은 자연스럽게 하기 위한 수정이 많이 이루어지기 때문에 인스펙터에서 주로 다룬다.
+    public class GameMobAutoMovement : MonoBehaviour
     {
         [Header("MoveInfo")]
         [SerializeField] protected float speed;
@@ -23,9 +24,10 @@ namespace ProjectM.InGame
         [Range(0, 30)]
         [SerializeField] protected float maxIdleTime;
 
-        [SerializeField] protected bool atDetectPlayerStop = false; //플레이어가 근처에 있다는 것을 알았을 때의 움직임
+        [SerializeField] protected bool atDiscoverPlayerStop = false; //플레이어가 근처에 있다는 것을 알았을 때의 움직임
 
         protected Rigidbody2D rigid;
+        private GameMobBase mob;
 
         //초기화 상수
         private Vector3 startPos;
@@ -37,19 +39,22 @@ namespace ProjectM.InGame
 
         protected virtual void Start()
         {
+            //예외처리
             rigid = GetComponent<Rigidbody2D>();
             if (rigid == null)
                 Debug.LogWarning("rigid없음" + thisOrder());
 
+            mob = GetComponent<GameMobBase>();
+            if (mob == null)
+                Debug.LogWarning("GameMobBase없음" + thisOrder());
+
             if (gameObject.tag != "Mob")
-            {
-                Debug.LogWarning("현재 몹 전용 컴포넌트를 다른 객체가 가지고 있습니다. " + thisOrder());
                 this.enabled = false;
-            }
 
             if (!IsGround())
                 Debug.LogWarning("몬스터가 공중에 뜬 상태로 시작되었습니다. " + thisOrder());
 
+            //상수 초기화
             startPos = movetip.position;
 
             if (minMoveTime >= maxMoveTime)
@@ -57,10 +62,9 @@ namespace ProjectM.InGame
             if (minIdleTime >= maxIdleTime)
                 maxIdleTime = minIdleTime;
 
+            //움직임 시작
             StartMoveState();
         }
-
-        //protected virtual void OnEnable() => StartMoveState();
 
         //코루틴 활성화 및 초반 움직임 세팅
         //todo: 코루틴은 활성화 시 다시 켜주어야 한다.
@@ -82,7 +86,8 @@ namespace ProjectM.InGame
             if ((startPos.y - 1) >= transform.position.y)
                 transform.position = startPos;
 
-            if (moveAble)
+            //원래 움직이는 몬스터 중에 몬스터를 보면 멈추는 몬스터에서 플레이어가 감지되었을 때만 멈춘다.
+            if (moveAble && !atDiscoverPlayerStop && !mob.discoverPlayer)
                 HorizontalMovement();
             else
                 rigid.velocity = Vector2.up * rigid.velocity;
@@ -90,7 +95,7 @@ namespace ProjectM.InGame
             //지형을 계속해서 확인하고, 이상을 감지하면 플립실행
             if (speed != 0)
                 if (GroundSense())
-                    if (rigid.velocity.x > 0)
+                    if (!flipX)
                         Turn(true);
                     else
                         Turn(false);
@@ -120,8 +125,6 @@ namespace ProjectM.InGame
                 yield return new WaitForSeconds(Random.Range(minIdleTime, minIdleTime));
             }
         }
-
-
 
         //@ 몬스터 플립
         //@=================================================================================================================================================
