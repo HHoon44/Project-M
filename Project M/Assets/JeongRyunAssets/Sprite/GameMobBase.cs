@@ -7,19 +7,24 @@ namespace ProjectM.InGame
 {
     public class GameMobBase : MonoBehaviour
     {
-        private Animator anim;
+        //컴포넌트
         private GameMobAutoMovement movement;
-        private GameMobBaseATK attack;
-
-        [Header("MobSetting")]
-        public KindOfMob thisMobType;
+        public Animator renderAnim { get; private set; }
 
         //mobInfo
         public MobInfo mobInfo { get; private set; }
         public float nowHP { get; private set; }
+        public bool detectPlayer { get; private set; }  //플레이어가 근처에 있다면
+        public bool discoverPlayer { get; private set; }  //플레이어가 보인다면
 
-        public bool detectPlayer;
-        public bool discoverPlayer;
+        public bool isLive { get; private set; }   //자신이 죽었다면
+
+        [Header("MobSetting")]
+        public KindOfMob thisMobType;
+        public GameObject renderObj;
+        public Transform moveTip;
+        public Transform atkTip;
+        public GameObject detectMark;
 
         private void Start()
         {
@@ -29,10 +34,8 @@ namespace ProjectM.InGame
                 this.enabled = false;
             }
 
-            anim = GetComponent<Animator>();
-            attack = GetComponent<GameMobBaseATK>();
-
-            if (anim == null)
+            renderAnim = renderObj.GetComponent<Animator>();
+            if (renderAnim == null)
                 Debug.LogWarning("케릭터의 애니메이터가 없습니다.");
 
             mobInfo = GameMobStaticData.Instance.GetMobReferenceInfo(thisMobType);
@@ -40,11 +43,12 @@ namespace ProjectM.InGame
             Regen();
         }
 
-        private void OnEnable()
+        //act: 몬스터가 다시 태어날 때 활성화 로직
+        private void Regen()
         {
-            //todo: 몹 생성 애니메이션 활성화
-            //Invoke(nameof(Regen), 1f);
-            Regen();
+            isLive = true;
+            nowHP = mobInfo.maxHP;
+            renderObj.SetActive(true);
         }
 
         private void FixedUpdate()
@@ -52,22 +56,21 @@ namespace ProjectM.InGame
             detectPlayer = DetectPlayer();
             discoverPlayer = DiscoverPlayer();
 
-            Debug.DrawLine(attack.atkTip.position, GamePlayer.GetPlayerTip(), Color.red);
+            if (detectPlayer)
+            {
+                Debug.DrawLine(atkTip.position, GamePlayer.GetPlayerTip(), Color.red);
+                detectMark.SetActive(true);
+            }
+            else
+                detectMark.SetActive(false);
         }
 
         //플레이어가 몬스터 근차에 갔을 때 true
         private bool DetectPlayer() => Vector2.Distance(transform.position, GamePlayer.GetPlayerTip()) <= mobInfo.detectArea;
         //플레이어와 몬스터 사이에 장애물이 없을 때 true
-        private bool DiscoverPlayer() => (detectPlayer && !Physics2D.Linecast(attack.atkTip.position, GamePlayer.GetPlayerTip(), LayerMask.GetMask("Ground")));
+        private bool DiscoverPlayer() => (detectPlayer && !Physics2D.Linecast(atkTip.position, GamePlayer.GetPlayerTip(), LayerMask.GetMask("Ground")));
 
         //@ 몬스터 라이프 ============================================================================================
-
-        //act: 몬스터가 다시 태어날 때 활성화 로직
-        private void Regen()
-        {
-            nowHP = mobInfo.maxHP;
-        }
-
         // act: 몬스터가 인자값 만큼 데미지를 입으며, 그 즉시 해당 디버프를 받아옵니다.
         public void SufferDemage(float _Demaged, DebuffType[] _types)
         {
@@ -94,12 +97,14 @@ namespace ProjectM.InGame
         {
             Debug.Log("todo: 몬스터 죽음");
 
+            isLive = false;
+
             //todo: 몬스터 죽는 애니메이션
-            Invoke(nameof(MobDead), 2f);
+            Invoke(nameof(MobDead), 1f);
         }
         private void MobDead()
         {
-            gameObject.SetActive(false);
+            renderObj.SetActive(false);
         }
     }
 }

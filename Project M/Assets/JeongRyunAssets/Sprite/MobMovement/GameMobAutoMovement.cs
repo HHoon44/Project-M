@@ -10,7 +10,6 @@ namespace ProjectM.InGame
     {
         [Header("MoveInfo")]
         [SerializeField] protected float speed;
-        [SerializeField] protected Transform movetip;
 
         [Space(10f)]
         [Range(0, 30)]
@@ -55,7 +54,7 @@ namespace ProjectM.InGame
                 Debug.LogWarning("몬스터가 공중에 뜬 상태로 시작되었습니다. " + thisOrder());
 
             //상수 초기화
-            startPos = movetip.position;
+            startPos = mob.moveTip.position;
 
             if (minMoveTime >= maxMoveTime)
                 maxMoveTime = minMoveTime;
@@ -87,8 +86,13 @@ namespace ProjectM.InGame
                 transform.position = startPos;
 
             //원래 움직이는 몬스터 중에 몬스터를 보면 멈추는 몬스터에서 플레이어가 감지되었을 때만 멈춘다.
-            if (moveAble && !atDiscoverPlayerStop && !mob.discoverPlayer)
-                HorizontalMovement();
+            if (moveAble)
+            {
+                if (atDiscoverPlayerStop && mob.discoverPlayer)
+                    rigid.velocity = Vector2.zero;
+                else
+                    HorizontalMovement();
+            }
             else
                 rigid.velocity = Vector2.up * rigid.velocity;
 
@@ -134,18 +138,18 @@ namespace ProjectM.InGame
         private bool GroundSense()
         {
             //다음 위치가 어디일지 미리 검색한다.
-            Vector2 nextPos = new Vector2(movetip.position.x + nextStap, movetip.position.y);
+            Vector2 nextPos = new Vector2(mob.moveTip.position.x + nextStap, mob.moveTip.position.y);
 
             //낭떠러지가 있는 지 확인.
-            Debug.DrawRay(nextPos, Vector3.down * (movetip.position.y - startPos.y + .3f), Color.green);
-            if (!Physics2D.Raycast(nextPos, Vector3.down, movetip.position.y - startPos.y + .3f, LayerMask.GetMask("Ground")))
+            Debug.DrawRay(nextPos, Vector3.down * (mob.moveTip.position.y - startPos.y + .3f), Color.green);
+            if (!Physics2D.Raycast(nextPos, Vector3.down, mob.moveTip.position.y - startPos.y + .3f, LayerMask.GetMask("Ground")))
             {
                 return true;
             }
 
             //벽이 있는 지 확인.
-            Debug.DrawLine(movetip.position, nextPos, Color.red);
-            if (Physics2D.Linecast(movetip.position, nextPos, LayerMask.GetMask("Ground")))
+            Debug.DrawLine(mob.moveTip.position, nextPos, Color.red);
+            if (Physics2D.Linecast(mob.moveTip.position, nextPos, LayerMask.GetMask("Ground")))
             {
                 return true;
             }
