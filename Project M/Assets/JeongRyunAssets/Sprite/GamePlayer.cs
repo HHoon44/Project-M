@@ -20,7 +20,7 @@ namespace ProjectM.InGame
                 playerObject = this.gameObject;
             else
                 Debug.LogWarning("스테이지내에 플레이어가 2개 이상 존재합니다.");
-        }
+        } 
 
     }
 }
