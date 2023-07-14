@@ -15,6 +15,13 @@ namespace ProjectM.Editor
     /// </summary>
     public class MyAssetsPostProcessor : AssetPostprocessor
     {
+        /// <summary>
+        /// 엑셀 파일이 임포트 될 때 실행할 메서드
+        /// </summary>
+        /// <param name="importedAssets"> 추가한 파일 </param>
+        /// <param name="deletedAssets"> 삭제한 파일 </param>
+        /// <param name="movedAssets"> 이동한 파일 </param>
+        /// <param name="movedFromAssetsPath"> 이동한 파일의 경로 </param>
         private static void OnPostProcessorAllAssets(string[] importedAssets, string[] deletedAssets,
          string[] movedAssets, string[] movedFromAssetsPath)
         {

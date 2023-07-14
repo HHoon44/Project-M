@@ -6,6 +6,8 @@ namespace ProjectM.Define
 {
     public enum PoolType { }
 
+    public enum SceneType { StartLoading, Loading }
+
     public class StaticData
     {
         public const string SDExcelPath = "Assets/StaticData/Excel";

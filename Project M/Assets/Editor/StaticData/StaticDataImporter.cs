@@ -75,9 +75,11 @@ namespace ProjectM.Editor
 
                     var fileFullPath = $"{rootPath}/{staticDataAsset}";
 
+                    // ExcelToJsonConvert를 이용해서 엑셀 파일을 제이슨 파일로 변형
                     var excelToJsonConvert =
                         new ExcelToJsonConvert(fileFullPath, $"{rootPath}/{Define.StaticData.SDJsonPath}");
 
+                    // 변형이 성공했다면 에셋에 제이슨 파일을 저장합니다.
                     if (excelToJsonConvert.SaveJsonFiles() > 0)
                     {
                         AssetDatabase.ImportAsset($"{Define.StaticData.SDJsonPath}/{fileName}.json");
