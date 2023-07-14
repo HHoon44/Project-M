@@ -111,12 +111,7 @@ namespace ProjectM.InGame
             discoveryPlayer = DiscoverPlayer();
 
             if (detectionPlayer)
-            {
                 Debug.DrawLine(atkTip.position, GamePlayer.GetPlayerTip(), Color.red);
-                detectionMark.SetActive(true);
-            }
-            else
-                detectionMark.SetActive(false);
         }
 
         //act: 감지된 정보를 토대로 몹 위에 플레이어가 감지 여부를 알 수 있도록 띄어줍니다.
@@ -125,6 +120,7 @@ namespace ProjectM.InGame
             while (true)
             {
                 yield return new WaitForSeconds(0.1f);
+
                 if (discoveryPlayer)
                 {
                     detectionMark.SetActive(false);
