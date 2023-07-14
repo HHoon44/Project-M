@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1936042287858647261}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: MobDetectionTip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -45,7 +45,7 @@ GameObject:
   - component: {fileID: 5422318607276918396}
   - component: {fileID: 5422318607267358525}
   - component: {fileID: 5422318607267358514}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -80,6 +80,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3bec497cf76d84f578209610f78dfdf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mobDetectionTip: {fileID: 0}
 --- !u!212 &5422318607255075026
 SpriteRenderer:
   m_ObjectHideFlags: 0
