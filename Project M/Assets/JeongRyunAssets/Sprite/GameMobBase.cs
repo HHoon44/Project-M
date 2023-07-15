@@ -7,9 +7,19 @@ namespace ProjectM.InGame
 {
     public class GameMobBase : MonoBehaviour
     {
-        //컴포넌트
-        private GameMobAutoMovement movement;
-        public Animator renderAnim { get; private set; }
+        [Header("MobSetting")]
+        public KindOfMob thisMobType;
+
+        [Space(10f)]
+        public GameObject formObj;
+        public Transform atkTip;
+        [Space(10f)]
+        public GameObject detectionMark;
+        public GameObject discoveryMark;
+
+        //몬스터 애니메이션 컴포넌트
+        public Animator formAnim { get; private set; }
+        public CapsuleCollider2D formCollider { get; private set; }
 
         //mobInfo
         public MobInfo mobInfo { get; private set; }
@@ -19,18 +29,11 @@ namespace ProjectM.InGame
 
         public bool isLive { get; private set; }   //자신이 죽었다면
 
-        [Header("MobSetting")]
-        public KindOfMob thisMobType;
-        public GameObject renderObj;
-        public Transform moveTip;
-        public Transform atkTip;
-
-        public GameObject detectionMark;
-        public GameObject discoveryMark;
+        public Vector2 colSize { get; protected set; }
 
         private void Start()
         {
-            if (renderObj == null || moveTip == null || atkTip == null || detectionMark == null)
+            if (formObj == null || atkTip == null || detectionMark == null)
                 Debug.LogError("몬스터 필수 컴포넌트 없음");
 
             if (gameObject.tag != "Mob")
@@ -39,11 +42,17 @@ namespace ProjectM.InGame
                 this.enabled = false;
             }
 
-            renderAnim = renderObj.GetComponent<Animator>();
-            if (renderAnim == null)
-                Debug.LogWarning("케릭터의 애니메이터가 없습니다.");
+            formAnim = formObj.GetComponent<Animator>();
+            formCollider = formObj.GetComponent<CapsuleCollider2D>();
+            if (formAnim == null || formCollider == null)
+                Debug.LogWarning("케릭터의 애니메이터 혹은 콜라이더가 없습니다.");
 
             mobInfo = GameMobStaticData.Instance.GetMobReferenceInfo(thisMobType);
+            colSize = formCollider.size;
+            Debug.Log(colSize);
+
+            detectionMark.SetActive(false);
+            discoveryMark.SetActive(false);
 
             Regen();
             StartCoroutine(ControllMark_co());
@@ -61,7 +70,7 @@ namespace ProjectM.InGame
         {
             isLive = true;
             nowHP = mobInfo.maxHP;
-            renderObj.SetActive(true);
+            formObj.SetActive(true);
         }
 
         //act: 데미지를 입힐 때 호출
@@ -97,7 +106,7 @@ namespace ProjectM.InGame
         }
         private void MobDead()
         {
-            renderObj.SetActive(false);
+            formObj.SetActive(false);
         }
 
         //@ 플레이어 감지 ===================================================================================================================

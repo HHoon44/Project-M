@@ -52,11 +52,10 @@ namespace ProjectM.InGame
             if (gameObject.tag != "Mob")
                 this.enabled = false;
 
-            if (!IsGround())
+            if (Physics2D.Raycast(transform.position, -Vector2.down, 2f, LayerMask.GetMask("Ground")))
                 Debug.LogWarning("몬스터가 공중에 뜬 상태로 시작되었습니다. " + thisOrder());
 
-            //상수 초기화
-            startPos = mob.moveTip.position;
+            startPos = transform.position;
 
             if (minMoveTime >= maxMoveTime)
                 maxMoveTime = minMoveTime;
@@ -151,18 +150,18 @@ namespace ProjectM.InGame
         private bool GroundSense()
         {
             //다음 위치가 어디일지 미리 검색한다.
-            Vector2 nextPos = new Vector2(mob.moveTip.position.x + nextStap, mob.moveTip.position.y);
+            Vector2 nextPos = new Vector2(transform.position.x + ((mob.colSize.x + 0.1f) * (flipX ? -1 : 1)), transform.position.y);
 
             //낭떠러지가 있는 지 확인.
-            Debug.DrawRay(nextPos, Vector3.down * (mob.moveTip.position.y - startPos.y + .3f), Color.green);
-            if (!Physics2D.Raycast(nextPos, Vector3.down, mob.moveTip.position.y - startPos.y + .3f, LayerMask.GetMask("Ground")))
+            Debug.DrawRay(nextPos, Vector3.down * (mob.colSize.y - startPos.y + .2f), Color.green);
+            if (!Physics2D.Raycast(nextPos, Vector3.down, mob.colSize.y - startPos.y + .2f, LayerMask.GetMask("Ground")))
             {
                 return true;
             }
 
             //벽이 있는 지 확인.
-            Debug.DrawLine(mob.moveTip.position, nextPos, Color.red);
-            if (Physics2D.Linecast(mob.moveTip.position, nextPos, LayerMask.GetMask("Ground")))
+            Debug.DrawLine(transform.position, nextPos, Color.red);
+            if (Physics2D.Linecast(transform.position, nextPos, LayerMask.GetMask("Ground")))
             {
                 return true;
             }
@@ -202,7 +201,7 @@ namespace ProjectM.InGame
         //@ 기타
         //@=================================================================================================================================================
 
-        protected bool IsGround() => Physics2D.Raycast(transform.position, Vector2.down, 1, LayerMask.GetMask("Ground"));
+        protected bool IsGround() => Physics2D.Raycast(transform.position, Vector2.down, mob.colSize.y + .1f, LayerMask.GetMask("Ground"));
         private int thisOrder() => transform.GetSiblingIndex();
     }
 }

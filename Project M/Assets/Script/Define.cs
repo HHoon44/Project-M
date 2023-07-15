@@ -56,11 +56,4 @@ namespace ProjectM.Define
         None,
         Slow
     }
-
-    public class InGameDefine
-    {
-        public static int withoutPlayerLayer = (-1) - (LayerMask.GetMask("Player"));
-        public static int withoutGroundLayer = (-1) - (LayerMask.GetMask("Ground"));
-
-    }
 }
