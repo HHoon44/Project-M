@@ -44,10 +44,11 @@ namespace ProjectM.Define
     //tip: 열거형의 정수는 스테이지와 관계있음   00## => 00 스테이지 번호, ## 몬스터 고유 번호
     public enum KindOfMob
     {
-        ReferenceMob = 0100,
-        Tmp_1,
-        Tmp_2
-
+        HorizontalMob,
+        JumpMob,
+        DashMob,
+        JumpDashMob,
+        NoneMovementMob
     }
 
     //@ 데미지를 입을 때 같이 전해지는 디버프 종류
@@ -55,5 +56,9 @@ namespace ProjectM.Define
     {
         None,
         Slow
+    }
+
+    public class InGamePath
+    {
     }
 }
