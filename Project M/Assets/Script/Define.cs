@@ -8,6 +8,8 @@ namespace ProjectM.Define
 
     public enum SceneType { StartLoading, Loading }
 
+    public enum IntroPhase { None, Start, ApllicationSetting, StaticData, Resource, UI, Complte }
+
     public class StaticData
     {
         public const string SDExcelPath = "Assets/StaticData/Excel";
