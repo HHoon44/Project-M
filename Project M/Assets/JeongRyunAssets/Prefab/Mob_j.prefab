@@ -1,36 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &6733414993073142277
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1301093887513661878}
-  m_Layer: 0
-  m_Name: MoveTip
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1301093887513661878
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6733414993073142277}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.1, y: -0.52, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 3363349399135574841}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6972188198728945967
 GameObject:
   m_ObjectHideFlags: 0
@@ -61,7 +30,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3363349399135574841}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &2969506802136158996
 SpriteRenderer:
@@ -144,7 +113,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3363349399135574841}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8241904046274209127
 GameObject:
@@ -157,7 +126,6 @@ GameObject:
   - component: {fileID: 3363349399135574841}
   - component: {fileID: 2211680249126867986}
   - component: {fileID: 8408124937320082752}
-  - component: {fileID: 4436531695820280843}
   - component: {fileID: -6271309021878876667}
   m_Layer: 0
   m_Name: Mob_j
@@ -179,7 +147,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4263427361669465173}
-  - {fileID: 1301093887513661878}
   - {fileID: 5992856870765436753}
   - {fileID: 716828932390412482}
   - {fileID: 4581487241566060133}
@@ -199,7 +166,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   thisMobType: 101
-  formObj: {fileID: 0}
+  myForm: {fileID: 0}
   atkTip: {fileID: 5992856870765436753}
   detectionMark: {fileID: 8788897660424596846}
   discoveryMark: {fileID: 6972188198728945967}
@@ -224,18 +191,6 @@ MonoBehaviour:
   jumpFarce: 7
   minJumpCooltime: 2
   maxJumpCooltime: 7.2
---- !u!114 &4436531695820280843
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8241904046274209127}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b56705f31de0747bfa7d373c0c91f466, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!50 &-6271309021878876667
 Rigidbody2D:
   serializedVersion: 4
@@ -287,7 +242,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3363349399135574841}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &7209493409383046805
 SpriteRenderer:
@@ -354,7 +309,7 @@ GameObject:
   - component: {fileID: 5738641456441021103}
   - component: {fileID: 5005695249441241261}
   m_Layer: 0
-  m_Name: MobRend
+  m_Name: MobForm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

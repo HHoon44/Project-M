@@ -8,33 +8,34 @@ namespace ProjectM.InGame
     public class MobBase : MonoBehaviour
     {
         [Header("MobSetting")]
-        public KindOfMob thisMobType;
+        public KindOfMob thisMobType = KindOfMob.NoneMovementMob;
 
         [Space(10f)]
-        public GameObject formObj;
-        public Transform atkTip;
+        public GameObject myForm;   //게임으로 보이는 몬스터의 실체
+        public Transform atkTip;  //공격을 시작하는 위치
+
         [Space(10f)]
+        [Header("MobEmotion")]
         public GameObject detectionMark;
         public GameObject discoveryMark;
 
-        //몬스터 애니메이션 컴포넌트
         public Animator formAnim { get; private set; }
-        public CapsuleCollider2D formCollider { get; private set; }
+        private GameObject[] myModule = new GameObject[3];
 
-        //mobInfo
-        public MobInfo mobInfo { get; private set; }
+        //몬스터 변수
         public float nowHP { get; private set; }
         public bool detectionPlayer { get; private set; }  //플레이어가 근처에 있다면
         public bool discoveryPlayer { get; private set; }  //플레이어가 보인다면
-
         public bool isLive { get; private set; }   //자신이 죽었다면
 
+        //몬스터 상수
+        public MobInfo myInfo { get; private set; }
         public Vector2 colSize { get; protected set; }
+
 
         private void Start()
         {
-            if (formObj == null || atkTip == null || detectionMark == null)
-                Debug.LogError("몬스터 필수 컴포넌트 없음");
+            myInfo = MobsStaticData.Instance.GetMobReferenceInfo(thisMobType);
 
             if (gameObject.tag != "Mob")
             {
@@ -42,20 +43,40 @@ namespace ProjectM.InGame
                 this.enabled = false;
             }
 
-            formAnim = formObj.GetComponent<Animator>();
-            formCollider = formObj.GetComponent<CapsuleCollider2D>();
-            if (formAnim == null || formCollider == null)
+            formAnim = myForm.GetComponent<Animator>();
+            colSize = myForm.GetComponent<CapsuleCollider2D>().size + myForm.GetComponent<CapsuleCollider2D>().offset;
+            if (formAnim == null)
                 Debug.LogWarning("케릭터의 애니메이터 혹은 콜라이더가 없습니다.");
-
-            mobInfo = MobsStaticData.Instance.GetMobReferenceInfo(thisMobType);
-            colSize = formCollider.size;
-            Debug.Log(colSize);
 
             detectionMark.SetActive(false);
             discoveryMark.SetActive(false);
 
+            SetModule();
+
             Regen();
-            StartCoroutine(ControllMark_co());
+            StartCoroutine(UpdateEmotion_co());
+        }
+
+
+
+        public void SetModule()
+        {
+            if (myInfo.jumpForce <= 0)
+                myModule[0] = Instantiate(MobsStaticData.mobMovementModule, transform);
+            else
+                myModule[0] = Instantiate(MobsStaticData.mobJumpModule, transform);
+
+            if (myInfo.dashForce >= 0)
+                myModule[1] = Instantiate(MobsStaticData.mobDashModule, transform);
+
+            if (myInfo.atkCool >= 0)
+                myModule[2] = Instantiate(MobsStaticData.mobAttackModule, transform);
+
+            foreach (GameObject item in myModule)
+            {
+                
+                item.transform.position = Vector3.zero;
+            }
         }
 
         private void FixedUpdate()
@@ -63,21 +84,24 @@ namespace ProjectM.InGame
             DetectUpdate();
         }
 
+
+
+
         //@ 몬스터 라이브 ===================================================================================================================
 
         //act: 몬스터가 다시 태어날 때 활성화 로직
         private void Regen()
         {
             isLive = true;
-            nowHP = mobInfo.maxHP;
-            formObj.SetActive(true);
+            nowHP = myInfo.maxHP;
+            myForm.SetActive(true);
         }
 
         //act: 데미지를 입힐 때 호출
         public void SufferDemage(float _Demaged, DebuffType[] _types)
         {
             //절대적인 몹이라면 공격을 받지 않음
-            if (mobInfo.staticMob)
+            if (myInfo.staticMob)
                 return;
 
             if (0 >= nowHP - _Demaged)
@@ -106,14 +130,14 @@ namespace ProjectM.InGame
         }
         private void MobDead()
         {
-            formObj.SetActive(false);
+            myForm.SetActive(false);
         }
 
         //@ 플레이어 감지 ===================================================================================================================
         //act: 플래이어를 기준으로 감지한다.
         private void DetectUpdate()
         {
-            if (mobInfo.detectArea == 0)
+            if (myInfo.detectArea == 0)
                 return;
 
             detectionPlayer = DetectPlayer();
@@ -124,11 +148,11 @@ namespace ProjectM.InGame
         }
 
         //act: 감지된 정보를 토대로 몹 위에 플레이어가 감지 여부를 알 수 있도록 띄어줍니다.
-        private IEnumerator ControllMark_co()
+        private IEnumerator UpdateEmotion_co()
         {
             while (true)
             {
-                yield return new WaitForSeconds(0.1f);
+                yield return new WaitForSeconds(0.5f);
 
                 if (discoveryPlayer)
                 {
@@ -149,7 +173,7 @@ namespace ProjectM.InGame
         }
 
         //플레이어가 몬스터 근차에 갔을 때 true
-        private bool DetectPlayer() => Vector2.Distance(transform.position, PlayerController.GetPlayerTip()) <= mobInfo.detectArea;
+        private bool DetectPlayer() => Vector2.Distance(transform.position, PlayerController.GetPlayerTip()) <= myInfo.detectArea;
         //플레이어와 몬스터 사이에 장애물이 없을 때 true
         private bool DiscoverPlayer() => (detectionPlayer && !Physics2D.Linecast(atkTip.position, PlayerController.GetPlayerTip(), LayerMask.GetMask("Ground")));
 

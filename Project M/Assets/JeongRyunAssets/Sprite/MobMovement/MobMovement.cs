@@ -6,7 +6,7 @@ using ProjectM.Define;
 namespace ProjectM.InGame
 {
     //몬스터의 움직임은 자연스럽게 하기 위한 수정이 많이 이루어지기 때문에 인스펙터에서 주로 다룬다.
-    public class MobBaseMovement : MonoBehaviour
+    public class MobMovement : MonoBehaviour, IMobConsistModule
     {
         [Header("MoveInfo")]
         [SerializeField] protected float speed;

@@ -5,7 +5,7 @@ using UnityEngine;
 namespace ProjectM.InGame
 {
     //점프를 하는 몬스터가의 움직임
-    public class MobAutoJump : MobBaseMovement
+    public class MobJump : MobMovement, IMobConsistModule
     {
         [Space(10f)]
         [Header("JumpInfo")]
@@ -14,7 +14,6 @@ namespace ProjectM.InGame
         [SerializeField] protected float minJumpCooltime;
         [Range(0, 30)]
         [SerializeField] protected float maxJumpCooltime;
-
 
         protected override void Start()
         {
@@ -42,6 +41,11 @@ namespace ProjectM.InGame
             }
         }
         private void Jump() => rigid.AddForce(Vector2.up * jumpFarce, ForceMode2D.Impulse);
+
+        public void InitMob(GameObject _obj)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 
 }
