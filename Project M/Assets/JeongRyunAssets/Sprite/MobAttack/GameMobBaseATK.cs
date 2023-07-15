@@ -7,11 +7,11 @@ namespace ProjectM.InGame
     //공격을 가하는 몬스터를 구현하는 부모 입니다.
     public class GameMobBaseATK : MonoBehaviour
     {
-        private GameMobBase mob;
+        private MobBase mob;
 
         void Start()
         {
-            mob = GetComponent<GameMobBase>();
+            mob = GetComponent<MobBase>();
         }
 
         void Update()

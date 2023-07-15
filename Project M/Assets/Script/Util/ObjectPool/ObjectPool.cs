@@ -48,7 +48,7 @@ namespace ProjectM.Util
         /// </summary>
         /// <param name="pred"> 오브젝트를 찾기 위한 조건 </param>
         /// <returns></returns>
-        public T GetPoolableObject(Func<T, bool> pred = null)
+        public T GetPoolableObject(Func<T, bool> pred = null) //개발자가 직접만든 함수를 집어 넣을 수 있다.
         {
             // 사용 가능한 오브젝트가 없다면
             if (!canRecycle)

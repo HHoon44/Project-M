@@ -5,7 +5,7 @@ using UnityEngine;
 namespace ProjectM.InGame
 {
 
-    public class GamePlayerMovement : MonoBehaviour
+    public class PlayerBaseMovement : MonoBehaviour
     {
         public float atDebugSpeed;
         void Update()

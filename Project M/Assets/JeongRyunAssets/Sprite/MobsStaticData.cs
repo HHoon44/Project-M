@@ -36,7 +36,7 @@ namespace ProjectM.InGame
     }
 
 
-    public class GameMobStaticData : Singleton<GameMobStaticData>
+    public class MobsStaticData : Singleton<MobsStaticData>
     {
         private Dictionary<KindOfMob, MobInfo> mobReferenceInfo_Table = new Dictionary<KindOfMob, MobInfo>();
 
@@ -45,7 +45,7 @@ namespace ProjectM.InGame
             base.Awake();
 
             //자신의 객체와 싱글톤 된 객체가 다르다면 부하를 최소화 하기위해 
-            if (this != GameMobStaticData.Instance)
+            if (this != MobsStaticData.Instance)
                 return;
 
             mobReferenceInfo_Table.Clear();

@@ -6,7 +6,7 @@ using ProjectM.Define;
 namespace ProjectM.InGame
 {
     //몬스터의 움직임은 자연스럽게 하기 위한 수정이 많이 이루어지기 때문에 인스펙터에서 주로 다룬다.
-    public class GameMobAutoMovement : MonoBehaviour
+    public class MobBaseMovement : MonoBehaviour
     {
         [Header("MoveInfo")]
         [SerializeField] protected float speed;
@@ -26,7 +26,7 @@ namespace ProjectM.InGame
         [SerializeField] protected bool atDiscoverPlayerStop = false; //플레이어가 근처에 있다는 것을 알았을 때의 움직임
 
         protected Rigidbody2D rigid;
-        protected GameMobBase mob;
+        protected MobBase mob;
 
         //초기화 상수
         private Vector3 startPos;
@@ -45,7 +45,7 @@ namespace ProjectM.InGame
             if (rigid == null)
                 Debug.LogWarning("rigid없음" + thisOrder());
 
-            mob = GetComponent<GameMobBase>();
+            mob = GetComponent<MobBase>();
             if (mob == null)
                 Debug.LogWarning("GameMobBase없음" + thisOrder());
 

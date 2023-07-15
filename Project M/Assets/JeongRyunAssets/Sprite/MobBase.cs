@@ -5,7 +5,7 @@ using ProjectM.Define;
 
 namespace ProjectM.InGame
 {
-    public class GameMobBase : MonoBehaviour
+    public class MobBase : MonoBehaviour
     {
         [Header("MobSetting")]
         public KindOfMob thisMobType;
@@ -47,7 +47,7 @@ namespace ProjectM.InGame
             if (formAnim == null || formCollider == null)
                 Debug.LogWarning("케릭터의 애니메이터 혹은 콜라이더가 없습니다.");
 
-            mobInfo = GameMobStaticData.Instance.GetMobReferenceInfo(thisMobType);
+            mobInfo = MobsStaticData.Instance.GetMobReferenceInfo(thisMobType);
             colSize = formCollider.size;
             Debug.Log(colSize);
 
@@ -120,7 +120,7 @@ namespace ProjectM.InGame
             discoveryPlayer = DiscoverPlayer();
 
             if (detectionPlayer)
-                Debug.DrawLine(atkTip.position, GamePlayer.GetPlayerTip(), Color.red);
+                Debug.DrawLine(atkTip.position, PlayerController.GetPlayerTip(), Color.red);
         }
 
         //act: 감지된 정보를 토대로 몹 위에 플레이어가 감지 여부를 알 수 있도록 띄어줍니다.
@@ -149,9 +149,9 @@ namespace ProjectM.InGame
         }
 
         //플레이어가 몬스터 근차에 갔을 때 true
-        private bool DetectPlayer() => Vector2.Distance(transform.position, GamePlayer.GetPlayerTip()) <= mobInfo.detectArea;
+        private bool DetectPlayer() => Vector2.Distance(transform.position, PlayerController.GetPlayerTip()) <= mobInfo.detectArea;
         //플레이어와 몬스터 사이에 장애물이 없을 때 true
-        private bool DiscoverPlayer() => (detectionPlayer && !Physics2D.Linecast(atkTip.position, GamePlayer.GetPlayerTip(), LayerMask.GetMask("Ground")));
+        private bool DiscoverPlayer() => (detectionPlayer && !Physics2D.Linecast(atkTip.position, PlayerController.GetPlayerTip(), LayerMask.GetMask("Ground")));
 
     }
 }
