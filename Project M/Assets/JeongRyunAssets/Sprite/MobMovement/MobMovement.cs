@@ -203,6 +203,16 @@ namespace ProjectM.InGame
 
         protected bool IsGround() => Physics2D.Raycast(transform.position, Vector2.down, mob.colSize.y + .1f, LayerMask.GetMask("Ground"));
         private int thisOrder() => transform.GetSiblingIndex();
+
+        public void StartForMob(MobBase _mob)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void SetActineModule(bool _act)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
 

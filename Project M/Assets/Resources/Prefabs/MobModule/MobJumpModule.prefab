@@ -44,12 +44,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa8fe34a69ca54935af6558612f0215d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 0
-  minMoveTime: 0
-  maxMoveTime: 0
-  minIdleTime: 0
-  maxIdleTime: 0
+  speed: 3
+  minMoveTime: 3
+  maxMoveTime: 6
+  minIdleTime: 1
+  maxIdleTime: 3
   atDiscoverPlayerStop: 0
-  jumpFarce: 0
-  minJumpCooltime: 0
-  maxJumpCooltime: 0
+  jumpFarce: 5
+  minJumpCooltime: 3
+  maxJumpCooltime: 5

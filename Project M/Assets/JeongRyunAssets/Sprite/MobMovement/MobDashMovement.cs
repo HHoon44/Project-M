@@ -62,7 +62,12 @@ namespace ProjectM.InGame
 
         }
 
-        public void InitMob(GameObject _obj)
+        public void StartForMob(MobBase _mob)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void SetActineModule(bool _act)
         {
             throw new System.NotImplementedException();
         }
