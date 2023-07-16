@@ -11,8 +11,8 @@ namespace ProjectM.InGame
         public MobType thisMobType = MobType.NoneMovementMob;
 
         [Space(10f)]
-        public GameObject myForm;   //°ÔÀÓÀ¸·Î º¸ÀÌ´Â ¸ó½ºÅÍÀÇ ½ÇÃ¼
-        public Transform atkTip;  //°ø°İÀ» ½ÃÀÛÇÏ´Â À§Ä¡
+        public GameObject myForm;   //ê²Œì„ìœ¼ë¡œ ë³´ì´ëŠ” ëª¬ìŠ¤í„°ì˜ ì‹¤ì²´
+        public Transform atkTip;  //ê³µê²©ì„ ì‹œì‘í•˜ëŠ” ìœ„ì¹˜
 
         [Space(10f)]
         [Header("MobEmotion")]
@@ -22,15 +22,15 @@ namespace ProjectM.InGame
         public Animator formAnim { get; private set; }
         private IMobConsistModule[] myModule = new IMobConsistModule[3];
 
-        //¸ó½ºÅÍ º¯¼ö
+        //ëª¬ìŠ¤í„° ë³€ìˆ˜
         public float nowHP { get; private set; }
-        public bool detectionPlayer { get; private set; }  //ÇÃ·¹ÀÌ¾î°¡ ±ÙÃ³¿¡ ÀÖ´Ù¸é
-        public bool discoveryPlayer { get; private set; }  //ÇÃ·¹ÀÌ¾î°¡ º¸ÀÎ´Ù¸é
-        public bool isLive { get; private set; }   //ÀÚ½ÅÀÌ Á×¾ú´Ù¸é
+        public bool detectionPlayer { get; private set; }  //í”Œë ˆì´ì–´ê°€ ê·¼ì²˜ì— ìˆë‹¤ë©´
+        public bool discoveryPlayer { get; private set; }  //í”Œë ˆì´ì–´ê°€ ë³´ì¸ë‹¤ë©´
+        public bool isLive { get; private set; }   //ìì‹ ì´ ì£½ì—ˆë‹¤ë©´
 
-        //¸ó½ºÅÍ »ó¼ö
+        //ëª¬ìŠ¤í„° ìƒìˆ˜
         public MobReferenceData myReference { get; private set; }
-        public MobMovemantData myMovement { get; private set; }
+        public MobMovementData myMovement { get; private set; }
 
         public Vector2 colPoint { get; protected set; }
 
@@ -42,7 +42,7 @@ namespace ProjectM.InGame
 
             if (gameObject.tag != "Mob")
             {
-                Debug.LogWarning("ÇöÀç ¸÷ Àü¿ë ÄÄÆ÷³ÍÆ®¸¦ ´Ù¸¥ °´Ã¼°¡ °¡Áö°í ÀÖ½À´Ï´Ù.");
+                Debug.LogWarning("í˜„ì¬ ëª¹ ì „ìš© ì»´í¬ë„ŒíŠ¸ë¥¼ ë‹¤ë¥¸ ê°ì²´ê°€ ê°€ì§€ê³  ìˆìŠµë‹ˆë‹¤.");
                 this.enabled = false;
             }
 
@@ -50,10 +50,8 @@ namespace ProjectM.InGame
             CapsuleCollider2D col = myForm.GetComponent<CapsuleCollider2D>();
             colPoint = new Vector2(col.size.x / 2 + col.offset.x, -col.size.y / 2 + col.offset.y);
 
-            Debug.Log(colPoint);
-
             if (formAnim == null)
-                Debug.LogWarning("ÄÉ¸¯ÅÍÀÇ ¾Ö´Ï¸ŞÀÌÅÍ È¤Àº Äİ¶óÀÌ´õ°¡ ¾ø½À´Ï´Ù.");
+                Debug.LogWarning("ì¼€ë¦­í„°ì˜ ì• ë‹ˆë©”ì´í„° í˜¹ì€ ì½œë¼ì´ë”ê°€ ì—†ìŠµë‹ˆë‹¤.");
 
             detectionMark.SetActive(false);
             discoveryMark.SetActive(false);
@@ -96,9 +94,9 @@ namespace ProjectM.InGame
 
 
 
-        //@ ¸ó½ºÅÍ ¶óÀÌºê ===================================================================================================================
+        //@ ëª¬ìŠ¤í„° ë¼ì´ë¸Œ ===================================================================================================================
 
-        //act: ¸ó½ºÅÍ°¡ ´Ù½Ã ÅÂ¾î³¯ ¶§ È°¼ºÈ­ ·ÎÁ÷
+        //act: ëª¬ìŠ¤í„°ê°€ ë‹¤ì‹œ íƒœì–´ë‚  ë•Œ í™œì„±í™” ë¡œì§
         private void Regen()
         {
             isLive = true;
@@ -106,10 +104,10 @@ namespace ProjectM.InGame
             myForm.SetActive(true);
         }
 
-        //act: µ¥¹ÌÁö¸¦ ÀÔÈú ¶§ È£Ãâ
+        //act: ë°ë¯¸ì§€ë¥¼ ì…í ë•Œ í˜¸ì¶œ
         public void SufferDemage(float _Demaged, DebuffType[] _types)
         {
-            //Àı´ëÀûÀÎ ¸÷ÀÌ¶ó¸é °ø°İÀ» ¹ŞÁö ¾ÊÀ½
+            //ì ˆëŒ€ì ì¸ ëª¹ì´ë¼ë©´ ê³µê²©ì„ ë°›ì§€ ì•ŠìŒ
             if (myReference.staticMob)
                 return;
 
@@ -121,20 +119,20 @@ namespace ProjectM.InGame
             }
             else
             {
-                //todo: °ø°İ ¹Ş´Â ¾Ö´Ï¸ŞÀÌ¼Ç
+                //todo: ê³µê²© ë°›ëŠ” ì• ë‹ˆë©”ì´ì…˜
                 nowHP -= _Demaged;
             }
         }
 
-        //act: ¸ó½ºÅÍÀÇ Á×À½
-        //todo: ¸ó½ºÅÍ Æú¸µ ±â¼ú »ç¿ë
+        //act: ëª¬ìŠ¤í„°ì˜ ì£½ìŒ
+        //todo: ëª¬ìŠ¤í„° í´ë§ ê¸°ìˆ  ì‚¬ìš©
         private void MobDie()
         {
-            Debug.Log("todo: ¸ó½ºÅÍ Á×À½");
+            Debug.Log("todo: ëª¬ìŠ¤í„° ì£½ìŒ");
 
             isLive = false;
 
-            //todo: ¸ó½ºÅÍ Á×´Â ¾Ö´Ï¸ŞÀÌ¼Ç
+            //todo: ëª¬ìŠ¤í„° ì£½ëŠ” ì• ë‹ˆë©”ì´ì…˜
             Invoke(nameof(MobDead), 1f);
         }
         private void MobDead()
@@ -142,8 +140,8 @@ namespace ProjectM.InGame
             myForm.SetActive(false);
         }
 
-        //@ ÇÃ·¹ÀÌ¾î °¨Áö ===================================================================================================================
-        //act: ÇÃ·¡ÀÌ¾î¸¦ ±âÁØÀ¸·Î °¨ÁöÇÑ´Ù.
+        //@ í”Œë ˆì´ì–´ ê°ì§€ ===================================================================================================================
+        //act: í”Œë˜ì´ì–´ë¥¼ ê¸°ì¤€ìœ¼ë¡œ ê°ì§€í•œë‹¤.
         private void DetectUpdate()
         {
             if (myReference.detectArea == 0)
@@ -156,7 +154,7 @@ namespace ProjectM.InGame
                 Debug.DrawLine(atkTip.position, PlayerController.GetPlayerTip(), Color.red);
         }
 
-        //act: °¨ÁöµÈ Á¤º¸¸¦ Åä´ë·Î ¸÷ À§¿¡ ÇÃ·¹ÀÌ¾î°¡ °¨Áö ¿©ºÎ¸¦ ¾Ë ¼ö ÀÖµµ·Ï ¶ç¾îÁİ´Ï´Ù.
+        //act: ê°ì§€ëœ ì •ë³´ë¥¼ í† ëŒ€ë¡œ ëª¹ ìœ„ì— í”Œë ˆì´ì–´ê°€ ê°ì§€ ì—¬ë¶€ë¥¼ ì•Œ ìˆ˜ ìˆë„ë¡ ë„ì–´ì¤ë‹ˆë‹¤.
         private IEnumerator UpdateEmotion_co()
         {
             while (true)
@@ -181,9 +179,9 @@ namespace ProjectM.InGame
             }
         }
 
-        //ÇÃ·¹ÀÌ¾î°¡ ¸ó½ºÅÍ ±ÙÂ÷¿¡ °¬À» ¶§ true
+        //í”Œë ˆì´ì–´ê°€ ëª¬ìŠ¤í„° ê·¼ì°¨ì— ê°”ì„ ë•Œ true
         private bool DetectPlayer() => Vector2.Distance(transform.position, PlayerController.GetPlayerTip()) <= myReference.detectArea;
-        //ÇÃ·¹ÀÌ¾î¿Í ¸ó½ºÅÍ »çÀÌ¿¡ Àå¾Ö¹°ÀÌ ¾øÀ» ¶§ true
+        //í”Œë ˆì´ì–´ì™€ ëª¬ìŠ¤í„° ì‚¬ì´ì— ì¥ì• ë¬¼ì´ ì—†ì„ ë•Œ true
         private bool DiscoverPlayer() => (detectionPlayer && !Physics2D.Linecast(atkTip.position, PlayerController.GetPlayerTip(), LayerMask.GetMask("Ground")));
 
     }

@@ -4,16 +4,16 @@ using UnityEngine;
 
 namespace ProjectM.InGame
 {
-    //Á¡ÇÁ¸¦ ÇÏ´Â ¸ó½ºÅÍ°¡ÀÇ ¿òÁ÷ÀÓ
+    //ì í”„ë¥¼ í•˜ëŠ” ëª¬ìŠ¤í„°ê°€ì˜ ì›€ì§ìž„
     public class MobJump : MobMovement
     {
         [Space(10f)]
         [Header("JumpInfo")]
-        [SerializeField] protected float jumpFarce;
+        [SerializeField] private float jumpFarce;
         [Range(0, 30)]
-        [SerializeField] protected float minJumpCooltime;
+        [SerializeField] private float minJumpCooltime;
         [Range(0, 30)]
-        [SerializeField] protected float maxJumpCooltime;
+        [SerializeField] private float maxJumpCooltime;
 
         protected override void Start()
         {
@@ -22,30 +22,28 @@ namespace ProjectM.InGame
             if (minJumpCooltime >= maxJumpCooltime)
                 maxJumpCooltime = minJumpCooltime;
 
+            jumpFarce = mob.myMovement.jumpForce;
+            minJumpCooltime = mob.myMovement.minJumpCooltime;
+            maxJumpCooltime = mob.myMovement.maxJumpCooltime;
+
             StartCoroutine(JumpTimer_co());
         }
 
-        //ÀÚµ¿À¸·Î ½Ã°£¿¡ ¸ÂÃß¾î Á¡ÇÁ¸¦ ÇÕ´Ï´Ù.
+        //ìžë™ìœ¼ë¡œ ì‹œê°„ì— ë§žì¶”ì–´ ì í”„ë¥¼ í•©ë‹ˆë‹¤.
         private IEnumerator JumpTimer_co()
         {
             while (true)
             {
                 yield return new WaitForSeconds(Random.Range(minJumpCooltime, maxJumpCooltime));
-                if (!atDiscoverPlayerStop || !mob.discoveryPlayer) //ÇÃ·¹ÀÌ¾î°¡ °¨Áö µÇ¸é Á¡ÇÁ´Â ÇÏÁö ¾Ê´Â´Ù.
+                if (!atDiscoverPlayerStop || !mob.discoveryPlayer) //í”Œë ˆì´ì–´ê°€ ê°ì§€ ë˜ë©´ ì í”„ëŠ” í•˜ì§€ ì•ŠëŠ”ë‹¤.
                 {
-                    while (Mathf.Abs(rigid.velocity.y) >= 0.01f)
-                        yield return new WaitForFixedUpdate();
-                    if (IsGround())
+                    if (isGround)
                         Jump();
                 }
             }
         }
-        private void Jump() => rigid.AddForce(Vector2.up * jumpFarce, ForceMode2D.Impulse);
 
-        public void InitMob(GameObject _obj)
-        {
-            throw new System.NotImplementedException();
-        }
+        private void Jump() => rigid.AddForce(Vector2.up * jumpFarce, ForceMode2D.Impulse);
     }
 
 }

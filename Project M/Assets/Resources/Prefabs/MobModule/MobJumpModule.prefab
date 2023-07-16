@@ -50,6 +50,6 @@ MonoBehaviour:
   minIdleTime: 1
   maxIdleTime: 3
   atDiscoverPlayerStop: 1
-  jumpFarce: 5
+  jumpFarce: 10
   minJumpCooltime: 3
   maxJumpCooltime: 5

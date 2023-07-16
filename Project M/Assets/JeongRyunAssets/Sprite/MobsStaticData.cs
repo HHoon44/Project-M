@@ -6,10 +6,10 @@ using ProjectM.Define;
 
 namespace ProjectM.InGame
 {
-    //@ ¸ó½ºÅÍ Á¾·ù ¸¶´Ù °íÀ¯ÀÇ ´É·ÂÄ¡¸¦ ÀúÀåÇÏ´Â Å¬·¡½º
+    //@ ëª¬ìŠ¤í„° ì¢…ë¥˜ ë§ˆë‹¤ ê³ ìœ ì˜ ëŠ¥ë ¥ì¹˜ë¥¼ ì €ì¥í•˜ëŠ” í´ë˜ìŠ¤
     public class MobReferenceData
     {
-        //´ëÁßÀûÀÎ ¸ó½ºÅÍ ÃÊ±âÈ­
+        //ëŒ€ì¤‘ì ì¸ ëª¬ìŠ¤í„° ì´ˆê¸°í™”
         public MobReferenceData(
             float _maxHP, float _atkCool, float _detectArea)
         {
@@ -20,7 +20,7 @@ namespace ProjectM.InGame
             specialMob = false;
             staticMob = false;
         }
-        //Æ¯¼öÀûÀÎ ¸ó½ºÅÍ ÃÊ±âÈ­
+        //íŠ¹ìˆ˜ì ì¸ ëª¬ìŠ¤í„° ì´ˆê¸°í™”
         public MobReferenceData(
             float _maxHP, float _atkCool, float _detectArea, bool _special, bool _static)
         {
@@ -34,15 +34,15 @@ namespace ProjectM.InGame
 
         readonly public float maxHP;
         readonly public float atkCool;
-        readonly public float detectArea; //ÇÃ·¹ÀÌ¾î °¨Áö°Å¸®
+        readonly public float detectArea; //í”Œë ˆì´ì–´ ê°ì§€ê±°ë¦¬
 
-        readonly public bool specialMob;   //ÀÌ ¸ó½ºÅÍ°¡ º¸½º µî Æ¯º°ÇÑ ¸ó½ºÅÍ¶ó¸é true
-        readonly public bool staticMob;  //°ø°İÀ» ¹ŞÁö ¾Ê´Â Àå¾Ö¹° °°Àº ¸ó½ºÅÍ¶ó¸é true ex) ¸¶¸®¿ÀÀÇ ÆÄÀÌÇÁ ²É °°Àº °æ¿ì
+        readonly public bool specialMob;   //ì´ ëª¬ìŠ¤í„°ê°€ ë³´ìŠ¤ ë“± íŠ¹ë³„í•œ ëª¬ìŠ¤í„°ë¼ë©´ true
+        readonly public bool staticMob;  //ê³µê²©ì„ ë°›ì§€ ì•ŠëŠ” ì¥ì• ë¬¼ ê°™ì€ ëª¬ìŠ¤í„°ë¼ë©´ true ex) ë§ˆë¦¬ì˜¤ì˜ íŒŒì´í”„ ê½ƒ ê°™ì€ ê²½ìš°
     }
 
-    public class MobMovemantData
+    public class MobMovementData
     {
-        public MobMovemantData(
+        public MobMovementData(
             float _speed, float _minMoveTime, float _maxMoveTime, float _minIdleTime, float _maxIdleTime, bool _atDiscoverStop,
             float _jumpForce, float _minJumpCooltime, float _maxJumpCooltime,
             float _dashForce, float _minDashCooltime, float _maxDashCooltime, float _dashReadyTime)
@@ -85,7 +85,7 @@ namespace ProjectM.InGame
     public class MobsStaticData : Singleton<MobsStaticData>
     {
         private Dictionary<MobType, MobReferenceData> mobReferenceData_Table = new Dictionary<MobType, MobReferenceData>();
-        private Dictionary<MobType, MobMovemantData> mobMovementData_Table = new Dictionary<MobType, MobMovemantData>();
+        private Dictionary<MobType, MobMovementData> mobMovementData_Table = new Dictionary<MobType, MobMovementData>();
 
         public static GameObject mobMovementModule { get; private set; }
         public static GameObject mobJumpModule { get; private set; }
@@ -96,7 +96,7 @@ namespace ProjectM.InGame
         {
             base.Awake();
 
-            //ÀÚ½ÅÀÇ °´Ã¼¿Í ½Ì±ÛÅæ µÈ °´Ã¼°¡ ´Ù¸£´Ù¸é ºÎÇÏ¸¦ ÃÖ¼ÒÈ­ ÇÏ±âÀ§ÇØ 
+            //ìì‹ ì˜ ê°ì²´ì™€ ì‹±ê¸€í†¤ ëœ ê°ì²´ê°€ ë‹¤ë¥´ë‹¤ë©´ ë¶€í•˜ë¥¼ ìµœì†Œí™” í•˜ê¸°ìœ„í•´ 
             if (this != MobsStaticData.Instance)
                 return;
 
@@ -118,11 +118,11 @@ namespace ProjectM.InGame
         private void MakeUp_MobMovementData()
         {
             mobMovementData_Table.Clear();
-            mobMovementData_Table.Add(MobType.HorizontalMob, new MobMovemantData(4, 3, 6, 1, 3, true, 0, 0, 0, 0, 0, 0, 0));
-            mobMovementData_Table.Add(MobType.JumpMob, new MobMovemantData(4, 3, 6, 1, 3, true, 6, 4, 6, 0, 0, 0, 0));
-            mobMovementData_Table.Add(MobType.DashMob, new MobMovemantData(4, 3, 6, 1, 3, true, 0, 0, 0, 5, 4, 6, 1));
-            mobMovementData_Table.Add(MobType.JumpDashMob, new MobMovemantData(4, 3, 6, 1, 3, true, 0, 0, 0, 0, 0, 0, 0));
-            mobMovementData_Table.Add(MobType.NoneMovementMob, new MobMovemantData(0, 3, 6, 1, 3, false, 0, 0, 0, 0, 0, 0, 0));
+            mobMovementData_Table.Add(MobType.HorizontalMob, new MobMovementData(4, 3, 6, 1, 3, true, 0, 0, 0, 0, 0, 0, 0));
+            mobMovementData_Table.Add(MobType.JumpMob, new MobMovementData(4, 3, 6, 1, 3, true, 20, 4, 6, 0, 0, 0, 0));
+            mobMovementData_Table.Add(MobType.DashMob, new MobMovementData(4, 3, 6, 1, 3, true, 0, 0, 0, 5, 4, 6, 1));
+            mobMovementData_Table.Add(MobType.JumpDashMob, new MobMovementData(4, 3, 6, 1, 3, true, 0, 0, 0, 0, 0, 0, 0));
+            mobMovementData_Table.Add(MobType.NoneMovementMob, new MobMovementData(0, 3, 6, 1, 3, false, 0, 0, 0, 0, 0, 0, 0));
         }
 
         private void SetModule()
@@ -137,7 +137,7 @@ namespace ProjectM.InGame
         {
             return mobReferenceData_Table[_mobType];
         }
-        public MobMovemantData GetMobMovemantData(MobType _mobType)
+        public MobMovementData GetMobMovemantData(MobType _mobType)
         {
             return mobMovementData_Table[_mobType];
         }

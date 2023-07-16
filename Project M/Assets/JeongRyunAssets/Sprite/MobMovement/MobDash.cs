@@ -7,7 +7,7 @@ using ProjectM.Util;
 
 namespace ProjectM.InGame
 {
-    //tip: ´ë½¬ ¸ğµÑÀÇ ¸ÅÀÎ ÄÄÆ÷³ÊÆ® ÀÔ´Ï´Ù
+    //tip: ëŒ€ì‰¬ ëª¨ë‘˜ì˜ ë§¤ì¸ ì»´í¬ë„ˆíŠ¸ ì…ë‹ˆë‹¤
     public class MobDash : MonoBehaviour, IMobConsistModule
     {
         public MobBase mob { get; set; }
@@ -15,9 +15,9 @@ namespace ProjectM.InGame
         private GameObject mobForm;
         private Sprite nowSprite;
 
-        [SerializeField] protected float dashForce;   //´ë½¬ °Å¸®
-        [SerializeField] protected float dashCooltime;   //0ÃÊÀÌ¸é, ¿ÀÅä´ë½¬¸¦ ÇÏÁö ¾Ê½À´Ï´Ù.
-        [SerializeField] protected float dashReadyTime;  //´ë½¬¸¦ ÇÏ±âÀü Àá±ñ ¸ØÃçÀÖ´Â ½Ã°£
+        [SerializeField] protected float dashForce;   //ëŒ€ì‰¬ ê±°ë¦¬
+        [SerializeField] protected float dashCooltime;   //0ì´ˆì´ë©´, ì˜¤í† ëŒ€ì‰¬ë¥¼ í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤.
+        [SerializeField] protected float dashReadyTime;  //ëŒ€ì‰¬ë¥¼ í•˜ê¸°ì „ ì ê¹ ë©ˆì¶°ìˆëŠ” ì‹œê°„
 
         private GameObject[] afterimageObj;
         private Vector2[] afterimageStartPos;

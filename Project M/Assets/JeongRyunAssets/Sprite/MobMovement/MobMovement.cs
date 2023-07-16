@@ -5,7 +5,7 @@ using ProjectM.Define;
 
 namespace ProjectM.InGame
 {
-    //¸ó½ºÅÍÀÇ ¿òÁ÷ÀÓÀº ÀÚ¿¬½º·´°Ô ÇÏ±â À§ÇÑ ¼öÁ¤ÀÌ ¸¹ÀÌ ÀÌ·ç¾îÁö±â ¶§¹®¿¡ ÀÎ½ºÆåÅÍ¿¡¼­ ÁÖ·Î ´Ù·é´Ù.
+    //ëª¬ìŠ¤í„°ì˜ ì›€ì§ì„ì€ ìì—°ìŠ¤ëŸ½ê²Œ í•˜ê¸° ìœ„í•œ ìˆ˜ì •ì´ ë§ì´ ì´ë£¨ì–´ì§€ê¸° ë•Œë¬¸ì— ì¸ìŠ¤í™í„°ì—ì„œ ì£¼ë¡œ ë‹¤ë£¬ë‹¤.
     public class MobMovement : MonoBehaviour, IMobConsistModule
     {
         [Header("MoveInfo")]
@@ -13,72 +13,81 @@ namespace ProjectM.InGame
 
         [Space(10f)]
         [Range(0, 30)]
-        [SerializeField] protected float minMoveTime;
+        [SerializeField] private float minMoveTime;
         [Range(0, 30)]
-        [SerializeField] protected float maxMoveTime;
+        [SerializeField] private float maxMoveTime;
 
         [Space(10f)]
         [Range(0, 30)]
-        [SerializeField] protected float minIdleTime;
+        [SerializeField] private float minIdleTime;
         [Range(0, 30)]
-        [SerializeField] protected float maxIdleTime;
+        [SerializeField] private float maxIdleTime;
 
-        [SerializeField] protected bool atDiscoverPlayerStop = false; //ÇÃ·¹ÀÌ¾î°¡ ±ÙÃ³¿¡ ÀÖ´Ù´Â °ÍÀ» ¾Ë¾ÒÀ» ¶§ÀÇ ¿òÁ÷ÀÓ
+        [SerializeField] protected bool atDiscoverPlayerStop = false; //í”Œë ˆì´ì–´ê°€ ê·¼ì²˜ì— ìˆë‹¤ëŠ” ê²ƒì„ ì•Œì•˜ì„ ë•Œì˜ ì›€ì§ì„
 
         protected Rigidbody2D rigid;
         protected MobBase mob;
 
-        //ÃÊ±âÈ­ »ó¼ö
+        //ì´ˆê¸°í™” ìƒìˆ˜
         private float groundDis;
         private Vector2 startPos;
 
-        //¿ÀºêÁ§Æ® º¯¼ö
+        //ì˜¤ë¸Œì íŠ¸ ë³€ìˆ˜
         private float nextStap;
         private bool flipX = false;
-        private bool isGround;
+        public bool isGround { get; private set; }
         private bool moveAble;
 
 
         protected virtual void Start()
         {
-            //¿¹¿ÜÃ³¸®
+            //ì˜ˆì™¸ì²˜ë¦¬
             rigid = mob.GetComponent<Rigidbody2D>();
             if (rigid == null)
-                Debug.LogWarning("rigid¾øÀ½" + thisOrder());
+                Debug.LogWarning("rigidì—†ìŒ" + thisOrder());
 
+            //ë°”ë‹¥ìœ¼ë¡œ rayë¥¼ ë°œì‚¬í•˜ì—¬ ëª¬ìŠ¤í„°ì˜ í”¼ë²—ê³¼ ë°”ë‹¥ì˜ ê±°ë¦¬ì°¨ì´ë¥¼ ê¸°ë¡í•œë‹¤
             groundDis = Physics2D.Raycast(mob.transform.position, Vector2.down, 100, LayerMask.GetMask("Ground")).distance;
-            //Debug.Log(Physics2D.Raycast(mob.transform.position, -Vector2.down, 100, LayerMask.GetMask("Ground")).transform.name);
-            Debug.Log(groundDis);
-            
+            if (groundDis == 0)
+                Debug.Log("ëª¬ìŠ¤í„°ê°€ ê³µì¤‘ì—ì„œ ìƒì„±ë˜ì—ˆìŠµë‹ˆë‹¤.");
+
             startPos = mob.transform.position;
+
+            MobMovementData m = mob.myMovement;
+            speed = m.speed;
+            minMoveTime = m.minMoveTime;
+            maxMoveTime = m.maxMoveTime;
+            minIdleTime = m.minIdleTime;
+            maxIdleTime = m.maxIdleTime;
+            atDiscoverPlayerStop = m.atDiscoverPlayerStop;
 
             if (minMoveTime >= maxMoveTime)
                 maxMoveTime = minMoveTime;
             if (minIdleTime >= maxIdleTime)
                 maxIdleTime = minIdleTime;
 
-            //¿òÁ÷ÀÓ ½ÃÀÛ
+            //ì›€ì§ì„ ì‹œì‘
             StartMoveState();
         }
 
-        //ÄÚ·çÆ¾ È°¼ºÈ­ ¹× ÃÊ¹İ ¿òÁ÷ÀÓ ¼¼ÆÃ
-        //todo: ÄÚ·çÆ¾Àº È°¼ºÈ­ ½Ã ´Ù½Ã ÄÑÁÖ¾î¾ß ÇÑ´Ù.
+        //ì½”ë£¨í‹´ í™œì„±í™” ë° ì´ˆë°˜ ì›€ì§ì„ ì„¸íŒ…
+        //todo: ì½”ë£¨í‹´ì€ í™œì„±í™” ì‹œ ë‹¤ì‹œ ì¼œì£¼ì–´ì•¼ í•œë‹¤.
         private void StartMoveState()
         {
-            // ¿òÁ÷ÀÌÁö ¾Ê´Â ¸ó½ºÅÍ°Å³ª, ¿òÁ÷ÀÓ ÀüÈ¯ ¼Óµµ°¡ 0ÃÊÀÏ¶§
+            // ì›€ì§ì´ì§€ ì•ŠëŠ” ëª¬ìŠ¤í„°ê±°ë‚˜, ì›€ì§ì„ ì „í™˜ ì†ë„ê°€ 0ì´ˆì¼ë•Œ
             if (speed != 0)
             {
-                if (maxMoveTime > 0f && maxIdleTime > 0f)
+                if (maxMoveTime > 0f || maxIdleTime > 0f)
                     StartCoroutine(SwitchIdleMoveTimer_co());
                 else
-                    Debug.LogWarning("¸ó½ºÅÍÀÇ ¿òÁ÷ÀÌ, ÈŞ½Ä, ÇÃ¸³ ÄğÅ¸ÀÓ 0ÃÊ ÀÔ´Ï´Ù. " + thisOrder());
+                    Debug.LogWarning("ëª¬ìŠ¤í„°ì˜ ì›€ì§ì„, íœ´ì‹ ì¿¨íƒ€ì„ 0ì´ˆ ì…ë‹ˆë‹¤. " + thisOrder());
             }
         }
 
         private void FixedUpdate()
         {
             isGround = IsGround();
-            //¸¸¾à ½ÃÀÛ À§Ä¡º¸´Ù ¶³¾îÁ® ÀÖ´Ù¸é, ´Ù½Ã À§Ä¡¸¦ ÃÊ±âÈ­ ÇÑ´Ù.
+            //ë§Œì•½ ì‹œì‘ ìœ„ì¹˜ë³´ë‹¤ ë–¨ì–´ì ¸ ìˆë‹¤ë©´, ë‹¤ì‹œ ìœ„ì¹˜ë¥¼ ì´ˆê¸°í™” í•œë‹¤.
             if ((startPos.y - 1) >= transform.position.y)
                 if (isGround)
                     transform.position = startPos;
@@ -88,15 +97,13 @@ namespace ProjectM.InGame
             if (atDiscoverPlayerStop && mob.discoveryPlayer)
                 moveAble = false;
 
-            //¿ø·¡ ¿òÁ÷ÀÌ´Â ¸ó½ºÅÍ Áß¿¡ ¸ó½ºÅÍ¸¦ º¸¸é ¸ØÃß´Â ¸ó½ºÅÍ¿¡¼­ ÇÃ·¹ÀÌ¾î°¡ °¨ÁöµÇ¾úÀ» ¶§¸¸ ¸ØÃá´Ù.
+            //ì›ë˜ ì›€ì§ì´ëŠ” ëª¬ìŠ¤í„° ì¤‘ì— ëª¬ìŠ¤í„°ë¥¼ ë³´ë©´ ë©ˆì¶”ëŠ” ëª¬ìŠ¤í„°ì—ì„œ í”Œë ˆì´ì–´ê°€ ê°ì§€ë˜ì—ˆì„ ë•Œë§Œ ë©ˆì¶˜ë‹¤.
             if (moveAble)
-            {
                 HorizontalMovement();
-            }
             else
                 rigid.velocity = Vector2.up * rigid.velocity;
 
-            //ÁöÇüÀ» °è¼ÓÇØ¼­ È®ÀÎÇÏ°í, ÀÌ»óÀ» °¨ÁöÇÏ¸é ÇÃ¸³½ÇÇà
+            //ì§€í˜•ì„ ê³„ì†í•´ì„œ í™•ì¸í•˜ê³ , ì´ìƒì„ ê°ì§€í•˜ë©´ í”Œë¦½ì‹¤í–‰
             if (speed != 0)
                 if (GroundSense())
                     if (!flipX)
@@ -105,7 +112,7 @@ namespace ProjectM.InGame
                         Turn(false);
         }
 
-        //act: ÁÂ¿ì ¿òÁ÷ÀÓ
+        //act: ì¢Œìš° ì›€ì§ì„
         private void HorizontalMovement()
         {
             if (!flipX)
@@ -114,16 +121,16 @@ namespace ProjectM.InGame
                 rigid.velocity = new Vector2(-speed, rigid.velocity.y);
         }
 
-        //@ ¿òÁ÷ÀÓ ÆĞÅÏ ÄÚ·çÆ¾
+        //@ ì›€ì§ì„ íŒ¨í„´ ì½”ë£¨í‹´
         //@=================================================================================================================================================
 
-        //act: ÀÚµ¿À¸·Î ÀÌµ¿, ÈŞ½ÄÀ» º¯°æÇÕ´Ï´Ù.
+        //act: ìë™ìœ¼ë¡œ ì´ë™, íœ´ì‹ì„ ë³€ê²½í•©ë‹ˆë‹¤.
         private IEnumerator SwitchIdleMoveTimer_co()
         {
             while (true)
             {
                 while (!isGround || Mathf.Abs(rigid.velocity.y) >= 0.01f)
-                    yield return new WaitForSeconds(0.1f);                //°øÁß¿¡ ¶°ÀÖÀ» ½Ã°£µ¿¾È ¹öÆÛ
+                    yield return new WaitForSeconds(0.1f);                //ê³µì¤‘ì— ë– ìˆì„ ì‹œê°„ë™ì•ˆ ë²„í¼
 
                 moveAble = true;
                 RandomTurn();
@@ -137,37 +144,33 @@ namespace ProjectM.InGame
             }
         }
 
-        //@ ¸ó½ºÅÍ ÇÃ¸³
+        //@ ëª¬ìŠ¤í„° í”Œë¦½
         //@=================================================================================================================================================
 
-        //act: ¸ó½ºÅÍ°¡ µ¹¾Æ¾ß ÇÒ ¶§¸¦ ¾Ë·ÁÁØ´Ù.
-        //tip: ±ÙÃ³¿¡ ³¶¶°·¯Áö°Å³ª, º®ÀÌ¸é ture¸¦ ¸®ÅÏ.
+        //act: ëª¬ìŠ¤í„°ê°€ ëŒì•„ì•¼ í•  ë•Œë¥¼ ì•Œë ¤ì¤€ë‹¤.
+        //tip: ê·¼ì²˜ì— ë‚­ë– ëŸ¬ì§€ê±°ë‚˜, ë²½ì´ë©´ tureë¥¼ ë¦¬í„´.
         private bool GroundSense()
         {
-            //´ÙÀ½ À§Ä¡°¡ ¾îµğÀÏÁö ¹Ì¸® °Ë»öÇÑ´Ù.
+            //ë‹¤ìŒ ìœ„ì¹˜ê°€ ì–´ë””ì¼ì§€ ë¯¸ë¦¬ ê²€ìƒ‰í•œë‹¤.
             Vector2 nextPos = new Vector2(transform.position.x + ((mob.colPoint.x + 0.1f) * (flipX ? -1 : 1)), transform.position.y);
 
             Debug.DrawLine(nextPos, new Vector2(nextPos.x, startPos.y - (groundDis + 0.1f)), Color.green);
             if (!Physics2D.Linecast(nextPos, new Vector2(nextPos.x, startPos.y - (groundDis + 0.1f)), LayerMask.GetMask("Ground")))
-            {
                 return true;
-            }
 
-            //º®ÀÌ ÀÖ´Â Áö È®ÀÎ.
+            //ë²½ì´ ìˆëŠ” ì§€ í™•ì¸.
             Debug.DrawLine(transform.position, nextPos, Color.red);
             if (Physics2D.Linecast(transform.position, nextPos, LayerMask.GetMask("Ground")))
-            {
                 return true;
-            }
 
             return false;
         }
 
-        //act: (bool) flip¿¡ µû¶ó ÀÚ½ÅÀ» ÇÃ¸³ÇÑ´Ù.
-        //tip: ÀÌ»ó ÁöÇüÀÌ °¨ÁöµÇ¾úÀ» ¶§ È£Ãâ
+        //act: (bool) flipì— ë”°ë¼ ìì‹ ì„ í”Œë¦½í•œë‹¤.
+        //tip: ì´ìƒ ì§€í˜•ì´ ê°ì§€ë˜ì—ˆì„ ë•Œ í˜¸ì¶œ
         private void Turn(bool _flip)
         {
-            //ÇÃ¸³Á¤º¸ ¹İÀü
+            //í”Œë¦½ì •ë³´ ë°˜ì „
             flipX = _flip;
 
             if (!flipX)
@@ -182,17 +185,19 @@ namespace ProjectM.InGame
             }
         }
 
-        //act: ·£´ıÇÏ°Ô µ¹¸°´Ù.
-        //tip: ¸Ê¿¡¼­ ÀÚ¿¬½º·´°Ô µ¹¾Æ´Ù´Ï°Ô ÇÏ±âÀ§ÇØ
+        //act: ëœë¤í•˜ê²Œ ëŒë¦°ë‹¤.
+        //tip: ë§µì—ì„œ ìì—°ìŠ¤ëŸ½ê²Œ ëŒì•„ë‹¤ë‹ˆê²Œ í•˜ê¸°ìœ„í•´
         private void RandomTurn()
         {
+            //ë§Œì•½ 
             if (atDiscoverPlayerStop && mob.discoveryPlayer)
                 return;
+
             bool flip = Random.Range(0, 2) == 1 ? true : false;
             Turn(flip);
         }
 
-        //@ ±âÅ¸
+        //@ ê¸°íƒ€
         //@=================================================================================================================================================
 
         protected bool IsGround() => Physics2D.Raycast(transform.position, Vector2.down, groundDis + .1f, LayerMask.GetMask("Ground"));
@@ -205,8 +210,6 @@ namespace ProjectM.InGame
             gameObject.name = "MovementModule";
 
             transform.localPosition = Vector3.zero;
-
-            speed = mob.myMovement.speed;
         }
 
         public void SetActiveModule(bool _act)
