@@ -11,7 +11,7 @@ namespace ProjectM.InGame
         public MobType thisMobType = MobType.NoneMovementMob;
 
         [Space(10f)]
-        public GameObject myForm;   //게임으로 보이는 몬스터의 실체
+        public GameObject myFormObj;   //게임으로 보이는 몬스터의 실체
         public Transform atkTip;  //공격을 시작하는 위치
 
         [Space(10f)]
@@ -46,8 +46,8 @@ namespace ProjectM.InGame
                 this.enabled = false;
             }
 
-            formAnim = myForm.GetComponent<Animator>();
-            CapsuleCollider2D col = myForm.GetComponent<CapsuleCollider2D>();
+            formAnim = myFormObj.GetComponent<Animator>();
+            CapsuleCollider2D col = myFormObj.GetComponent<CapsuleCollider2D>();
             colPoint = new Vector2(col.size.x / 2 + col.offset.x, -col.size.y / 2 + col.offset.y);
 
             if (formAnim == null)
@@ -101,7 +101,7 @@ namespace ProjectM.InGame
         {
             isLive = true;
             nowHP = myReference.maxHP;
-            myForm.SetActive(true);
+            myFormObj.SetActive(true);
         }
 
         //act: 데미지를 입힐 때 호출
@@ -137,7 +137,7 @@ namespace ProjectM.InGame
         }
         private void MobDead()
         {
-            myForm.SetActive(false);
+            myFormObj.SetActive(false);
         }
 
         //@ 플레이어 감지 ===================================================================================================================

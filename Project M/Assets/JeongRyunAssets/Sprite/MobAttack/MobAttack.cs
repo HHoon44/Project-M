@@ -4,26 +4,28 @@ using UnityEngine;
 
 namespace ProjectM.InGame
 {
-    //°ø°ÝÀ» °¡ÇÏ´Â ¸ó½ºÅÍ¸¦ ±¸ÇöÇÏ´Â ºÎ¸ð ÀÔ´Ï´Ù.
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½Î¸ï¿½ ï¿½Ô´Ï´ï¿½.
     public class MobAttack : MonoBehaviour, IMobConsistModule
     {
         protected MobBase mob;
+        private Transform tip;
 
         public void Initialize(MobBase _mob)
         {
             mob = _mob;
             gameObject.tag = "Mob";
             gameObject.name = "AttackModule";
+
+            transform.localPosition = mob.atkTip.localPosition;
         }
 
         public void SetActiveModule(bool _act)
         {
-            throw new System.NotImplementedException();
         }
-
 
         void Start()
         {
+            tip = mob.atkTip;
         }
 
         void Update()

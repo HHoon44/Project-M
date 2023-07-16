@@ -19,12 +19,12 @@ namespace ProjectM.InGame
         {
             base.Start();
 
-            if (minJumpCooltime >= maxJumpCooltime)
-                maxJumpCooltime = minJumpCooltime;
-
             jumpFarce = mob.myMovement.jumpForce;
             minJumpCooltime = mob.myMovement.minJumpCooltime;
             maxJumpCooltime = mob.myMovement.maxJumpCooltime;
+            if (minJumpCooltime >= maxJumpCooltime)
+                maxJumpCooltime = minJumpCooltime;
+
 
             StartCoroutine(JumpTimer_co());
         }
@@ -38,7 +38,10 @@ namespace ProjectM.InGame
                 if (!atDiscoverPlayerStop || !mob.discoveryPlayer) //플레이어가 감지 되면 점프는 하지 않는다.
                 {
                     if (isGround)
+                    {
+                        Move();
                         Jump();
+                    }
                 }
             }
         }

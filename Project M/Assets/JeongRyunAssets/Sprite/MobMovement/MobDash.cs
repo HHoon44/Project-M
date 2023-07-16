@@ -10,7 +10,7 @@ namespace ProjectM.InGame
     //tip: 대쉬 모둘의 매인 컴포너트 입니다
     public class MobDash : MonoBehaviour, IMobConsistModule
     {
-        public MobBase mob { get; set; }
+        private MobBase mob;
 
         private GameObject mobForm;
         private Sprite nowSprite;
@@ -24,15 +24,22 @@ namespace ProjectM.InGame
 
         public bool isDash{get; private set; }
 
-
-        public MobDash(GameObject _obj)
+        public void Initialize(MobBase _mob)
         {
-            
+            mob = _mob;
+            gameObject.tag = "Mob";
+            gameObject.name = "DashModule";
+
+            transform.localPosition = Vector3.zero;
+        }
+
+        public void SetActiveModule(bool _act)
+        {
         }
 
         void Start()
         {
-            mobForm = mob.myForm;
+            mobForm = mob.myFormObj;
         }
 
         void Update()
@@ -62,17 +69,5 @@ namespace ProjectM.InGame
 
         }
 
-        public void Initialize(MobBase _mob)
-        {
-            mob = _mob;
-            gameObject.tag = "Mob";
-            gameObject.name = "DashModule";
-
-
-        }
-
-        public void SetActiveModule(bool _act)
-        {
-        }
     }
 }

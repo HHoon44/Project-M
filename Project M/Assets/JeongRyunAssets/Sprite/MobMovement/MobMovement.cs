@@ -38,13 +38,22 @@ namespace ProjectM.InGame
         public bool isGround { get; private set; }
         private bool moveAble;
 
+        public void Initialize(MobBase _mob)
+        {
+            mob = _mob;
+            gameObject.tag = "Mob";
+            gameObject.name = "MovementModule";
+
+            transform.localPosition = Vector3.zero;
+        }
+        public void SetActiveModule(bool _act)
+        {
+        }
 
         protected virtual void Start()
         {
             //예외처리
             rigid = mob.GetComponent<Rigidbody2D>();
-            if (rigid == null)
-                Debug.LogWarning("rigid없음" + thisOrder());
 
             //바닥으로 ray를 발사하여 몬스터의 피벗과 바닥의 거리차이를 기록한다
             groundDis = Physics2D.Raycast(mob.transform.position, Vector2.down, 100, LayerMask.GetMask("Ground")).distance;
@@ -53,25 +62,32 @@ namespace ProjectM.InGame
 
             startPos = mob.transform.position;
 
+            //static 변수 할당
             MobMovementData m = mob.myMovement;
-            speed = m.speed;
-            minMoveTime = m.minMoveTime;
-            maxMoveTime = m.maxMoveTime;
-            minIdleTime = m.minIdleTime;
-            maxIdleTime = m.maxIdleTime;
-            atDiscoverPlayerStop = m.atDiscoverPlayerStop;
+
+            //변수할당
+            InitVariable(mob.myMovement);
+            //움직임 시작
+            StartMoveState();
+        }
+
+        //게임 절대 데이터에서 받아온 값을 대입
+        private void InitVariable(MobMovementData _m)
+        {
+            speed = _m.speed;
+            minMoveTime = _m.minMoveTime;
+            maxMoveTime = _m.maxMoveTime;
+            minIdleTime = _m.minIdleTime;
+            maxIdleTime = _m.maxIdleTime;
+            atDiscoverPlayerStop = _m.atDiscoverPlayerStop;
 
             if (minMoveTime >= maxMoveTime)
                 maxMoveTime = minMoveTime;
             if (minIdleTime >= maxIdleTime)
                 maxIdleTime = minIdleTime;
 
-            //움직임 시작
-            StartMoveState();
         }
-
-        //코루틴 활성화 및 초반 움직임 세팅
-        //todo: 코루틴은 활성화 시 다시 켜주어야 한다.
+        //조건을 분석하고 본격적으로 코루팅의 시동을 건다.
         private void StartMoveState()
         {
             // 움직이지 않는 몬스터거나, 움직임 전환 속도가 0초일때
@@ -92,10 +108,16 @@ namespace ProjectM.InGame
                 if (isGround)
                     transform.position = startPos;
                 else
-                    moveAble = false;
+                    Idle();
 
             if (atDiscoverPlayerStop && mob.discoveryPlayer)
-                moveAble = false;
+            {
+                Idle();
+                if (PlayerController.GetPlayerTip().x <= mob.myFormObj.transform.position.x)
+                    Turn(true);
+                else
+                    Turn(false);
+            }
 
             //원래 움직이는 몬스터 중에 몬스터를 보면 멈추는 몬스터에서 플레이어가 감지되었을 때만 멈춘다.
             if (moveAble)
@@ -106,10 +128,12 @@ namespace ProjectM.InGame
             //지형을 계속해서 확인하고, 이상을 감지하면 플립실행
             if (speed != 0)
                 if (GroundSense())
+                {
                     if (!flipX)
                         Turn(true);
                     else
                         Turn(false);
+                }
         }
 
         //act: 좌우 움직임
@@ -121,32 +145,38 @@ namespace ProjectM.InGame
                 rigid.velocity = new Vector2(-speed, rigid.velocity.y);
         }
 
-        //@ 움직임 패턴 코루틴
-        //@=================================================================================================================================================
-
+        //@ 움직임 패턴 =================================================================================================================================================
         //act: 자동으로 이동, 휴식을 변경합니다.
         private IEnumerator SwitchIdleMoveTimer_co()
         {
             while (true)
             {
-                while (!isGround || Mathf.Abs(rigid.velocity.y) >= 0.01f)
-                    yield return new WaitForSeconds(0.1f);                //공중에 떠있을 시간동안 버퍼
-
-                moveAble = true;
+                while (!isGround)
+                    yield return new WaitForSeconds(0.1f);  //공중에 떠 있을 때는 그대로 움직인다.\
                 RandomTurn();
+                Move();
+
                 yield return new WaitForSeconds(Random.Range(minMoveTime, maxMoveTime));
 
-                while (!isGround || Mathf.Abs(rigid.velocity.y) >= 0.01f)
+                while (!isGround)
                     yield return new WaitForSeconds(0.1f);
+                Idle();
 
-                moveAble = false;
-                yield return new WaitForSeconds(Random.Range(minIdleTime, minIdleTime));
+                yield return new WaitForSeconds(Random.Range(minIdleTime, maxIdleTime));
             }
         }
 
-        //@ 몬스터 플립
-        //@=================================================================================================================================================
+        protected void Move()
+        {
+            moveAble = true;
+            //todo: 애니메이션
+        }
+        protected void Idle()
+        {
+            moveAble = false;
+        }
 
+        //@ 몬스터 플립 =================================================================================================================================================
         //act: 몬스터가 돌아야 할 때를 알려준다.
         //tip: 근처에 낭떠러지거나, 벽이면 ture를 리턴.
         private bool GroundSense()
@@ -202,19 +232,6 @@ namespace ProjectM.InGame
 
         protected bool IsGround() => Physics2D.Raycast(transform.position, Vector2.down, groundDis + .1f, LayerMask.GetMask("Ground"));
         private int thisOrder() => transform.GetSiblingIndex();
-
-        public void Initialize(MobBase _mob)
-        {
-            mob = _mob;
-            gameObject.tag = "Mob";
-            gameObject.name = "MovementModule";
-
-            transform.localPosition = Vector3.zero;
-        }
-
-        public void SetActiveModule(bool _act)
-        {
-        }
     }
 }
 

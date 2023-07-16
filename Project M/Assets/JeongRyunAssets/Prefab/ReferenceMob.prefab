@@ -370,7 +370,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   thisMobType: 0
-  myForm: {fileID: 2746209315971025079}
+  myFormObj: {fileID: 2746209315971025079}
   atkTip: {fileID: 2508821227427458083}
   detectionMark: {fileID: 2619470424452601310}
   discoveryMark: {fileID: 3019645656036750927}
@@ -394,7 +394,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!1 &8981740833183519383
 GameObject:
   m_ObjectHideFlags: 0
