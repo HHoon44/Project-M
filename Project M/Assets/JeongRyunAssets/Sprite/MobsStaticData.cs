@@ -118,7 +118,7 @@ namespace ProjectM.InGame
         private void MakeUp_MobMovementData()
         {
             mobMovementData_Table.Clear();
-            mobMovementData_Table.Add(MobType.HorizontalMob, new MobMovementData(4, 3, 6, 1, 3, true, 0, 0, 0, 0, 0, 0, 0));
+            mobMovementData_Table.Add(MobType.HorizontalMob, new MobMovementData(3, 3, 6, 1, 3, true, 0, 0, 0, 0, 0, 0, 0));
             mobMovementData_Table.Add(MobType.JumpMob, new MobMovementData(2.5f, 3, 6, 2, 3, true, 9, 2, 3, 0, 0, 0, 0));
             mobMovementData_Table.Add(MobType.DashMob, new MobMovementData(4, 3, 6, 1, 3, true, 0, 0, 0, 5, 4, 6, 1));
             mobMovementData_Table.Add(MobType.JumpDashMob, new MobMovementData(4, 3, 6, 1, 3, true, 0, 0, 0, 0, 0, 0, 0));

@@ -11,5 +11,7 @@ namespace ProjectM.InGame
 
         //tip: 해당 모듈을 제어할 수 있음
         public void SetActiveModule(bool _act);
+
+        public GameObject thisObj();
     }
 }

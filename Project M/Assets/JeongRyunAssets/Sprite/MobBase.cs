@@ -20,7 +20,7 @@ namespace ProjectM.InGame
         public GameObject discoveryMark;
 
         public Animator formAnim { get; private set; }
-        private IMobConsistModule[] myModule = new IMobConsistModule[3];
+        public IMobConsistModule[] myModule = new IMobConsistModule[3];
 
         //몬스터 변수
         public float nowHP { get; private set; }
@@ -72,18 +72,17 @@ namespace ProjectM.InGame
                 myModule[0] = Instantiate(MobsStaticData.mobJumpModule, transform).GetComponent<MobJump>();
 
             if (myMovement.dashForce >= 0)
-                myModule[1] = Instantiate(MobsStaticData.mobDashModule, transform).GetComponent<MobDash>(); ;
+                myModule[1] = Instantiate(MobsStaticData.mobDashModule, transform).GetComponent<MobDash>();
 
             if (myReference.atkCool >= 0)
                 myModule[2] = Instantiate(MobsStaticData.mobAttackModule, transform).GetComponent<MobAttack>();
 
-            foreach (IMobConsistModule item in myModule)
+            foreach (var item in myModule)
             {
-                if (item == null)
-                    continue;
-
                 item.Initialize(this);
+                item.SetActiveModule(true);
             }
+
         }
 
         private void FixedUpdate()

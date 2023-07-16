@@ -22,7 +22,7 @@ namespace ProjectM.InGame
         private GameObject[] afterimageObj;
         private Vector2[] afterimageStartPos;
 
-        public bool isDash{get; private set; }
+        public bool isDash { get; private set; }
 
         public void Initialize(MobBase _mob)
         {
@@ -36,6 +36,17 @@ namespace ProjectM.InGame
         public void SetActiveModule(bool _act)
         {
         }
+        
+        public GameObject thisObj()
+        {
+            return gameObject;
+        }
+
+        public object thisScript()
+        {
+            return this;
+        }
+
 
         void Start()
         {
@@ -44,24 +55,27 @@ namespace ProjectM.InGame
 
         void Update()
         {
-            if(isDash)
+            if (isDash)
             {
                 for (int i = 0; i < afterimageObj.Length; i++)
                 {
                     afterimageObj[i].transform.position = afterimageStartPos[i];
                 }
             }
-
+        }
+        private void FixedUpdate()
+        {
+// if(isDash)
+//mob.
         }
 
         private void DashStart()
         {
-            if(isDash == true)
+            if (isDash == true)
                 return;
 
             isDash = true;
             nowSprite = mobForm.GetComponent<SpriteRenderer>().sprite;
-            
         }
         private void DashEnd()
         {

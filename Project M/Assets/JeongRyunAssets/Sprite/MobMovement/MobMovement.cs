@@ -49,7 +49,15 @@ namespace ProjectM.InGame
         public void SetActiveModule(bool _act)
         {
         }
+        public GameObject thisObj()
+        {
+            return gameObject;
+        }
 
+        public object thisScript()
+        {
+            return this;
+        }
         protected virtual void Start()
         {
             //예외처리
@@ -166,12 +174,12 @@ namespace ProjectM.InGame
             }
         }
 
-        protected void Move()
+        public void Move()
         {
             moveAble = true;
             //todo: 애니메이션
         }
-        protected void Idle()
+        public void Idle()
         {
             moveAble = false;
         }

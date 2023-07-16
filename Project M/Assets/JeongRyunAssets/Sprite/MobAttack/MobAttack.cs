@@ -23,6 +23,16 @@ namespace ProjectM.InGame
         {
         }
 
+        public GameObject thisObj()
+        {
+            return gameObject;
+        }
+
+        public object thisScript()
+        {
+            return this;
+        }
+
         void Start()
         {
             tip = mob.atkTip;
