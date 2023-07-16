@@ -5,7 +5,7 @@ using UnityEngine;
 namespace ProjectM.InGame
 {
     //점프를 하는 몬스터가의 움직임
-    public class MobJump : MobMovement, IMobConsistModule
+    public class MobJump : MobMovement
     {
         [Space(10f)]
         [Header("JumpInfo")]

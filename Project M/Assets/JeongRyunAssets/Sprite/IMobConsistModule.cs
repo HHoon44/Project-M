@@ -6,7 +6,7 @@ namespace ProjectM.InGame
 {
     public interface IMobConsistModule
     {
-        public void StartForMob(MobBase _mob);
-        public void SetActineModule(bool _act);
+        public void Initialize(MobBase _mob);
+        public void SetActiveModule(bool _act);
     }
 }

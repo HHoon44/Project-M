@@ -7,15 +7,20 @@ namespace ProjectM.InGame
     //공격을 가하는 몬스터를 구현하는 부모 입니다.
     public class MobAttack : MonoBehaviour, IMobConsistModule
     {
-        public void SetActineModule(bool _act)
+        protected MobBase mob;
+
+        public void Initialize(MobBase _mob)
+        {
+            mob = _mob;
+            gameObject.tag = "Mob";
+            gameObject.name = "AttackModule";
+        }
+
+        public void SetActiveModule(bool _act)
         {
             throw new System.NotImplementedException();
         }
 
-        public void StartForMob(MobBase _mob)
-        {
-            throw new System.NotImplementedException();
-        }
 
         void Start()
         {

@@ -8,16 +8,16 @@ using ProjectM.Util;
 namespace ProjectM.InGame
 {
     //tip: 대쉬 모둘의 매인 컴포너트 입니다
-    public class MobDashMovement : MonoBehaviour, IMobConsistModule
+    public class MobDash : MonoBehaviour, IMobConsistModule
     {
         public MobBase mob { get; set; }
 
         private GameObject mobForm;
         private Sprite nowSprite;
 
-        [SerializeField] protected float dashCooltime;
-        [SerializeField] protected float dashReadyTime;   //대쉬를 하기전 잠깐 멈춰있는 시간
         [SerializeField] protected float dashForce;   //대쉬 거리
+        [SerializeField] protected float dashCooltime;   //0초이면, 오토대쉬를 하지 않습니다.
+        [SerializeField] protected float dashReadyTime;  //대쉬를 하기전 잠깐 멈춰있는 시간
 
         private GameObject[] afterimageObj;
         private Vector2[] afterimageStartPos;
@@ -25,14 +25,14 @@ namespace ProjectM.InGame
         public bool isDash{get; private set; }
 
 
-        public MobDashMovement(GameObject _obj)
+        public MobDash(GameObject _obj)
         {
             
         }
 
         void Start()
         {
-            mobForm = GetComponent<MobBase>().myForm;
+            mobForm = mob.myForm;
         }
 
         void Update()
@@ -62,14 +62,17 @@ namespace ProjectM.InGame
 
         }
 
-        public void StartForMob(MobBase _mob)
+        public void Initialize(MobBase _mob)
         {
-            throw new System.NotImplementedException();
+            mob = _mob;
+            gameObject.tag = "Mob";
+            gameObject.name = "DashModule";
+
+
         }
 
-        public void SetActineModule(bool _act)
+        public void SetActiveModule(bool _act)
         {
-            throw new System.NotImplementedException();
         }
     }
 }

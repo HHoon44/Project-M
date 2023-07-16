@@ -44,7 +44,7 @@ namespace ProjectM.Define
 
     //@ 몬스터의 종류를 나열
     //tip: 열거형의 정수는 스테이지와 관계있음   00## => 00 스테이지 번호, ## 몬스터 고유 번호
-    public enum KindOfMob
+    public enum MobType
     {
         HorizontalMob,
         JumpMob,

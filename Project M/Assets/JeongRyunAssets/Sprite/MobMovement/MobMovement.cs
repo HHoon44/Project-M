@@ -29,7 +29,8 @@ namespace ProjectM.InGame
         protected MobBase mob;
 
         //초기화 상수
-        private Vector3 startPos;
+        private float groundDis;
+        private Vector2 startPos;
 
         //오브젝트 변수
         private float nextStap;
@@ -41,21 +42,15 @@ namespace ProjectM.InGame
         protected virtual void Start()
         {
             //예외처리
-            rigid = GetComponent<Rigidbody2D>();
+            rigid = mob.GetComponent<Rigidbody2D>();
             if (rigid == null)
                 Debug.LogWarning("rigid없음" + thisOrder());
 
-            mob = GetComponent<MobBase>();
-            if (mob == null)
-                Debug.LogWarning("GameMobBase없음" + thisOrder());
-
-            if (gameObject.tag != "Mob")
-                this.enabled = false;
-
-            if (Physics2D.Raycast(transform.position, -Vector2.down, 2f, LayerMask.GetMask("Ground")))
-                Debug.LogWarning("몬스터가 공중에 뜬 상태로 시작되었습니다. " + thisOrder());
-
-            startPos = transform.position;
+            groundDis = Physics2D.Raycast(mob.transform.position, Vector2.down, 100, LayerMask.GetMask("Ground")).distance;
+            //Debug.Log(Physics2D.Raycast(mob.transform.position, -Vector2.down, 100, LayerMask.GetMask("Ground")).transform.name);
+            Debug.Log(groundDis);
+            
+            startPos = mob.transform.position;
 
             if (minMoveTime >= maxMoveTime)
                 maxMoveTime = minMoveTime;
@@ -150,11 +145,10 @@ namespace ProjectM.InGame
         private bool GroundSense()
         {
             //다음 위치가 어디일지 미리 검색한다.
-            Vector2 nextPos = new Vector2(transform.position.x + ((mob.colSize.x + 0.1f) * (flipX ? -1 : 1)), transform.position.y);
+            Vector2 nextPos = new Vector2(transform.position.x + ((mob.colPoint.x + 0.1f) * (flipX ? -1 : 1)), transform.position.y);
 
-            //낭떠러지가 있는 지 확인.
-            Debug.DrawRay(nextPos, Vector3.down * (mob.colSize.y - startPos.y + .2f), Color.green);
-            if (!Physics2D.Raycast(nextPos, Vector3.down, mob.colSize.y - startPos.y + .2f, LayerMask.GetMask("Ground")))
+            Debug.DrawLine(nextPos, new Vector2(nextPos.x, startPos.y - (groundDis + 0.1f)), Color.green);
+            if (!Physics2D.Linecast(nextPos, new Vector2(nextPos.x, startPos.y - (groundDis + 0.1f)), LayerMask.GetMask("Ground")))
             {
                 return true;
             }
@@ -179,12 +173,12 @@ namespace ProjectM.InGame
             if (!flipX)
             {
                 nextStap = .2f * speed;
-                transform.localScale = new Vector3(1, 1, 1);
+                mob.transform.localScale = new Vector3(1, 1, 1);
             }
             else
             {
                 nextStap = -.2f * speed;
-                transform.localScale = new Vector3(-1, 1, 1);
+                mob.transform.localScale = new Vector3(-1, 1, 1);
             }
         }
 
@@ -201,17 +195,22 @@ namespace ProjectM.InGame
         //@ 기타
         //@=================================================================================================================================================
 
-        protected bool IsGround() => Physics2D.Raycast(transform.position, Vector2.down, mob.colSize.y + .1f, LayerMask.GetMask("Ground"));
+        protected bool IsGround() => Physics2D.Raycast(transform.position, Vector2.down, groundDis + .1f, LayerMask.GetMask("Ground"));
         private int thisOrder() => transform.GetSiblingIndex();
 
-        public void StartForMob(MobBase _mob)
+        public void Initialize(MobBase _mob)
         {
-            throw new System.NotImplementedException();
+            mob = _mob;
+            gameObject.tag = "Mob";
+            gameObject.name = "MovementModule";
+
+            transform.localPosition = Vector3.zero;
+
+            speed = mob.myMovement.speed;
         }
 
-        public void SetActineModule(bool _act)
+        public void SetActiveModule(bool _act)
         {
-            throw new System.NotImplementedException();
         }
     }
 }

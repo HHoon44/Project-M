@@ -44,9 +44,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db6493fdae8db4d1889469ce609fc622, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 0
-  minMoveTime: 0
-  maxMoveTime: 0
-  minIdleTime: 0
-  maxIdleTime: 0
-  atDiscoverPlayerStop: 0
+  speed: 5
+  minMoveTime: 3
+  maxMoveTime: 6
+  minIdleTime: 1
+  maxIdleTime: 3
+  atDiscoverPlayerStop: 1
