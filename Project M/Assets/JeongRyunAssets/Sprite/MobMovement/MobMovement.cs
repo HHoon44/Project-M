@@ -114,7 +114,7 @@ namespace ProjectM.InGame
             //만약 시작 위치보다 떨어져 있다면, 다시 위치를 초기화 한다.
             if ((startPos.y - 1) >= transform.position.y)
                 if (isGround)
-                    transform.position = startPos;
+                    mob.transform.position = startPos;
                 else
                     Idle();
 
