@@ -25,7 +25,6 @@ namespace ProjectM.InGame
 
         [SerializeField] protected bool atDiscoverPlayerStop = false; //플레이어가 근처에 있다는 것을 알았을 때의 움직임
 
-        protected Rigidbody2D rigid;
         protected MobBase mob;
 
         //초기화 상수
@@ -35,9 +34,9 @@ namespace ProjectM.InGame
         //오브젝트 변수
         private float nextStap;
         private bool flipX = false;
-        public bool isGround { get; private set; }
         private bool moveAble;
 
+        //! interface
         public void Initialize(MobBase _mob)
         {
             mob = _mob;
@@ -45,6 +44,22 @@ namespace ProjectM.InGame
             gameObject.name = "MovementModule";
 
             transform.localPosition = Vector3.zero;
+
+            //변수 할당
+            MobMovementData mM = _mob.myMovement;
+
+            speed = mM.speed;
+            minMoveTime = mM.minMoveTime;
+            maxMoveTime = mM.maxMoveTime;
+            minIdleTime = mM.minIdleTime;
+            maxIdleTime = mM.maxIdleTime;
+            atDiscoverPlayerStop = mM.atDiscoverPlayerStop;
+
+            if (minMoveTime >= maxMoveTime)
+                maxMoveTime = minMoveTime;
+            if (minIdleTime >= maxIdleTime)
+                maxIdleTime = minIdleTime;
+
         }
         public void SetActiveModule(bool _act)
         {
@@ -54,15 +69,8 @@ namespace ProjectM.InGame
             return gameObject;
         }
 
-        public object thisScript()
-        {
-            return this;
-        }
         protected virtual void Start()
         {
-            //예외처리
-            rigid = mob.GetComponent<Rigidbody2D>();
-
             //바닥으로 ray를 발사하여 몬스터의 피벗과 바닥의 거리차이를 기록한다
             groundDis = Physics2D.Raycast(mob.transform.position, Vector2.down, 100, LayerMask.GetMask("Ground")).distance;
             if (groundDis == 0)
@@ -73,28 +81,10 @@ namespace ProjectM.InGame
             //static 변수 할당
             MobMovementData m = mob.myMovement;
 
-            //변수할당
-            InitVariable(mob.myMovement);
             //움직임 시작
             StartMoveState();
         }
 
-        //게임 절대 데이터에서 받아온 값을 대입
-        private void InitVariable(MobMovementData _m)
-        {
-            speed = _m.speed;
-            minMoveTime = _m.minMoveTime;
-            maxMoveTime = _m.maxMoveTime;
-            minIdleTime = _m.minIdleTime;
-            maxIdleTime = _m.maxIdleTime;
-            atDiscoverPlayerStop = _m.atDiscoverPlayerStop;
-
-            if (minMoveTime >= maxMoveTime)
-                maxMoveTime = minMoveTime;
-            if (minIdleTime >= maxIdleTime)
-                maxIdleTime = minIdleTime;
-
-        }
         //조건을 분석하고 본격적으로 코루팅의 시동을 건다.
         private void StartMoveState()
         {
@@ -110,10 +100,9 @@ namespace ProjectM.InGame
 
         private void FixedUpdate()
         {
-            isGround = IsGround();
             //만약 시작 위치보다 떨어져 있다면, 다시 위치를 초기화 한다.
             if ((startPos.y - 1) >= transform.position.y)
-                if (isGround)
+                if (mob.isGround)
                     mob.transform.position = startPos;
                 else
                     Idle();
@@ -130,8 +119,6 @@ namespace ProjectM.InGame
             //원래 움직이는 몬스터 중에 몬스터를 보면 멈추는 몬스터에서 플레이어가 감지되었을 때만 멈춘다.
             if (moveAble)
                 HorizontalMovement();
-            else
-                rigid.velocity = Vector2.up * rigid.velocity;
 
             //지형을 계속해서 확인하고, 이상을 감지하면 플립실행
             if (speed != 0)
@@ -148,9 +135,9 @@ namespace ProjectM.InGame
         private void HorizontalMovement()
         {
             if (!flipX)
-                rigid.velocity = new Vector2(speed, rigid.velocity.y);
+                mob.nowVelocityX += speed;
             else
-                rigid.velocity = new Vector2(-speed, rigid.velocity.y);
+                mob.nowVelocityX += -speed;
         }
 
         //@ 움직임 패턴 =================================================================================================================================================
@@ -159,14 +146,14 @@ namespace ProjectM.InGame
         {
             while (true)
             {
-                while (!isGround)
+                while (!mob.isGround)
                     yield return new WaitForSeconds(0.1f);  //공중에 떠 있을 때는 그대로 움직인다.\
                 RandomTurn();
                 Move();
 
                 yield return new WaitForSeconds(Random.Range(minMoveTime, maxMoveTime));
 
-                while (!isGround)
+                while (!mob.isGround)
                     yield return new WaitForSeconds(0.1f);
                 Idle();
 
@@ -238,7 +225,7 @@ namespace ProjectM.InGame
         //@ 기타
         //@=================================================================================================================================================
 
-        protected bool IsGround() => Physics2D.Raycast(transform.position, Vector2.down, groundDis + .1f, LayerMask.GetMask("Ground"));
+
         private int thisOrder() => transform.GetSiblingIndex();
     }
 }

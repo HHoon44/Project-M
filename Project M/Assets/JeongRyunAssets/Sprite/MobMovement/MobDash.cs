@@ -12,14 +12,15 @@ namespace ProjectM.InGame
     {
         private MobBase mob;
 
-        private GameObject mobForm;
-        private Sprite nowSprite;
+        private SpriteRenderer mobRender;
 
         [SerializeField] protected float dashForce;   //대쉬 거리
         [SerializeField] protected float dashCooltime;   //0초이면, 오토대쉬를 하지 않습니다.
-        [SerializeField] protected float dashReadyTime;  //대쉬를 하기전 잠깐 멈춰있는 시간
 
-        private GameObject[] afterimageObj;
+        static private float decreaseMount = 100;
+        static private float chargingTime = 0.7f;
+
+        private GameObject[] afterimageObj;  //폴딩 기술 사용
         private Vector2[] afterimageStartPos;
 
         public bool isDash { get; private set; }
@@ -31,12 +32,15 @@ namespace ProjectM.InGame
             gameObject.name = "DashModule";
 
             transform.localPosition = Vector3.zero;
+
+            dashForce = _mob.myMovement.dashForce;
+            dashCooltime = _mob.myMovement.dashCooltime;
         }
 
         public void SetActiveModule(bool _act)
         {
         }
-        
+
         public GameObject thisObj()
         {
             return gameObject;
@@ -50,23 +54,31 @@ namespace ProjectM.InGame
 
         void Start()
         {
-            mobForm = mob.myFormObj;
+            mobRender = mob.myFormObj.GetComponent<SpriteRenderer>();
+            StartCoroutine(DashStart_co());
         }
 
         void Update()
         {
-            if (isDash)
-            {
-                for (int i = 0; i < afterimageObj.Length; i++)
-                {
-                    afterimageObj[i].transform.position = afterimageStartPos[i];
-                }
-            }
+            // if (isDash)
+            // {
+            //     for (int i = 0; i < afterimageObj.Length; i++)
+            //     {
+            //         afterimageObj[i].transform.position = afterimageStartPos[i];
+            //     }
+            // }
         }
         private void FixedUpdate()
         {
-// if(isDash)
-//mob.
+        }
+
+        private IEnumerator DashStart_co()
+        {
+            while (true)
+            {
+                yield return new WaitForSeconds(dashCooltime);
+                DashStart();
+            }
         }
 
         private void DashStart()
@@ -75,7 +87,20 @@ namespace ProjectM.InGame
                 return;
 
             isDash = true;
-            nowSprite = mobForm.GetComponent<SpriteRenderer>().sprite;
+
+            StartCoroutine(ActDash_co());
+        }
+        private IEnumerator ActDash_co()
+        {
+            float remainingForce = dashForce;
+            yield return new WaitForSeconds(chargingTime);
+            while (remainingForce >= dashForce / 20f)
+            {
+                mob.nowVelocityX += remainingForce * mob.transform.localScale.x;
+                remainingForce -= Time.fixedDeltaTime * decreaseMount;
+                yield return new WaitForFixedUpdate();
+            }
+            DashEnd();
         }
         private void DashEnd()
         {

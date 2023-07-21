@@ -7,6 +7,15 @@ namespace ProjectM.InGame
 {
     public class MobBase : MonoBehaviour
     {
+        private Rigidbody2D rigid;
+        public Animator formAnim { get; private set; }
+
+        private MobMovement movementModule;
+        private MobJump jumpModule;
+        private MobDash dashModule;
+        private MobAttack attactModule;
+        public IMobConsistModule[] myModule = new IMobConsistModule[4];
+
         [Header("MobSetting")]
         public MobType thisMobType = MobType.NoneMovementMob;
 
@@ -19,11 +28,10 @@ namespace ProjectM.InGame
         public GameObject detectionMark;
         public GameObject discoveryMark;
 
-        public Animator formAnim { get; private set; }
-        public IMobConsistModule[] myModule = new IMobConsistModule[3];
-
         //몬스터 변수
         public float nowHP { get; private set; }
+        public float nowVelocityX;
+        public bool isGround { get; private set; }
         public bool detectionPlayer { get; private set; }  //플레이어가 근처에 있다면
         public bool discoveryPlayer { get; private set; }  //플레이어가 보인다면
         public bool isLive { get; private set; }   //자신이 죽었다면
@@ -37,6 +45,7 @@ namespace ProjectM.InGame
 
         private void Start()
         {
+            rigid = GetComponent<Rigidbody2D>();
             myReference = MobsStaticData.Instance.GetMobReferenceInfo(thisMobType);
             myMovement = MobsStaticData.Instance.GetMobMovemantData(thisMobType);
 
@@ -66,28 +75,37 @@ namespace ProjectM.InGame
 
         public void SetModule()
         {
-            if (myMovement.jumpForce <= 0)
-                myModule[0] = Instantiate(MobsStaticData.mobMovementModule, transform).GetComponent<MobMovement>();
-            else
-                myModule[0] = Instantiate(MobsStaticData.mobJumpModule, transform).GetComponent<MobJump>();
+            if (myMovement.speed > 0)
+                movementModule = Instantiate(MobsStaticData.mobMovementModule, transform).GetComponent<MobMovement>();
+            if (myMovement.jumpForce > 0)
+                jumpModule = Instantiate(MobsStaticData.mobJumpModule, transform).GetComponent<MobJump>();
+            if (myMovement.dashForce > 0)
+                dashModule = Instantiate(MobsStaticData.mobDashModule, transform).GetComponent<MobDash>();
+            if (myReference.atkCool > 0)
+                attactModule = Instantiate(MobsStaticData.mobAttackModule, transform).GetComponent<MobAttack>();
 
-            if (myMovement.dashForce >= 0)
-                myModule[1] = Instantiate(MobsStaticData.mobDashModule, transform).GetComponent<MobDash>();
-
-            if (myReference.atkCool >= 0)
-                myModule[2] = Instantiate(MobsStaticData.mobAttackModule, transform).GetComponent<MobAttack>();
+            myModule[0] = movementModule;
+            myModule[1] = jumpModule;
+            myModule[2] = dashModule;
+            myModule[3] = attactModule;
 
             foreach (var item in myModule)
             {
+                if (item == null)
+                    continue;
                 item.Initialize(this);
                 item.SetActiveModule(true);
             }
-
         }
 
         private void FixedUpdate()
         {
+            isGround = IsGround();
+
             DetectUpdate();
+            rigid.velocity = new Vector2(nowVelocityX, rigid.velocity.y);
+
+            nowVelocityX = 0; //매 프래임마다 초기화;
         }
 
 
@@ -183,5 +201,9 @@ namespace ProjectM.InGame
         //플레이어와 몬스터 사이에 장애물이 없을 때 true
         private bool DiscoverPlayer() => (detectionPlayer && !Physics2D.Linecast(atkTip.position, PlayerController.GetPlayerTip(), LayerMask.GetMask("Ground")));
 
+
+        //@ 기타 ===================================================================================================================
+
+        private bool IsGround() => Physics2D.Raycast(transform.position, Vector2.down, -(colPoint.y - 0.1f), LayerMask.GetMask("Ground"));
     }
 }

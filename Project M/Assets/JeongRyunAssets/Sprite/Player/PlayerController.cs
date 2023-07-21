@@ -7,19 +7,18 @@ namespace ProjectM.InGame
 
     public class PlayerController : MonoBehaviour
     {
-        //ÇÃ·¡ÀÌ¾î´Â Á÷Á¢ ½Ì±ÛÅæÀ» ¸¸µé¾î »ç¿ë
         private static GameObject playerObject = null;
         public static GameObject GetPlayerObject() => playerObject;
 
         public Transform mobDetectionTip;
-        public static Vector2 GetPlayerTip() => playerObject.GetComponent<PlayerController>().mobDetectionTip.transform.position; //¸ó½ºÅÍ°¡ ÇÃ·¹ÀÌ¾î¸¦ Æ®·¡Å·ÇÒ À§Ä¡¸¦ ¸®ÅÏÇÕ´Ï´Ù
+        public static Vector2 GetPlayerTip() => playerObject.GetComponent<PlayerController>().mobDetectionTip.transform.position; //ï¿½ï¿½ï¿½Í°ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾î¸¦ Æ®ï¿½ï¿½Å·ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½
 
         private void Awake()
         {
             if (playerObject == null)
                 playerObject = this.gameObject;
             else
-                Debug.LogWarning("½ºÅ×ÀÌÁö³»¿¡ ÇÃ·¹ÀÌ¾î°¡ 2°³ ÀÌ»ó Á¸ÀçÇÕ´Ï´Ù.");
+                Debug.LogWarning("í”Œë ˆì´ì–´ê°€ 2ë§ˆë¦¬ ìˆìŠµë‹ˆë‹¤.");
         } 
 
     }

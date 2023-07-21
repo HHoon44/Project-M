@@ -45,7 +45,7 @@ namespace ProjectM.InGame
         public MobMovementData(
             float _speed, float _minMoveTime, float _maxMoveTime, float _minIdleTime, float _maxIdleTime, bool _atDiscoverStop,
             float _jumpForce, float _minJumpCooltime, float _maxJumpCooltime,
-            float _dashForce, float _minDashCooltime, float _maxDashCooltime, float _dashReadyTime)
+            float _dashForce, float _dashCooltime)
         {
             speed = _speed;
             minMoveTime = _minMoveTime;
@@ -59,9 +59,7 @@ namespace ProjectM.InGame
             maxJumpCooltime = _maxJumpCooltime;
 
             dashForce = _dashForce;
-            minDashCooltime = _minDashCooltime;
-            maxDashCooltime = _maxDashCooltime;
-            dashReadyTime = _dashReadyTime;
+            dashCooltime = _dashCooltime;
         }
 
         readonly public float speed;
@@ -76,9 +74,7 @@ namespace ProjectM.InGame
         readonly public float maxJumpCooltime;
 
         readonly public float dashForce;
-        readonly public float minDashCooltime;
-        readonly public float maxDashCooltime;
-        readonly public float dashReadyTime;
+        readonly public float dashCooltime;
     }
 
 
@@ -118,11 +114,11 @@ namespace ProjectM.InGame
         private void MakeUp_MobMovementData()
         {
             mobMovementData_Table.Clear();
-            mobMovementData_Table.Add(MobType.HorizontalMob, new MobMovementData(3, 3, 6, 1, 3, true, 0, 0, 0, 0, 0, 0, 0));
-            mobMovementData_Table.Add(MobType.JumpMob, new MobMovementData(8f, 3, 6, 2, 3, true, 9, 2, 3, 0, 0, 0, 0));
-            mobMovementData_Table.Add(MobType.DashMob, new MobMovementData(4, 3, 6, 1, 3, true, 0, 0, 0, 5, 4, 6, 1));
-            mobMovementData_Table.Add(MobType.JumpDashMob, new MobMovementData(4, 3, 6, 1, 3, true, 0, 0, 0, 0, 0, 0, 0));
-            mobMovementData_Table.Add(MobType.NoneMovementMob, new MobMovementData(0, 3, 6, 1, 3, false, 0, 0, 0, 0, 0, 0, 0));
+            mobMovementData_Table.Add(MobType.HorizontalMob, new MobMovementData(3, 3, 6, 1, 3, true, 0, 0, 0, 0, 0));
+            mobMovementData_Table.Add(MobType.JumpMob, new MobMovementData(8f, 3, 6, 2, 3, true, 9, 2, 3, 0, 0));
+            mobMovementData_Table.Add(MobType.DashMob, new MobMovementData(4, 3, 6, 1, 3, true, 0, 0, 0, 20, 6));
+            mobMovementData_Table.Add(MobType.JumpDashMob, new MobMovementData(4, 3, 6, 1, 3, true, 0, 0, 0, 0, 0));
+            mobMovementData_Table.Add(MobType.NoneMovementMob, new MobMovementData(0, 3, 6, 1, 3, false, 0, 0, 0, 0, 0));
         }
 
         private void SetModule()
