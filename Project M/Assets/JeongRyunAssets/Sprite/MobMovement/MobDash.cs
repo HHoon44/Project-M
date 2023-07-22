@@ -10,8 +10,10 @@ namespace ProjectM.InGame
     //tip: 대쉬 모둘의 매인 컴포너트 입니다
     public class MobDash : MonoBehaviour, IMobConsistModule
     {
-        private MobBase mob;
+        [SerializeField] private GameObject afterimagePrefab;
+        private SpriteRenderer[] afterimageArr;  //폴딩 기술 사용
 
+        private MobBase mob;
         private SpriteRenderer mobRender;
 
         [SerializeField] protected float dashForce;   //대쉬 거리
@@ -20,10 +22,10 @@ namespace ProjectM.InGame
         static private float decreaseMount = 80;
         static private float chargingTime = 1f;
 
-        private GameObject[] afterimageObj;  //폴딩 기술 사용
-        private Vector2[] afterimageStartPos;
 
         public bool isDash { get; private set; }
+
+        private static Transform afterimageGroup = null;  //몬스터 잔상을 관리하는 tramsform
 
         public void Initialize(MobBase _mob)
         {
@@ -54,8 +56,17 @@ namespace ProjectM.InGame
 
         void Start()
         {
+            if (afterimageGroup == null)
+                afterimageGroup = GameObject.Find("EffectGroup").transform;
+
             mobRender = mob.myFormObj.GetComponent<SpriteRenderer>();
             StartCoroutine(DashStart_co());
+
+            //이미지 세팅
+            GameObject afterimage = Instantiate(afterimagePrefab, afterimageGroup);
+            afterimageArr = new SpriteRenderer[afterimage.transform.childCount];
+            for (int i = 0; i < afterimage.transform.childCount; i++)
+                afterimageArr[i] = afterimage.transform.GetChild(i).GetComponent<SpriteRenderer>();
         }
 
         void Update()
@@ -99,6 +110,7 @@ namespace ProjectM.InGame
             yield return new WaitForSeconds(chargingTime);
 
             //데쉬
+            StartCoroutine(DashAfterimage_co());
             while (remainingForce >= dashForce / 20f)
             {
                 mob.nowVelocityX += remainingForce * (mob.movementModule.flipX ? -1 : 1);
@@ -114,14 +126,36 @@ namespace ProjectM.InGame
 
             DashEnd();
         }
-        private IEnumerator DashEfterimage_co()
+
+        private IEnumerator DashAfterimage_co()
         {
+            int index = 0;
             while (isDash)
             {
-                yield return new WaitForSeconds(0.1f);
-            }
+                int i = index % afterimageArr.Length;
 
+                afterimageArr[i].transform.position = mob.transform.position;
+                afterimageArr[i].sprite = mobRender.sprite;
+
+                afterimageArr[i].gameObject.SetActive(false);
+                afterimageArr[i].gameObject.SetActive(true);
+
+                Color32 color = afterimageArr[i].color;
+                color.a = 100;
+                afterimageArr[i].color = color;
+
+                index++;
+                StartCoroutine(OffAfterimage_co(afterimageArr[i].gameObject));
+                yield return new WaitForSeconds(dashForce / (decreaseMount * 6));
+            }
         }
+
+        private IEnumerator OffAfterimage_co(GameObject _that)
+        {
+            yield return new WaitForSeconds(0.4f);
+            _that.SetActive(false);
+        }
+
         private void DashEnd()
         {
             //mob.movementModule.Move();

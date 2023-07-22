@@ -116,8 +116,8 @@ namespace ProjectM.InGame
             mobMovementData_Table.Clear();
             mobMovementData_Table.Add(MobType.HorizontalMob, new MobMovementData(3, 3, 6, 1, 3, true, 0, 0, 0, 0, 0));
             mobMovementData_Table.Add(MobType.JumpMob, new MobMovementData(8f, 3, 6, 2, 3, true, 9, 2, 3, 0, 0));
-            mobMovementData_Table.Add(MobType.DashMob, new MobMovementData(4, 3, 6, 1, 3, true, 0, 0, 0, 30, 4));
-            mobMovementData_Table.Add(MobType.JumpDashMob, new MobMovementData(4, 3, 6, 1, 3, true, 0, 0, 0, 0, 0));
+            mobMovementData_Table.Add(MobType.DashMob, new MobMovementData(4, 3, 6, 1, 3, true, 0, 0, 0, 30, 1));
+            mobMovementData_Table.Add(MobType.JumpDashMob, new MobMovementData(4, 3, 6, 1, 3, true, 9, 3, 4, 30, 5));
             mobMovementData_Table.Add(MobType.NoneMovementMob, new MobMovementData(0, 3, 6, 1, 3, false, 0, 0, 0, 0, 0));
         }
 
