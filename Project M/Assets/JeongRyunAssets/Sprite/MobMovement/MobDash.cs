@@ -17,8 +17,8 @@ namespace ProjectM.InGame
         [SerializeField] protected float dashForce;   //대쉬 거리
         [SerializeField] protected float dashCooltime;   //0초이면, 오토대쉬를 하지 않습니다.
 
-        static private float decreaseMount = 100;
-        static private float chargingTime = 0.7f;
+        static private float decreaseMount = 80;
+        static private float chargingTime = 1f;
 
         private GameObject[] afterimageObj;  //폴딩 기술 사용
         private Vector2[] afterimageStartPos;
@@ -88,24 +88,44 @@ namespace ProjectM.InGame
 
             isDash = true;
 
-            StartCoroutine(ActDash_co());
+            StartCoroutine(Dash_co());
         }
-        private IEnumerator ActDash_co()
+        private IEnumerator Dash_co()
         {
             float remainingForce = dashForce;
+
+            //차징
+            mob.movementModule.Idle(chargingTime + (remainingForce / decreaseMount));
             yield return new WaitForSeconds(chargingTime);
+
+            //데쉬
             while (remainingForce >= dashForce / 20f)
             {
-                mob.nowVelocityX += remainingForce * mob.transform.localScale.x;
+                mob.nowVelocityX += remainingForce * (mob.movementModule.flipX ? -1 : 1);
                 remainingForce -= Time.fixedDeltaTime * decreaseMount;
+
+                if (mob.movementModule.groundSense)
+                    break;
+                if (Mathf.Abs(mob.transform.position.x - PlayerController.GetPlayerTip().x) <= .5f) //플레이어와 동일선상의 X축위에 있으면
+                    break;
+
                 yield return new WaitForFixedUpdate();
             }
+
             DashEnd();
+        }
+        private IEnumerator DashEfterimage_co()
+        {
+            while (isDash)
+            {
+                yield return new WaitForSeconds(0.1f);
+            }
+
         }
         private void DashEnd()
         {
+            //mob.movementModule.Move();
             isDash = false;
-
         }
 
     }

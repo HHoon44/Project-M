@@ -28,13 +28,16 @@ namespace ProjectM.InGame
         protected MobBase mob;
 
         //초기화 상수
-        private float groundDis;
+        private float groundDis = 0;
         private Vector2 startPos;
 
         //오브젝트 변수
         private float nextStap;
-        private bool flipX = false;
+        public bool flipX { get; private set; } = false;
         private bool moveAble;
+        public bool groundSense{ get; private set; } //true일 때 낭떠러지
+        private float staticMoveTime;  //필연적으로 움직이는 시간
+        private float staticIdleTime;  //필연적으로 멈춰있는 시간
 
         //! interface
         public void Initialize(MobBase _mob)
@@ -72,7 +75,7 @@ namespace ProjectM.InGame
         protected virtual void Start()
         {
             //바닥으로 ray를 발사하여 몬스터의 피벗과 바닥의 거리차이를 기록한다
-            groundDis = Physics2D.Raycast(mob.transform.position, Vector2.down, 100, LayerMask.GetMask("Ground")).distance;
+            groundDis = Physics2D.Raycast(mob.transform.position, Vector2.down, -mob.colPoint.y + 1f, LayerMask.GetMask("Ground")).distance;
             if (groundDis == 0)
                 Debug.Log("몬스터가 공중에서 생성되었습니다.");
 
@@ -98,6 +101,14 @@ namespace ProjectM.InGame
             }
         }
 
+        private void Update()
+        {
+            if (staticMoveTime > 0)
+                staticMoveTime -= Time.deltaTime;
+            if (staticIdleTime > 0)
+                staticIdleTime -= Time.deltaTime;
+        }
+
         private void FixedUpdate()
         {
             //만약 시작 위치보다 떨어져 있다면, 다시 위치를 초기화 한다.
@@ -107,6 +118,7 @@ namespace ProjectM.InGame
                 else
                     Idle();
 
+            //플레이어가 보이는 상태라면
             if (atDiscoverPlayerStop && mob.discoveryPlayer)
             {
                 Idle();
@@ -116,28 +128,27 @@ namespace ProjectM.InGame
                     Turn(false);
             }
 
-            //원래 움직이는 몬스터 중에 몬스터를 보면 멈추는 몬스터에서 플레이어가 감지되었을 때만 멈춘다.
             if (moveAble)
                 HorizontalMovement();
 
             //지형을 계속해서 확인하고, 이상을 감지하면 플립실행
-            if (speed != 0)
-                if (GroundSense())
-                {
-                    if (!flipX)
-                        Turn(true);
-                    else
-                        Turn(false);
-                }
+            groundSense = GroundSense();
+            if (groundSense)
+            {
+                if (!flipX)
+                    Turn(true);
+                else
+                    Turn(false);
+            }
         }
 
         //act: 좌우 움직임
         private void HorizontalMovement()
         {
             if (!flipX)
-                mob.nowVelocityX += speed;
+                mob.nowVelocityX = speed;
             else
-                mob.nowVelocityX += -speed;
+                mob.nowVelocityX = -speed;
         }
 
         //@ 움직임 패턴 =================================================================================================================================================
@@ -146,14 +157,14 @@ namespace ProjectM.InGame
         {
             while (true)
             {
-                while (!mob.isGround)
-                    yield return new WaitForSeconds(0.1f);  //공중에 떠 있을 때는 그대로 움직인다.\
+                while (!mob.isGround || staticIdleTime > 0)
+                    yield return new WaitForSeconds(0.1f);  //공중에 떠 있을 때는 전의 행동 그대로 한다
                 RandomTurn();
                 Move();
 
                 yield return new WaitForSeconds(Random.Range(minMoveTime, maxMoveTime));
 
-                while (!mob.isGround)
+                while (!mob.isGround || staticMoveTime > 0)
                     yield return new WaitForSeconds(0.1f);
                 Idle();
 
@@ -161,13 +172,17 @@ namespace ProjectM.InGame
             }
         }
 
-        public void Move()
+        public void Move(float _staticTime = 0)
         {
+            staticIdleTime = 0;
+            staticMoveTime = _staticTime;
             moveAble = true;
             //todo: 애니메이션
         }
-        public void Idle()
+        public void Idle(float _staticTime = 0)
         {
+            staticMoveTime = 0;
+            staticIdleTime = _staticTime;
             moveAble = false;
         }
 

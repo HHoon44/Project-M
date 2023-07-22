@@ -10,11 +10,11 @@ namespace ProjectM.InGame
         private Rigidbody2D rigid;
         public Animator formAnim { get; private set; }
 
-        private MobMovement movementModule;
+        public MobMovement movementModule { get; private set; }
         private MobJump jumpModule;
         private MobDash dashModule;
         private MobAttack attactModule;
-        public IMobConsistModule[] myModule = new IMobConsistModule[4];
+        private IMobConsistModule[] myModule = new IMobConsistModule[4];
 
         [Header("MobSetting")]
         public MobType thisMobType = MobType.NoneMovementMob;
@@ -43,6 +43,12 @@ namespace ProjectM.InGame
         public Vector2 colPoint { get; protected set; }
 
 
+        private void Awake()
+        {
+            CapsuleCollider2D col = myFormObj.GetComponent<CapsuleCollider2D>();
+            colPoint = new Vector2(col.size.x / 2 + col.offset.x, -col.size.y / 2 + col.offset.y);
+        }
+
         private void Start()
         {
             rigid = GetComponent<Rigidbody2D>();
@@ -56,8 +62,6 @@ namespace ProjectM.InGame
             }
 
             formAnim = myFormObj.GetComponent<Animator>();
-            CapsuleCollider2D col = myFormObj.GetComponent<CapsuleCollider2D>();
-            colPoint = new Vector2(col.size.x / 2 + col.offset.x, -col.size.y / 2 + col.offset.y);
 
             if (formAnim == null)
                 Debug.LogWarning("케릭터의 애니메이터 혹은 콜라이더가 없습니다.");
@@ -70,12 +74,9 @@ namespace ProjectM.InGame
             Regen();
             StartCoroutine(UpdateEmotion_co());
         }
-
-
-
         public void SetModule()
         {
-            if (myMovement.speed > 0)
+            if (myMovement.speed > 0 || myMovement.dashForce > 0) //대쉬를 할 때도 필요하다.
                 movementModule = Instantiate(MobsStaticData.mobMovementModule, transform).GetComponent<MobMovement>();
             if (myMovement.jumpForce > 0)
                 jumpModule = Instantiate(MobsStaticData.mobJumpModule, transform).GetComponent<MobJump>();
