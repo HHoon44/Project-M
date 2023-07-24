@@ -1,7 +1,9 @@
 using ProjectM.Define;
+using ProjectM.Resource;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace ProjectM
 {
@@ -65,7 +67,7 @@ namespace ProjectM
                     break;
 
                 case IntroPhase.Resource:
-                    // ResourceManager.Instance.Initialize();
+                    ResourceManager.Instance.Initialize();
                     LoadComplete = true;
                     break;
 
@@ -75,6 +77,8 @@ namespace ProjectM
                     break;
 
                 case IntroPhase.Complte:
+                    SceneManager.LoadScene(SceneType.InGame.ToString());
+
                     allLoaded = true;
                     LoadComplete = true;
                     break;

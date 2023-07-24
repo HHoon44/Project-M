@@ -10,9 +10,9 @@ using UnityEngine.SceneManagement;
 namespace ProjectM.Start
 {
     /// <summary>
-    /// 시작 화면의 버튼을 관리하는 클래스
+    /// 시작 버튼을 관리하는 클래스
     /// </summary>
-    public class StartBtnManager : MonoBehaviour
+    public class StartBtn : MonoBehaviour
     {
         /// <summary>
         /// 시작 화면의 버튼들의 기능을 담당하는 메서드

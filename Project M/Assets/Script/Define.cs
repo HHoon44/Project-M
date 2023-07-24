@@ -6,7 +6,7 @@ namespace ProjectM.Define
 {
     public enum PoolType { }
 
-    public enum SceneType { StartLoading, Loading }
+    public enum SceneType { StartLoading, Loading, InGame }
 
     public enum IntroPhase { None, Start, ApllicationSetting, StaticData, Resource, UI, Complte }
 
@@ -16,7 +16,13 @@ namespace ProjectM.Define
         public const string SDJsonPath = "Assets/StaticData/Json";
     }
 
-
+    public class Resource
+    {
+        public enum AtlasType
+        {
+            None
+        }
+    }
 
 
 
