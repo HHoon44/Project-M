@@ -34,19 +34,66 @@ namespace ProjectM
             }
         }
 
+        /// <summary>
+        /// 첫 페이즈를 불러오는 작업을 하는 메서드
+        /// </summary>
         public void Initialize()
         {
             OnPhase(introPhase);
         }
 
+        /// <summary>
+        /// 현재 페이즈에 대한 로직을 실행하는 메서드
+        /// </summary>
+        /// <param name="introPhase"> 현재 페이즈 </param>
         private void OnPhase(IntroPhase introPhase)
         {
+            switch (introPhase)
+            {
+                case IntroPhase.Start:
+                    LoadComplete = true;
+                    break;
 
+                case IntroPhase.ApllicationSetting:
+                    GameManager.Instance.OnApplicationSetting();
+                    LoadComplete = true;
+                    break;
+
+                case IntroPhase.StaticData:
+                    // GameManager.SD.Initialize();
+                    LoadComplete = true;
+                    break;
+
+                case IntroPhase.Resource:
+                    // ResourceManager.Instance.Initialize();
+                    LoadComplete = true;
+                    break;
+
+                case IntroPhase.UI:
+                    // UIWindowManager.Instance.Initialize();
+                    LoadComplete = true;
+                    break;
+
+                case IntroPhase.Complte:
+                    allLoaded = true;
+                    LoadComplete = true;
+                    break;
+            }
         }
 
+        /// <summary>
+        /// 페이즈를 다음 페이즈로 변경하는 메서드
+        /// </summary>
         private void NextPhase()
-        { 
-        
+        {
+            StartCoroutine(WaitForSeconds());
+
+            IEnumerator WaitForSeconds()
+            {
+                yield return new WaitForSeconds(.5f);
+                LoadComplete = false;
+                OnPhase(introPhase++);
+            }
         }
     }
 }
