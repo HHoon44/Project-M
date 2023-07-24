@@ -1,5 +1,6 @@
 using ProjectM.Define;
 using ProjectM.Resource;
+using ProjectM.UI;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -72,7 +73,7 @@ namespace ProjectM
                     break;
 
                 case IntroPhase.UI:
-                    // UIWindowManager.Instance.Initialize();
+                    UIWindowManager.Instance.Initialize();
                     LoadComplete = true;
                     break;
 
