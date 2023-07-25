@@ -11,10 +11,10 @@ namespace ProjectM.InGame
     {
         //대중적인 몬스터 초기화
         public MobReferenceData(
-            float _maxHP, float _atkCool, float _detectArea)
+            float _maxHP, float _atkCooltime, float _detectArea)
         {
             maxHP = _maxHP;
-            atkCool = _atkCool;
+            atkCooltime = _atkCooltime;
             detectArea = _detectArea;
 
             specialMob = false;
@@ -22,10 +22,10 @@ namespace ProjectM.InGame
         }
         //특수적인 몬스터 초기화
         public MobReferenceData(
-            float _maxHP, float _atkCool, float _detectArea, bool _special, bool _static)
+            float _maxHP, float _atkCooltime, float _detectArea, bool _special, bool _static)
         {
             maxHP = _maxHP;
-            atkCool = _atkCool;
+            atkCooltime = _atkCooltime;
             detectArea = _detectArea;
 
             specialMob = _special;
@@ -33,7 +33,7 @@ namespace ProjectM.InGame
         }
 
         readonly public float maxHP;
-        readonly public float atkCool;
+        readonly public float atkCooltime;
         readonly public float detectArea; //플레이어 감지거리
 
         readonly public bool specialMob;   //이 몬스터가 보스 등 특별한 몬스터라면 true
@@ -82,7 +82,7 @@ namespace ProjectM.InGame
     {
         private Dictionary<MobType, MobReferenceData> mobReferenceData_Table = new Dictionary<MobType, MobReferenceData>();
         private Dictionary<MobType, MobMovementData> mobMovementData_Table = new Dictionary<MobType, MobMovementData>();
-        private Dictionary<MobType, GameObject> mobAttactPrefab_table = new Dictionary<MobType, GameObject>();
+        private Dictionary<MobType, GameObject> mobProjectilePrefab_table = new Dictionary<MobType, GameObject>();
 
         public static GameObject mobMovementModule { get; private set; }
         public static GameObject mobJumpModule { get; private set; }
@@ -125,11 +125,11 @@ namespace ProjectM.InGame
 
         private void MakeUp_MobAttactPrefab()
         {
-            mobAttactPrefab_table.Clear();
-            mobAttactPrefab_table.Add(MobType.HorizontalMob, Resources.Load("Prefabs/MobAttack/Attack_HorizontalMob") as GameObject);
-            for (int i = 0; i < mobAttactPrefab_table.Count; i++)
+            mobProjectilePrefab_table.Clear();
+            mobProjectilePrefab_table.Add(MobType.HorizontalMob, Resources.Load("Prefabs/MobAttacks/Atk_HorizontalMob") as GameObject);
+            for (int i = 0; i < mobProjectilePrefab_table.Count; i++)
             {
-                if(mobAttactPrefab_table[(MobType)i] == null)
+                if(mobProjectilePrefab_table[(MobType)i] == null)
                     Debug.Log("공격 프리펩 없음");
             }
         }
@@ -150,6 +150,10 @@ namespace ProjectM.InGame
         public MobMovementData GetMobMovemantData(MobType _mobType)
         {
             return mobMovementData_Table[_mobType];
+        }
+        public GameObject GetMobProjectilePrefab(MobType _mobType)
+        {
+            return mobProjectilePrefab_table[_mobType];
         }
     }
 }

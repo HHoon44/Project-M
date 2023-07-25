@@ -60,7 +60,7 @@ namespace ProjectM.InGame
             mobRender = mob.myFormObj.GetComponent<SpriteRenderer>();
 
             //잔상세팅
-            afterimage = MakeAfterimage.Instance.MakeNornal(mob.gameObject, mobRender);
+            afterimage = EffectGroupManager.Instance.MakeNornal(mob.gameObject, mobRender);
             StartCoroutine(DashAuto_co());
             StartCoroutine(DashPlayer_co());
         }

@@ -10,6 +10,14 @@ namespace ProjectM.InGame
         protected MobBase mob;
         private Transform tip;
 
+        private GameObject myProjectile;
+        private int attackCount;
+
+        [SerializeField] private float attackCooltime;
+
+
+
+        //! 인터페이스 구현
         public void Initialize(MobBase _mob)
         {
             mob = _mob;
@@ -17,30 +25,42 @@ namespace ProjectM.InGame
             gameObject.name = "AttackModule";
 
             transform.localPosition = mob.atkTip.localPosition;
-        }
 
+            attackCooltime = mob.myReference.atkCooltime;
+        }
         public void SetActiveModule(bool _act)
         {
         }
-
         public GameObject thisObj()
         {
             return gameObject;
         }
 
-        public object thisScript()
-        {
-            return this;
-        }
-
         void Start()
         {
             tip = mob.atkTip;
+            myProjectile = MobsStaticData.Instance.GetMobProjectilePrefab(mob.thisMobType);
+            StartCoroutine(AtkCooltime_co());
         }
 
-        void Update()
+        private IEnumerator AtkCooltime_co()
         {
+            while (true)
+            {
+                yield return new WaitForFixedUpdate();
 
+                if (!mob.discoveryPlayer)
+                    continue;
+
+                Attack();
+                yield return new WaitForSeconds(attackCooltime);
+            }
         }
+        private void Attack()
+        {
+            attackCount++;
+            Instantiate(myProjectile, EffectGroupManager.Instance.transform);
+        }
+
     }
 }

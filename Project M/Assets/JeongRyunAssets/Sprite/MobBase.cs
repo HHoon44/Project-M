@@ -82,7 +82,7 @@ namespace ProjectM.InGame
                 jumpModule = Instantiate(MobsStaticData.mobJumpModule, transform).GetComponent<MobJump>();
             if (myMovement.dashForce > 0)
                 dashModule = Instantiate(MobsStaticData.mobDashModule, transform).GetComponent<MobDash>();
-            if (myReference.atkCool > 0)
+            if (myReference.atkCooltime > 0)
                 attactModule = Instantiate(MobsStaticData.mobAttackModule, transform).GetComponent<MobAttack>();
 
             myModule[0] = movementModule;

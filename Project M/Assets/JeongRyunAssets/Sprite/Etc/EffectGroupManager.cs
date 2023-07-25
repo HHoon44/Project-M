@@ -5,7 +5,7 @@ using ProjectM.Util;
 
 namespace ProjectM.InGame
 {
-    public class MakeAfterimage : Singleton<MakeAfterimage>
+    public class EffectGroupManager : Singleton<EffectGroupManager>
     {
         [SerializeField] private GameObject normalAfterimage;
 
