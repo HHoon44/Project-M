@@ -54,7 +54,6 @@ namespace ProjectM.InGame
                 {
                     if (mob.isGround)
                     {
-                        Debug.Log("점프 실행");
                         Jump();
                     }
                 }

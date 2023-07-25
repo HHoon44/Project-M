@@ -10,20 +10,18 @@ namespace ProjectM.InGame
     //tip: 대쉬 모둘의 매인 컴포너트 입니다
     public class MobDash : MonoBehaviour, IMobConsistModule
     {
-        [SerializeField] private GameObject afterimagePrefab;
-        private SpriteRenderer[] afterimageArr;  //폴딩 기술 사용
-
         private MobBase mob;
         private SpriteRenderer mobRender;
+        private AfterimageController afterimage;
 
-        [SerializeField] protected float dashForce;   //대쉬 거리
-        [SerializeField] protected float dashCooltime;   //0초이면, 오토대쉬를 하지 않습니다.
+        [SerializeField] private float dashForce;   //대쉬 거리
+        [SerializeField] private float dashCooltime;   //0초이면, 오토대쉬를 하지 않습니다.
+        [SerializeField] private bool dashAttack = false;
 
         static private float decreaseMount = 80;
         static private float chargingTime = 1f;
 
-
-        public bool isDash { get; private set; }
+        public bool isDash { get; private set; } = false;
 
         private static Transform afterimageGroup = null;  //몬스터 잔상을 관리하는 tramsform
 
@@ -60,36 +58,21 @@ namespace ProjectM.InGame
                 afterimageGroup = GameObject.Find("EffectGroup").transform;
 
             mobRender = mob.myFormObj.GetComponent<SpriteRenderer>();
-            StartCoroutine(DashStart_co());
 
-            //이미지 세팅
-            GameObject afterimage = Instantiate(afterimagePrefab, afterimageGroup);
-            afterimageArr = new SpriteRenderer[afterimage.transform.childCount];
-            for (int i = 0; i < afterimage.transform.childCount; i++)
-                afterimageArr[i] = afterimage.transform.GetChild(i).GetComponent<SpriteRenderer>();
+            //잔상세팅
+            afterimage = MakeAfterimage.Instance.MakeNornal(mob.gameObject, mobRender);
+            StartCoroutine(DashAuto_co());
+            StartCoroutine(DashPlayer_co());
         }
 
         void Update()
         {
-            // if (isDash)
-            // {
-            //     for (int i = 0; i < afterimageObj.Length; i++)
-            //     {
-            //         afterimageObj[i].transform.position = afterimageStartPos[i];
-            //     }
-            // }
-        }
-        private void FixedUpdate()
-        {
+
         }
 
-        private IEnumerator DashStart_co()
+        private void FixedUpdate()
         {
-            while (true)
-            {
-                yield return new WaitForSeconds(dashCooltime);
-                DashStart();
-            }
+
         }
 
         private void DashStart()
@@ -97,69 +80,62 @@ namespace ProjectM.InGame
             if (isDash == true)
                 return;
 
-            isDash = true;
-
             StartCoroutine(Dash_co());
         }
+
         private IEnumerator Dash_co()
         {
+            isDash = true;
             float remainingForce = dashForce;
 
-            //차징
-            mob.movementModule.Idle(chargingTime + (remainingForce / decreaseMount));
-            yield return new WaitForSeconds(chargingTime);
+            //차징 (대기시간)
+            if (mob.discoveryPlayer)
+            {
+                mob.movementModule.Idle(chargingTime + (remainingForce / decreaseMount));
+                yield return new WaitForSeconds(chargingTime);
+            }
 
             //데쉬
-            StartCoroutine(DashAfterimage_co());
+            afterimage.StartAfterimage(dashForce / decreaseMount);
             while (remainingForce >= dashForce / 20f)
             {
                 mob.nowVelocityX += remainingForce * (mob.movementModule.flipX ? -1 : 1);
                 remainingForce -= Time.fixedDeltaTime * decreaseMount;
 
-                if (mob.movementModule.groundSense)
+                if (Mathf.Abs(mob.transform.position.x - PlayerController.GetPlayerTip().x) <= .2f || mob.movementModule.groundSense) //플레이어와 동일선상의 X축위에 있으면
+                {
+                    mob.movementModule.Idle();
+                    afterimage.StopAfterimage();
                     break;
-                if (Mathf.Abs(mob.transform.position.x - PlayerController.GetPlayerTip().x) <= .5f) //플레이어와 동일선상의 X축위에 있으면
-                    break;
+                }
 
                 yield return new WaitForFixedUpdate();
             }
-
-            DashEnd();
+            isDash = false;
         }
 
-        private IEnumerator DashAfterimage_co()
+        private IEnumerator DashAuto_co()
         {
-            int index = 0;
-            while (isDash)
+            while (true)
             {
-                int i = index % afterimageArr.Length;
-
-                afterimageArr[i].transform.position = mob.transform.position;
-                afterimageArr[i].sprite = mobRender.sprite;
-
-                afterimageArr[i].gameObject.SetActive(false);
-                afterimageArr[i].gameObject.SetActive(true);
-
-                Color32 color = afterimageArr[i].color;
-                color.a = 100;
-                afterimageArr[i].color = color;
-
-                index++;
-                StartCoroutine(OffAfterimage_co(afterimageArr[i].gameObject));
-                yield return new WaitForSeconds(dashForce / (decreaseMount * 6));
+                yield return new WaitForSeconds(Random.Range(1f, 20f));
+                if (mob.discoveryPlayer)
+                    continue;
+                DashStart();
             }
         }
-
-        private IEnumerator OffAfterimage_co(GameObject _that)
+        private IEnumerator DashPlayer_co()
         {
-            yield return new WaitForSeconds(0.4f);
-            _that.SetActive(false);
-        }
+            while (true)
+            {
+                yield return new WaitForFixedUpdate();
 
-        private void DashEnd()
-        {
-            //mob.movementModule.Move();
-            isDash = false;
+                if (!mob.discoveryPlayer)
+                    continue;
+
+                DashStart();
+                yield return new WaitForSeconds(dashCooltime);
+            }
         }
 
     }

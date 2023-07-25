@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace ProjectM.InGame
 {
-    //������ ���ϴ� ���͸� �����ϴ� �θ� �Դϴ�.
+    //몬스터의 공격을 구현하는 모듈입니다.
     public class MobAttack : MonoBehaviour, IMobConsistModule
     {
         protected MobBase mob;

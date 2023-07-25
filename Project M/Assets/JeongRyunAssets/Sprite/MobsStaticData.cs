@@ -82,6 +82,7 @@ namespace ProjectM.InGame
     {
         private Dictionary<MobType, MobReferenceData> mobReferenceData_Table = new Dictionary<MobType, MobReferenceData>();
         private Dictionary<MobType, MobMovementData> mobMovementData_Table = new Dictionary<MobType, MobMovementData>();
+        private Dictionary<MobType, GameObject> mobAttactPrefab_table = new Dictionary<MobType, GameObject>();
 
         public static GameObject mobMovementModule { get; private set; }
         public static GameObject mobJumpModule { get; private set; }
@@ -98,6 +99,7 @@ namespace ProjectM.InGame
 
             MakeUp_MobReferenceData();
             MakeUp_MobMovementData();
+            MakeUp_MobAttactPrefab();
             SetModule();
         }
 
@@ -117,8 +119,19 @@ namespace ProjectM.InGame
             mobMovementData_Table.Add(MobType.HorizontalMob, new MobMovementData(3, 3, 6, 1, 3, true, 0, 0, 0, 0, 0));
             mobMovementData_Table.Add(MobType.JumpMob, new MobMovementData(8f, 3, 6, 2, 3, true, 9, 2, 3, 0, 0));
             mobMovementData_Table.Add(MobType.DashMob, new MobMovementData(4, 3, 6, 1, 3, true, 0, 0, 0, 30, 1));
-            mobMovementData_Table.Add(MobType.JumpDashMob, new MobMovementData(4, 3, 6, 1, 3, true, 9, 3, 4, 30, 5));
+            mobMovementData_Table.Add(MobType.JumpDashMob, new MobMovementData(2, 3, 6, 1, 3, true, 9, 2, 4, 20, 3));
             mobMovementData_Table.Add(MobType.NoneMovementMob, new MobMovementData(0, 3, 6, 1, 3, false, 0, 0, 0, 0, 0));
+        }
+
+        private void MakeUp_MobAttactPrefab()
+        {
+            mobAttactPrefab_table.Clear();
+            mobAttactPrefab_table.Add(MobType.HorizontalMob, Resources.Load("Prefabs/MobAttack/Attack_HorizontalMob") as GameObject);
+            for (int i = 0; i < mobAttactPrefab_table.Count; i++)
+            {
+                if(mobAttactPrefab_table[(MobType)i] == null)
+                    Debug.Log("공격 프리펩 없음");
+            }
         }
 
         private void SetModule()
@@ -128,6 +141,7 @@ namespace ProjectM.InGame
             mobDashModule = Resources.Load("Prefabs/MobModule/MobDashModule") as GameObject;
             mobAttackModule = Resources.Load("Prefabs/MobModule/MobAttackModule") as GameObject;
         }
+
 
         public MobReferenceData GetMobReferenceInfo(MobType _mobType)
         {
