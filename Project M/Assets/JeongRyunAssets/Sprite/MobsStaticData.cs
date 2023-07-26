@@ -144,15 +144,16 @@ namespace ProjectM.InGame
 
             if (mobProjectilePrefab_table.Count != System.Enum.GetValues(typeof(MobType)).Length)
             {
-                Debug.LogWarning("mobProjectilePrefab_table count and MobType count are different");
+                //Debug.LogWarning("mobProjectilePrefab_table count and MobType count are different");
             }
 
             for (int i = 0; i < mobProjectilePrefab_table.Count; i++)
             {
                 if (mobProjectilePrefab_table[(MobType)i] == null)
                 {
-                    mobProjectilePrefab_table[(MobType)i] = Resources.Load("Prefabs/MobAttacks/Projectile_Reference") as GameObject;
-                    Debug.Log("attact prefab is null");
+                    mobProjectilePrefab_table[(MobType)i] = Resources.Load("Prefabs/MobAttack/Projectile_Reference") as GameObject;
+                    if (mobProjectilePrefab_table[(MobType)i] == null)
+                        Debug.Log("attact prefab is null");
                 }
             }
         }

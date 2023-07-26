@@ -10,7 +10,7 @@ namespace ProjectM.InGame
         protected MobBase mob;
         private Transform tip;
 
-        private GameObject myProjectile;
+        [SerializeField] private GameObject myProjectile;
         private int attackCount;
 
         [SerializeField] private float attackCooltime;
@@ -41,6 +41,9 @@ namespace ProjectM.InGame
             tip = mob.atkTip;
             myProjectile = MobsStaticData.Instance.GetMobProjectilePrefab(mob.thisMobType);
             StartCoroutine(AtkCooltime_co());
+        }
+        private void FixedUpdate() {
+            
             Attack();
         }
 

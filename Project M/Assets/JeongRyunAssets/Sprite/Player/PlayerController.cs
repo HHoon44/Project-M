@@ -17,11 +17,11 @@ namespace ProjectM.InGame
 
         private void Awake()
         {
-            if (gameObject.tag != "Player" || gameObject.layer != LayerMask.GetMask("Player"))
-            {
-                Debug.LogError("it is not Player but it has PlayerController");
-                enabled = false;
-            }
+            // if (gameObject.tag != "Player" || gameObject.layer != LayerMask.GetMask("Player"))
+            // {
+            //     Debug.LogError("it is not Player but it has PlayerController");
+            //     enabled = false;
+            // }
 
             if (playerObject == null)
                 playerObject = this.gameObject;
