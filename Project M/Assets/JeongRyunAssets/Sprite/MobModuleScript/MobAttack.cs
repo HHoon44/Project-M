@@ -41,6 +41,7 @@ namespace ProjectM.InGame
             tip = mob.atkTip;
             myProjectile = MobsStaticData.Instance.GetMobProjectilePrefab(mob.thisMobType);
             StartCoroutine(AtkCooltime_co());
+            Attack();
         }
 
         private IEnumerator AtkCooltime_co()
@@ -59,7 +60,12 @@ namespace ProjectM.InGame
         private void Attack()
         {
             attackCount++;
-            Instantiate(myProjectile, EffectGroupManager.Instance.transform);
+            GameObject projectile = Instantiate(myProjectile, EffectGroupManager.Instance.transform);
+
+            Vector2 dis = PlayerController.GetPlayerTip() - mob.atkTip.position;
+            float angle = Mathf.Atan2(dis.y, dis.x) * Mathf.Rad2Deg;
+
+            projectile.GetComponent<MobProjectileBase>().Initialize(mob.atkTip.position, angle, mob.transform.localScale.x);
         }
 
     }

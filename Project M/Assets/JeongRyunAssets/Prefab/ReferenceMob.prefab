@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2508821227427458083}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: atkTip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -41,7 +41,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5083623014614011492}
   - component: {fileID: 7200674317309909986}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: DetectionMark
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -127,7 +127,7 @@ GameObject:
   - component: {fileID: 4002799547245669709}
   - component: {fileID: 4895787901454750502}
   - component: {fileID: 3484565771336574547}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: MobForm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -247,7 +247,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4577763711700378062}
   - component: {fileID: 7755079684944620944}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: DiscoveryMark
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -332,7 +332,7 @@ GameObject:
   - component: {fileID: 7184950481648541141}
   - component: {fileID: 6039222076128801971}
   - component: {fileID: 9190569373239591820}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ReferenceMob
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -374,6 +374,7 @@ MonoBehaviour:
   atkTip: {fileID: 2508821227427458083}
   detectionMark: {fileID: 2619470424452601310}
   discoveryMark: {fileID: 3019645656036750927}
+  nowVelocityX: 0
 --- !u!50 &9190569373239591820
 Rigidbody2D:
   serializedVersion: 4
@@ -404,7 +405,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5936533089933781586}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Emotions
   m_TagString: Untagged
   m_Icon: {fileID: 0}

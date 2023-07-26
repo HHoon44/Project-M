@@ -106,11 +106,16 @@ namespace ProjectM.InGame
         private void MakeUp_MobReferenceData()
         {
             mobReferenceData_Table.Clear();
-            mobReferenceData_Table.Add(MobType.HorizontalMob, new MobReferenceData(100, 2, 8));
-            mobReferenceData_Table.Add(MobType.JumpMob, new MobReferenceData(100, 2, 10));
-            mobReferenceData_Table.Add(MobType.DashMob, new MobReferenceData(100, 3, 5));
-            mobReferenceData_Table.Add(MobType.JumpDashMob, new MobReferenceData(100, 3, 10));
+            mobReferenceData_Table.Add(MobType.HorizontalMob, new MobReferenceData(100, 2, 20));
+            mobReferenceData_Table.Add(MobType.JumpMob, new MobReferenceData(100, 2, 12));
+            mobReferenceData_Table.Add(MobType.DashMob, new MobReferenceData(100, 3, 20));
+            mobReferenceData_Table.Add(MobType.JumpDashMob, new MobReferenceData(100, 3, 20));
             mobReferenceData_Table.Add(MobType.NoneMovementMob, new MobReferenceData(100, 0, 0));
+
+            if (mobReferenceData_Table.Count != System.Enum.GetValues(typeof(MobType)).Length)
+            {
+                Debug.LogWarning("mobReferenceData_Table count and MobType count are different");
+            }
         }
 
         private void MakeUp_MobMovementData()
@@ -121,16 +126,34 @@ namespace ProjectM.InGame
             mobMovementData_Table.Add(MobType.DashMob, new MobMovementData(4, 3, 6, 1, 3, true, 0, 0, 0, 30, 1));
             mobMovementData_Table.Add(MobType.JumpDashMob, new MobMovementData(2, 3, 6, 1, 3, true, 9, 2, 4, 20, 3));
             mobMovementData_Table.Add(MobType.NoneMovementMob, new MobMovementData(0, 3, 6, 1, 3, false, 0, 0, 0, 0, 0));
+
+            if (mobMovementData_Table.Count != System.Enum.GetValues(typeof(MobType)).Length)
+            {
+                Debug.LogWarning("mobMovementData_Table count and MobType count are different");
+            }
         }
 
         private void MakeUp_MobAttactPrefab()
         {
             mobProjectilePrefab_table.Clear();
-            mobProjectilePrefab_table.Add(MobType.HorizontalMob, Resources.Load("Prefabs/MobAttacks/Atk_HorizontalMob") as GameObject);
+            mobProjectilePrefab_table.Add(MobType.HorizontalMob, Resources.Load("Prefabs/MobAttack/Projectile_HorizontalMob") as GameObject);
+            mobProjectilePrefab_table.Add(MobType.JumpMob, Resources.Load("Prefabs/MobAttack/Projectile_JumpMob") as GameObject);
+            mobProjectilePrefab_table.Add(MobType.DashMob, Resources.Load("Prefabs/MobAttack/Projectile_DashMob") as GameObject);
+            mobProjectilePrefab_table.Add(MobType.JumpDashMob, Resources.Load("Prefabs/MobAttack/Projectile_JumpDashMob") as GameObject);
+            mobProjectilePrefab_table.Add(MobType.NoneMovementMob, Resources.Load("Prefabs/MobAttack/Projectile_NoneMovementMob") as GameObject);
+
+            if (mobProjectilePrefab_table.Count != System.Enum.GetValues(typeof(MobType)).Length)
+            {
+                Debug.LogWarning("mobProjectilePrefab_table count and MobType count are different");
+            }
+
             for (int i = 0; i < mobProjectilePrefab_table.Count; i++)
             {
-                if(mobProjectilePrefab_table[(MobType)i] == null)
-                    Debug.Log("공격 프리펩 없음");
+                if (mobProjectilePrefab_table[(MobType)i] == null)
+                {
+                    mobProjectilePrefab_table[(MobType)i] = Resources.Load("Prefabs/MobAttacks/Projectile_Reference") as GameObject;
+                    Debug.Log("attact prefab is null");
+                }
             }
         }
 
