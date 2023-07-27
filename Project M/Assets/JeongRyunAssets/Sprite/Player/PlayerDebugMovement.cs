@@ -16,15 +16,20 @@ namespace ProjectM.InGame
                 enabled = false;
 
             rigid = GetComponent<Rigidbody2D>();
-            rigid.isKinematic = true;
         }
 
         void FixedUpdate()
         {
             if (Input.GetKey(KeyCode.Slash))
+            {
                 rigid.velocity = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")) * atDebugSpeed;
+                rigid.isKinematic = true;
+            }
             else
+            {
                 rigid.velocity = Vector2.zero;
+                rigid.isKinematic = false;
+            }
         }
 
         // public void DontControll(float _time = 0)
