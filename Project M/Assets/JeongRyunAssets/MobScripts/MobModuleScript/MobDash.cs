@@ -102,7 +102,7 @@ namespace ProjectM.InGame
                 mob.nowVelocityX += remainingForce * (mob.movementModule.flipX ? -1 : 1);
                 remainingForce -= Time.fixedDeltaTime * decreaseMount;
 
-                if (Mathf.Abs(mob.transform.position.x - PlayerController.GetPlayerTip().x) <= .2f || mob.movementModule.groundSense) //플레이어와 동일선상의 X축위에 있으면
+                if (Mathf.Abs(mob.transform.position.x - PlayerBase.GetPlayerTip().x) <= .2f || mob.movementModule.groundSense) //플레이어와 동일선상의 X축위에 있으면
                 {
                     mob.movementModule.Idle();
                     afterimage.StopAfterimage();

@@ -38,10 +38,17 @@ namespace ProjectM.InGame
             // }
 
             if (destroyAtPlayer)
-                if (other.gameObject == PlayerController.GetPlayerObject())
+                if (other.gameObject == PlayerBase.GetPlayerObject())
                 {
-                    alreadyDamaged = true;
-                    Destroy(this.gameObject);
+                    PlayerBase player = PlayerBase.GetPlayerObject().GetComponent<PlayerBase>();
+
+                    if (player.invincibleTime <= 0)//무적시간이 아닐 때
+                    {
+                        if (alreadyDamaged == false)
+                            player.TakeDamage(1);
+                        alreadyDamaged = true;
+                        Destroy(this.gameObject);
+                    }
                 }
 
             if (destroyAtTilemap)

@@ -61,7 +61,7 @@ namespace ProjectM.InGame
             attackCount++;
             GameObject projectile = Instantiate(myProjectile, EffectGroupManager.Instance.transform);
 
-            Vector2 dis = PlayerController.GetPlayerTip() - mob.atkTip.position;
+            Vector2 dis = PlayerBase.GetPlayerTip() - mob.atkTip.position;
             float angle = Mathf.Atan2(dis.y, dis.x) * Mathf.Rad2Deg;
 
             projectile.GetComponent<MobProjectileBase>().Initialize(mob.atkTip.position, angle, mob.transform.localScale.x);

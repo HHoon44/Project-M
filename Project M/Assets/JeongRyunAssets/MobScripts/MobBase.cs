@@ -53,16 +53,16 @@ namespace ProjectM.InGame
 
         private void Start()
         {
-            rigid = GetComponent<Rigidbody2D>();
-            myReference = MobsStaticData.Instance.GetMobReferenceInfo(thisMobType);
-            myMovement = MobsStaticData.Instance.GetMobMovemantData(thisMobType);
-
             if (gameObject.tag != "Mob")
             {
                 Debug.LogWarning("현재 몹 전용 컴포넌트를 다른 객체가 가지고 있습니다.");
                 this.enabled = false;
             }
 
+            //변수 초기화
+            rigid = GetComponent<Rigidbody2D>();
+            myReference = MobsStaticData.Instance.GetMobReferenceInfo(thisMobType);
+            myMovement = MobsStaticData.Instance.GetMobMovemantData(thisMobType);
             formAnim = myFormObj.GetComponent<Animator>();
 
             if (formAnim == null)
@@ -72,10 +72,10 @@ namespace ProjectM.InGame
             discoveryMark.SetActive(false);
 
             SetModule();
-
             Regen();
-            StartCoroutine(UpdateEmotion_co());
         }
+
+        //모듈을 생성하고, 각 모듈의 초기화 함수를 호출합니다.
         public void SetModule()
         {
             if (myMovement.speed > 0 || myMovement.dashForce > 0) //대쉬를 할 때도 필요하다.
@@ -106,6 +106,7 @@ namespace ProjectM.InGame
             isGround = IsGround();
 
             DetectUpdate();
+
             rigid.velocity = new Vector2(nowVelocityX, rigid.velocity.y);
 
             nowVelocityX = 0; //매 프래임마다 초기화;
@@ -171,38 +172,35 @@ namespace ProjectM.InGame
             discoveryPlayer = DiscoverPlayer();
 
             if (detectionPlayer)
-                Debug.DrawLine(atkTip.position, PlayerController.GetPlayerTip(), Color.red);
+                Debug.DrawLine(atkTip.position, PlayerBase.GetPlayerTip(), Color.red);
+
+            UpdateEmotion();
         }
-
         //act: 감지된 정보를 토대로 몹 위에 플레이어가 감지 여부를 알 수 있도록 띄어줍니다.
-        private IEnumerator UpdateEmotion_co()
+        private void UpdateEmotion()
         {
-            while (true)
-            {
-                yield return new WaitForSeconds(0.5f);
 
-                if (discoveryPlayer)
-                {
-                    detectionMark.SetActive(false);
-                    discoveryMark.SetActive(true);
-                }
-                else if (detectionPlayer)
-                {
-                    detectionMark.SetActive(true);
-                    discoveryMark.SetActive(false);
-                }
-                else
-                {
-                    detectionMark.SetActive(false);
-                    discoveryMark.SetActive(false);
-                }
+            if (discoveryPlayer)
+            {
+                detectionMark.SetActive(false);
+                discoveryMark.SetActive(true);
+            }
+            else if (detectionPlayer)
+            {
+                detectionMark.SetActive(true);
+                discoveryMark.SetActive(false);
+            }
+            else
+            {
+                detectionMark.SetActive(false);
+                discoveryMark.SetActive(false);
             }
         }
 
         //플레이어가 몬스터 근차에 갔을 때 true
-        private bool DetectPlayer() => Vector2.Distance(transform.position, PlayerController.GetPlayerTip()) <= myReference.detectArea;
+        private bool DetectPlayer() => Vector2.Distance(transform.position, PlayerBase.GetPlayerTip()) <= myReference.detectArea;
         //플레이어와 몬스터 사이에 장애물이 없을 때 true
-        private bool DiscoverPlayer() => (detectionPlayer && !Physics2D.Linecast(atkTip.position, PlayerController.GetPlayerTip(), LayerMask.GetMask("Ground")));
+        private bool DiscoverPlayer() => (detectionPlayer && !Physics2D.Linecast(atkTip.position, PlayerBase.GetPlayerTip(), LayerMask.GetMask("Ground")));
 
 
         //@ 기타 ===================================================================================================================

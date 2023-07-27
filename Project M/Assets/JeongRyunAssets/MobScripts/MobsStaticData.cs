@@ -107,7 +107,7 @@ namespace ProjectM.InGame
         {
             mobReferenceData_Table.Clear();
             mobReferenceData_Table.Add(MobType.HorizontalMob, new MobReferenceData(100, 2, 20));
-            mobReferenceData_Table.Add(MobType.JumpMob, new MobReferenceData(100, 2, 12));
+            mobReferenceData_Table.Add(MobType.JumpMob, new MobReferenceData(100, 1.2f, 12));
             mobReferenceData_Table.Add(MobType.DashMob, new MobReferenceData(100, 3, 20));
             mobReferenceData_Table.Add(MobType.JumpDashMob, new MobReferenceData(100, 3, 20));
             mobReferenceData_Table.Add(MobType.NoneMovementMob, new MobReferenceData(100, 0, 0));

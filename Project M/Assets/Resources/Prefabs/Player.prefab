@@ -42,6 +42,7 @@ GameObject:
   - component: {fileID: 6232577665553825898}
   - component: {fileID: 3996747057508929366}
   - component: {fileID: 6587735452662260146}
+  - component: {fileID: 5783657324247331913}
   m_Layer: 0
   m_Name: PlayerRenderer
   m_TagString: Untagged
@@ -136,6 +137,18 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &5783657324247331913
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4124764853597539883}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aac0c0904f4964fc5aa0657998aca785, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5422318607267426292
 GameObject:
   m_ObjectHideFlags: 0
@@ -185,6 +198,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3bec497cf76d84f578209610f78dfdf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pRenderer: {fileID: 5783657324247331913}
   mobDetectionTip: {fileID: 1936042287858647261}
 --- !u!114 &8668922267887499472
 MonoBehaviour:

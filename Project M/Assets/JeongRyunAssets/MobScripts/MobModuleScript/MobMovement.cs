@@ -122,7 +122,7 @@ namespace ProjectM.InGame
             if (atDiscoverPlayerStop && mob.discoveryPlayer)
             {
                 Idle();
-                if (PlayerController.GetPlayerTip().x <= mob.myFormObj.transform.position.x)
+                if (PlayerBase.GetPlayerTip().x <= mob.myFormObj.transform.position.x)
                     Turn(true);
                 else
                     Turn(false);
