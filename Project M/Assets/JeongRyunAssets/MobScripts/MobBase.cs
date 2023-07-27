@@ -28,13 +28,15 @@ namespace ProjectM.InGame
         public GameObject detectionMark;
         public GameObject discoveryMark;
 
-        //몬스터 변수
-        public float nowHP { get; private set; }
+        //몬스터 상태
+        private float nowHP;
+        public bool isLive { get; private set; }   //자신이 죽었다면
+
+        //몬스터 상황
         public float nowVelocityX;
         public bool isGround { get; private set; }
         public bool detectionPlayer { get; private set; }  //플레이어가 근처에 있다면
         public bool discoveryPlayer { get; private set; }  //플레이어가 보인다면
-        public bool isLive { get; private set; }   //자신이 죽었다면
 
         //몬스터 상수
         public MobReferenceData myReference { get; private set; }
@@ -45,7 +47,7 @@ namespace ProjectM.InGame
 
         private void Awake()
         {
-            CapsuleCollider2D col = myFormObj.GetComponent<CapsuleCollider2D>();
+            CapsuleCollider2D col = GetComponent<CapsuleCollider2D>();
             colPoint = new Vector2(col.size.x / 2 + col.offset.x, -col.size.y / 2 + col.offset.y);
         }
 

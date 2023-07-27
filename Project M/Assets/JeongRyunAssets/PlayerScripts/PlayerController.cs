@@ -6,9 +6,9 @@ namespace ProjectM.InGame
 {
     public class PlayerController : MonoBehaviour
     {
-        private int startHP;
+        private int startHP = 5;
         private int nowHP;
-        private int maxHP;
+        private int maxHP = 10;
 
         private float maxCurse;
         private float nowCurse;
@@ -46,6 +46,12 @@ namespace ProjectM.InGame
         public void TakeDamage(int _dmgAmount = 1, float _knockbackAmunt = 0f)
         {
             nowHP -= _dmgAmount;
+            Debug.Log("PlayerHP = " + nowHP);
+        }
+
+        public void TakeHeal(int _healAmount = 1, bool _removeDebuffs = false)
+        {
+
         }
 
 
