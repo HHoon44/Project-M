@@ -19,9 +19,12 @@ namespace ProjectM.InGame
             rigid.isKinematic = true;
         }
 
-        void FixedUpdatete()
+        void FixedUpdate()
         {
-            rigid.velocity = new Vector2(transform.position.x + Input.GetAxisRaw("Horizontal"), transform.position.y + Input.GetAxisRaw("Vertical"))* atDebugSpeed;
+            if (Input.GetKey(KeyCode.Slash))
+                rigid.velocity = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")) * atDebugSpeed;
+            else
+                rigid.velocity = Vector2.zero;
         }
 
         // public void DontControll(float _time = 0)

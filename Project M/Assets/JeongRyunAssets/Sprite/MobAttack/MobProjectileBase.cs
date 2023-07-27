@@ -37,8 +37,6 @@ namespace ProjectM.InGame
             //     other.gameObject.GetComponent<PlayerController>().TakeDamage();
             // }
 
-            Debug.Log("OnProjectile");
-
             if (destroyAtPlayer)
                 if (other.gameObject == PlayerController.GetPlayerObject())
                 {
