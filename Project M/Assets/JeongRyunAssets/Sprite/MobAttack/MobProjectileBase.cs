@@ -18,14 +18,15 @@ namespace ProjectM.InGame
         public void Initialize(Vector2 _startPos, float _angle, float _scale = 1)
         {
             this.transform.position = _startPos;
-            this.transform.rotation = Quaternion.Euler(0, 0,_angle);
-            this.transform.localScale = Vector3.one * _scale;//new Vector3(_scale, Mathf.Abs(_scale), Mathf.Abs(_scale));
+            this.transform.rotation = Quaternion.Euler(0, 0, _angle);
+            this.transform.localScale = new Vector3(Mathf.Abs(_scale), _scale, Mathf.Abs(_scale));
 
         }
 
         protected virtual void Start()
         {
-                GetComponent<Rigidbody2D>().velocity = transform.right.normalized * speed;
+            GetComponent<Rigidbody2D>().velocity = transform.right.normalized * speed;
+            GetComponent<SpriteRenderer>().sortingLayerName = "FrontEffect";
         }
 
         protected virtual void OnTriggerEnter2D(Collider2D other)
@@ -36,15 +37,17 @@ namespace ProjectM.InGame
             //     other.gameObject.GetComponent<PlayerController>().TakeDamage();
             // }
 
+            Debug.Log("OnProjectile");
+
             if (destroyAtPlayer)
-                if (other.gameObject.tag == "Player")
+                if (other.gameObject == PlayerController.GetPlayerObject())
                 {
                     alreadyDamaged = true;
                     Destroy(this.gameObject);
                 }
 
             if (destroyAtTilemap)
-                if (other.gameObject.tag == "Map")
+                if (other.gameObject.tag == "Tilemap")
                     Destroy(this.gameObject);
         }
     }

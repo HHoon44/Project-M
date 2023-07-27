@@ -42,10 +42,6 @@ namespace ProjectM.InGame
             myProjectile = MobsStaticData.Instance.GetMobProjectilePrefab(mob.thisMobType);
             StartCoroutine(AtkCooltime_co());
         }
-        private void FixedUpdate() {
-            
-            Attack();
-        }
 
         private IEnumerator AtkCooltime_co()
         {

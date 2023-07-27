@@ -531,6 +531,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ReferenceMob
       objectReference: {fileID: 0}
+    - target: {fileID: 6521833774877614650, guid: 851613d6d1c67422ea5b499e09bcfc80, type: 3}
+      propertyPath: m_TagString
+      value: Mob
+      objectReference: {fileID: 0}
     - target: {fileID: 7184950481648541141, guid: 851613d6d1c67422ea5b499e09bcfc80, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -591,7 +595,7 @@ GameObject:
   - component: {fileID: 1084918289}
   m_Layer: 6
   m_Name: Tilemap
-  m_TagString: Untagged
+  m_TagString: Tilemap
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1703,6 +1707,14 @@ PrefabInstance:
       propertyPath: mobDetectionTip
       value: 
       objectReference: {fileID: 5422318606311783110}
+    - target: {fileID: 5422318607255075026, guid: 1ad5256f5eefb2d47a21d1d28928e4b4, type: 3}
+      propertyPath: m_SortingLayer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5422318607255075026, guid: 1ad5256f5eefb2d47a21d1d28928e4b4, type: 3}
+      propertyPath: m_SortingLayerID
+      value: -1938402009
+      objectReference: {fileID: 0}
     - target: {fileID: 5422318607267358525, guid: 1ad5256f5eefb2d47a21d1d28928e4b4, type: 3}
       propertyPath: m_BodyType
       value: 1
@@ -1785,6 +1797,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1862807884}
     m_Modifications:
+    - target: {fileID: 8864289614725917282, guid: 8ee52b4f9540c4967a3222a3314d6fb7, type: 3}
+      propertyPath: m_SortingLayer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8864289614725917282, guid: 8ee52b4f9540c4967a3222a3314d6fb7, type: 3}
+      propertyPath: m_SortingLayerID
+      value: -1223830781
+      objectReference: {fileID: 0}
     - target: {fileID: 8864289614725917294, guid: 8ee52b4f9540c4967a3222a3314d6fb7, type: 3}
       propertyPath: m_Name
       value: Projectile_Reference
