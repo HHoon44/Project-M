@@ -3,9 +3,7 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags:
-  - Mob
-  - Tilemap
+  tags: []
   layers:
   - Default
   - TransparentFX
@@ -13,13 +11,9 @@ TagManager:
   - 
   - Water
   - UI
-  - Ground
-  - Player
-<<<<<<< HEAD
-  - Organism
-=======
-  - Button
->>>>>>> h_hoon
+  - 
+  - 
+  - 
   - 
   - 
   - 
@@ -46,22 +40,4 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
-    locked: 0
-  - name: Ground
-    uniqueID: 1300878431
-    locked: 0
-  - name: Effect
-    uniqueID: 92383561
-    locked: 0
-  - name: Player
-    uniqueID: 2356565287
-    locked: 0
-  - name: Monstar
-    uniqueID: 416561361
-    locked: 0
-  - name: FrontEffect
-    uniqueID: 3071136515
-    locked: 0
-  - name: Arrangement
-    uniqueID: 2627602013
     locked: 0
