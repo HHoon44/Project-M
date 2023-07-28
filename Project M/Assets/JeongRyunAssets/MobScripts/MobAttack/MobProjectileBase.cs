@@ -5,14 +5,9 @@ using ProjectM.Calculator;
 
 namespace ProjectM.InGame
 {
-    public class MobProjectileBase : MonoBehaviour
+    public class MobProjectileBase : Projectile
     {
-        protected bool destroyAtPlayer = true;
-        protected bool destroyAtTilemap = true;
-
-        protected bool alreadyDamaged = false;
-
-        protected float speed = 5; //! 항상 노멀라이즈를 해주고, 속도를 곱해주어야 합니다.
+        public float playerKnockbackAmount { get; private set; } = 1;
 
         //생성시 호출
         public void Initialize(Vector2 _startPos, float _angle, float _scale = 1)
@@ -27,6 +22,7 @@ namespace ProjectM.InGame
         {
             GetComponent<Rigidbody2D>().velocity = transform.right.normalized * speed;
             GetComponent<SpriteRenderer>().sortingLayerName = "FrontEffect";
+            gameObject.tag = "MobProjectile";
         }
 
         protected virtual void OnTriggerEnter2D(Collider2D other)
@@ -37,21 +33,19 @@ namespace ProjectM.InGame
             //     other.gameObject.GetComponent<PlayerController>().TakeDamage();
             // }
 
-            if (destroyAtPlayer)
-                if (other.gameObject == PlayerBase.GetPlayerObject())
+            if (other.gameObject == PlayerBase.GetPlayerObject())
+            {
+                PlayerBase player = PlayerBase.GetPlayerObject().GetComponent<PlayerBase>();
+                if (player.invincibleTime <= 0)//무적시간이 아닐 때
                 {
-                    PlayerBase player = PlayerBase.GetPlayerObject().GetComponent<PlayerBase>();
-
-                    if (player.invincibleTime <= 0)//무적시간이 아닐 때
-                    {
-                        if (alreadyDamaged == false)
-                            player.TakeDamage(1);
-                        alreadyDamaged = true;
+                    player.TakeDamage(hasDamage, playerKnockbackAmount);
+                    
+                    if (destroyAtOrganism)
                         Destroy(this.gameObject);
-                    }
                 }
+            }
 
-            if (destroyAtTilemap)
+            if (destroyAtGround)
                 if (other.gameObject.tag == "Tilemap")
                     Destroy(this.gameObject);
         }

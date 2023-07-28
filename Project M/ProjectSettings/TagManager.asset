@@ -3,7 +3,12 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Tilemap
+  - Mob
+  - Projectile
+  - MobProjectile
+  - PlayerProjectile
   layers:
   - Default
   - TransparentFX
@@ -11,9 +16,9 @@ TagManager:
   - 
   - Water
   - UI
-  - 
-  - 
-  - 
+  - Ground
+  - Player
+  - Organism
   - 
   - 
   - 
@@ -40,4 +45,25 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Ground
+    uniqueID: 2427562315
+    locked: 0
+  - name: BackEffect
+    uniqueID: 1904657715
+    locked: 0
+  - name: Mob
+    uniqueID: 3036463865
+    locked: 0
+  - name: Player
+    uniqueID: 4059385399
+    locked: 0
+  - name: FrontEffect
+    uniqueID: 2434543603
+    locked: 0
+  - name: FrontObj
+    uniqueID: 1514442445
+    locked: 0
+  - name: UI
+    uniqueID: 3345093651
     locked: 0

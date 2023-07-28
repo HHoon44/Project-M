@@ -20,6 +20,8 @@ namespace ProjectM.InGame
         private int deathCount = 0;
         private int lifeCount = 0;   //환생 횟수
 
+        private float evasionPro = 0; //회피확룰 max100;
+
         //상황 변수
         public bool isLive { get; private set; }
         public float invincibleTime { get; private set; }
@@ -42,6 +44,10 @@ namespace ProjectM.InGame
             {
                 invincibleTime = 0;
             }
+        }
+
+        private void OnTriggerEnter2D(Collider2D other)
+        {
         }
 
 

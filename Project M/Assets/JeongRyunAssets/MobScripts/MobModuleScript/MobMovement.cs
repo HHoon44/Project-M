@@ -35,7 +35,7 @@ namespace ProjectM.InGame
         private float nextStap;
         public bool flipX { get; private set; } = false;
         private bool moveAble;
-        public bool groundSense{ get; private set; } //true일 때 낭떠러지
+        public bool groundSense { get; private set; } //true일 때 낭떠러지
         private float staticMoveTime;  //필연적으로 움직이는 시간
         private float staticIdleTime;  //필연적으로 멈춰있는 시간
 
@@ -133,7 +133,7 @@ namespace ProjectM.InGame
 
             //지형을 계속해서 확인하고, 이상을 감지하면 플립실행
             groundSense = GroundSense();
-            if (groundSense)
+            if (groundSense || FriendSense())
             {
                 if (!flipX)
                     Turn(true);
@@ -192,7 +192,7 @@ namespace ProjectM.InGame
         private bool GroundSense()
         {
             //다음 위치가 어디일지 미리 검색한다.
-            Vector2 nextPos = new Vector2(transform.position.x + ((mob.colPoint.x + 0.1f) * (flipX ? -1 : 1)), transform.position.y);
+            Vector2 nextPos = new Vector2(transform.position.x + ((mob.colPoint.x + 0.2f) * (flipX ? -1 : 1)), transform.position.y);
 
             Debug.DrawLine(nextPos, new Vector2(nextPos.x, startPos.y - (groundDis + 0.1f)), Color.green);
             if (!Physics2D.Linecast(nextPos, new Vector2(nextPos.x, startPos.y - (groundDis + 0.1f)), LayerMask.GetMask("Ground")))
@@ -206,6 +206,15 @@ namespace ProjectM.InGame
             return false;
         }
 
+        //act: 같은 몬스터가 옆에 있을 때 
+        private bool FriendSense()
+        {
+            RaycastHit2D[] hit = Physics2D.RaycastAll(transform.position, Vector2.right, (mob.colPoint.x + 0.1f) * (flipX ? -1 : 1), LayerMask.GetMask("Organism"));
+            if (hit.Length >= 2)
+                return true;
+            else return false;
+        }
+
         //act: (bool) flip에 따라 자신을 플립한다.
         //tip: 이상 지형이 감지되었을 때 호출
         private void Turn(bool _flip)
@@ -215,12 +224,10 @@ namespace ProjectM.InGame
 
             if (!flipX)
             {
-                nextStap = .2f * speed;
                 mob.transform.localScale = new Vector3(1, 1, 1);
             }
             else
             {
-                nextStap = -.2f * speed;
                 mob.transform.localScale = new Vector3(-1, 1, 1);
             }
         }
