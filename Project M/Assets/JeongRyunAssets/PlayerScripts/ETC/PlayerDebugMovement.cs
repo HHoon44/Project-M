@@ -27,7 +27,6 @@ namespace ProjectM.InGame
             }
             else
             {
-                rigid.velocity = Vector2.zero;
                 rigid.isKinematic = false;
             }
         }
