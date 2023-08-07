@@ -10,6 +10,8 @@ namespace ProjectM.Define
 
     public enum IntroPhase { None, Start, ApllicationSetting, StaticData, Resource, UI, Complte }
 
+    public enum GaugeType { None, Mp, Curse }
+
     public class StaticData
     {
         public const string SDExcelPath = "Assets/StaticData/Excel";
@@ -70,5 +72,5 @@ namespace ProjectM.Define
     {
     }
 
-   // public static 
+    // public static 
 }
