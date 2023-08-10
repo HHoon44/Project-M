@@ -9,24 +9,19 @@ namespace ProjectM.UI
 {
     public class MpGauge : MonoBehaviour
     {
-        [SerializeField]
-        public GaugeType type;
-
-        private Image image;
+        private GaugeType type;      // 현재 게이지 타입
+        private Image bar;           
 
         void Start()
         {
-            image = GetComponent<Image>();
+            bar = GetComponent<Image>();
 
             // 스프라이트 로더로 아틀라스 가져와서 이미지 설정
 
-            image.type = Image.Type.Filled;
-            image.fillMethod = Image.FillMethod.Vertical;
-        }
+            bar.type = Image.Type.Filled;
+            bar.fillMethod = Image.FillMethod.Vertical;
 
-        void Update()
-        {
-
+            ChangeType(GaugeType.Mp);
         }
 
         /// <summary>
@@ -39,14 +34,23 @@ namespace ProjectM.UI
             {
                 case GaugeType.Mp:
                     this.type = GaugeType.Mp;
-                    image.fillMethod = Image.FillMethod.Vertical;
+                    bar.fillMethod = Image.FillMethod.Vertical;
                     break;
 
                 case GaugeType.Curse:
                     this.type = GaugeType.Curse;
-                    image.fillMethod = Image.FillMethod.Horizontal;
+                    bar.fillMethod = Image.FillMethod.Horizontal;
                     break;
             }
+        }
+
+        /// <summary>
+        /// 게이지 값 설정 메서드
+        /// </summary>
+        /// <param name="value"> 설정할 값 </param>
+        public void SetGauge(float value)
+        {
+            bar.fillAmount = value;
         }
     }
 }

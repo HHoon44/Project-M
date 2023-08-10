@@ -17,6 +17,16 @@ namespace ProjectM.InGame
         private float maxCurse;
         private float nowCurse;
 
+        // 형훈 작업
+        public float maxMp;
+        public float currentMp;
+
+        /// <summary>
+        /// 플레이어가 현재 활동 중인가를
+        /// 알 수 있는 프로퍼티
+        /// </summary>
+        public bool isPlayerAction { get; set; }
+
         private int deathCount = 0;
         private int lifeCount = 0;   //환생 횟수
 
@@ -44,6 +54,24 @@ namespace ProjectM.InGame
             {
                 invincibleTime = 0;
             }
+
+            ChargeMp();
+        }
+
+        /// <summary>
+        /// 형훈 MP 작업
+        /// </summary>
+        private void ChargeMp()
+        {
+            // 여기서 저주 작업도 해야함
+
+            if (currentMp >= maxMp)
+            {
+                currentMp = maxMp;
+                return;
+            }
+
+            currentMp += Time.deltaTime * .5f;
         }
 
         private void OnTriggerEnter2D(Collider2D other)
